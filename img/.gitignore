@@ -1,0 +1,4 @@
+*.zip
+*.img
+*.sha1
+/mnt
