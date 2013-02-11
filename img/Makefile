@@ -9,6 +9,9 @@
 # Links to images found at http://www.raspberrypi.org/downloads ->
 # http://downloads.raspberrypi.org/images/raspbian/2012-12-16-wheezy-raspbian/2012-12-16-wheezy-raspbian.zip
 
+IMAGE_URL = http://files.velocix.com/c1410/images/raspbian/2012-12-16-wheezy-raspbian/2012-12-16-wheezy-raspbian.zip
+#IMAGE_URL = http://ftp.snt.utwente.nl/pub/software/rpi/images/debian/7/2012-08-08-wheezy-armel/2012-08-08-wheezy-armel.zip
+IMAGE_NAME := `basename $(IMAGE_URL) .zip`
 
 all: install-dependencies download-image fix-image
 
@@ -20,12 +23,12 @@ install-dependencies:
 	sudo apt-get install binfmt-support qemu qemu-user-static unzip
 
 download-image:
-	wget http://files.velocix.com/c1410/images/raspbian/2012-12-16-wheezy-raspbian/2012-12-16-wheezy-raspbian.zip
-	wget http://downloads.raspberrypi.org/images/raspbian/2012-12-16-wheezy-raspbian/2012-12-16-wheezy-raspbian.zip.sha1
-	sed -i s:/home/eben/images/raspbian/2012-12-16-wheezy-raspbian/:: 2012-12-16-wheezy-raspbian.zip.sha1
-	sha1sum -c 2012-12-16-wheezy-raspbian.zip.sha1
-	unzip 2012-12-16-wheezy-raspbian.zip
-	mv 2012-12-16-wheezy-raspbian.img oxberrypis.img
+	wget $(IMAGE_URL)
+	wget $(IMAGE_URL).sha1
+	sed -i s:/home/eben/images/raspbian/$(IMAGE_NAME).zip/:: $(IMAGE_NAME).zip.sha1
+	sha1sum -c $(IMAGE_NAME).zip.sha1
+	unzip $(IMAGE_NAME).zip
+	mv $(IMAGE_NAME).img oxberrypis-$(IMAGE_NAME).img
 
 fix-image: mount static-ssh-update umount
 
@@ -40,7 +43,7 @@ mount:
 	# offset = starting block * sector size
 	# (both values can be found by running
 	# `fdisk -l oxberrypis.img`
-	sudo mount -o loop,offset=62914560 oxberrypis.img mnt
+	sudo mount -o loop,offset=62914560 oxberrypis-$(IMAGE_NAME).img mnt
 
 	sudo mount --rbind /dev mnt/dev
 	sudo mount -t proc none mnt/proc
@@ -49,10 +52,10 @@ mount:
 	sudo cp /usr/bin/qemu-arm-static mnt/usr/bin/
 
 umount:
-	sudo rm mnt/usr/bin/qemu-arm-static
-
-	sudo umount -l mnt
-	rm -rf mnt
+	#sudo rm mnt/usr/bin/qemu-arm-static
+	#sudo umount -l mnt
+	#rm -rf mnt
+	sha1sum oxberrypis-$(IMAGE_NAME).img > oxberrypis-$(IMAGE_NAME).img.sha1
 
 static-ssh-update:
 	sudo cp interfaces mnt/etc/network/
@@ -75,6 +78,6 @@ static-ssh-update:
 	sudo mv resolv.conf.bak mnt/etc/resolv.conf
 
 clean:
-	rm 2012-12-16-wheezy-raspbian.zip
-	rm 2012-12-16-wheezy-raspbian.zip.sha1
-	rm oxberrypis.img
+	rm $(IMAGE_NAME).zip
+	rm $(IMAGE_NAME).zip.sha1
+	rm oxberrypis-$(IMAGE_NAME).img
