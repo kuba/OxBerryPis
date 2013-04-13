@@ -1,5 +1,8 @@
 """Order book implementation."""
 
+from oxberrypis.errors import OxBerryPisException
+
+
 class Order(object):
     """Represents a single order."""
 
@@ -118,7 +121,7 @@ class LimitBook(object):
             self.sell_orders[order_id].remove()
             del self.sell_orders[order_id]
         else:
-            raise Exception('No Such Order:' + str(order_id))
+            raise OxBerryPisException('No Such Order: {}'.format(order_id))
 
     def add_order(self, limits, front, orders, price, amount, order_id):
         """Add an order (paramterised by specifics)."""
