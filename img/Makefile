@@ -52,9 +52,9 @@ mount:
 	sudo cp /usr/bin/qemu-arm-static mnt/usr/bin/
 
 umount:
-	#sudo rm mnt/usr/bin/qemu-arm-static
-	#sudo umount -l mnt
-	#rm -rf mnt
+	sudo rm mnt/usr/bin/qemu-arm-static
+	sudo umount -l mnt
+	rm -rf mnt
 	sha1sum oxberrypis-$(IMAGE_NAME).img > oxberrypis-$(IMAGE_NAME).img.sha1
 
 static-ssh-update:
