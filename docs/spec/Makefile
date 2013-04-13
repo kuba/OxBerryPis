@@ -6,5 +6,6 @@
 
 
 download:
-	wget -O xdp-integrated-feed-client-specification.pdf http://www.nyxdata.com/doc/77186
-	wget -O nyse-arca-integrated-feed-sample-data-directory-layout.pdf http://www.nyxdata.com/doc/76675
+	wget -O "XDP Integrated Feed Client Spec v1.7.pdf" http://www.nyxdata.com/doc/77186
+	wget -O "XDP Common Client Spec v1.0.pdf" http://www.nyxdata.com/doc/69004
+	wget -O "NYSE Arca Integrated Feed Sample Data Directory Layout.pdf" http://www.nyxdata.com/doc/76675
