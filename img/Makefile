@@ -9,7 +9,8 @@
 # Links to images found at http://www.raspberrypi.org/downloads ->
 # http://downloads.raspberrypi.org/images/raspbian/2012-12-16-wheezy-raspbian/2012-12-16-wheezy-raspbian.zip
 
-IMAGE_URL = http://files.velocix.com/c1410/images/raspbian/2012-12-16-wheezy-raspbian/2012-12-16-wheezy-raspbian.zip
+#IMAGE_URL = http://files.velocix.com/c1410/images/raspbian/2012-12-16-wheezy-raspbian/2012-12-16-wheezy-raspbian.zip
+IMAGE_URL = http://raspberrypi.reon.hu/images/raspbian/2013-02-09-wheezy-raspbian/2013-02-09-wheezy-raspbian.zip
 #IMAGE_URL = http://ftp.snt.utwente.nl/pub/software/rpi/images/debian/7/2012-08-08-wheezy-armel/2012-08-08-wheezy-armel.zip
 IMAGE_NAME := `basename $(IMAGE_URL) .zip`
 
@@ -67,12 +68,16 @@ static-ssh-update:
 	sudo mv mnt/etc/resolv.conf resolv.conf.bak
 	sudo cp /etc/resolv.conf mnt/etc/resolv.conf
 
+	sudo mv mnt/etc/ld.so.preload ld.so.preload.bak
+
 	# Enable SSH
 	sudo chroot mnt update-rc.d ssh enable
 
 	# Update and upgrade packages
 	sudo chroot mnt apt-get update
 	sudo chroot mnt apt-get -y upgrade
+
+	sudo mv ld.so.preload.bak mnt/etc/ld.so.preload
 
 	# Restore original resolv configuration
 	sudo mv resolv.conf.bak mnt/etc/resolv.conf
