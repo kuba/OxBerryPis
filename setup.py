@@ -5,6 +5,8 @@ version = '0.1'
 
 # Package requirements
 install_requires = [
+    'nose',
+    'coverage',
 ]
 
 
