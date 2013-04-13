@@ -25,7 +25,7 @@ install-dependencies:
 download-image:
 	wget $(IMAGE_URL)
 	wget $(IMAGE_URL).sha1
-	sed -i s:/home/eben/images/raspbian/$(IMAGE_NAME).zip/:: $(IMAGE_NAME).zip.sha1
+	sed -i s:/home/eben/images/raspbian/$(IMAGE_NAME)/:: $(IMAGE_NAME).zip.sha1
 	sha1sum -c $(IMAGE_NAME).zip.sha1
 	unzip $(IMAGE_NAME).zip
 	mv $(IMAGE_NAME).img oxberrypis-$(IMAGE_NAME).img
