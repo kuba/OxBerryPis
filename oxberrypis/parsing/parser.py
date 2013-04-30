@@ -14,11 +14,15 @@ class ChannelParser(object):
     """Standard channel file name."""
     CHANNEL_FILE_NAME = "20111219-ARCA_XDP_IBF_{}.dat"
 
-    def get_channel_path(self, directory, channel):
-        """Get path to the channel found in the directory."""
-        file_name = self.CHANNEL_FILE_NAME.format(channel)
+    def _get_channel_path(self, channel_file_name, directory, channel):
+        file_name = channel_file_name.format(channel)
         path = os.path.join(directory, file_name)
         return path
+
+    def get_channel_path(self, directory, channel):
+        """Get path to the channel found in the directory."""
+        channel_file_name = self.CHANNEL_FILE_NAME
+        return self._get_channel_path(channel_file_name, directory, channel)
 
     def _parse_cls_from_stream(self, cls, stream):
         """Read the stream and parse to create an instance of given class."""
@@ -46,18 +50,22 @@ class ChannelParser(object):
 
             count -= 1
 
+    def parse_stream(self, stream):
+        """Parse opened file-like stream."""
+        while True:
+            pkt_header = self._parse_cls_from_stream(
+                PacketHeader,
+                channel_file
+            )
+
+            msgs = self.parse_packet(pkt_header, channel_file)
+            for msg in msgs:
+                yield (pkt_header, msg)
+
     def parse_file(self, file_name):
         """Parse channel file."""
         with open(file_name, 'rb') as channel_file:
-            while True:
-                pkt_header = self._parse_cls_from_stream(
-                    PacketHeader,
-                    channel_file
-                )
-
-                msgs = self.parse_packet(pkt_header, channel_file)
-                for msg in msgs:
-                    yield (pkt_header, msg)
+            return self.parse_stream(channel_file)
 
     def parse_channel(self, directory, channel_id):
         """Find channel file and parse it."""
