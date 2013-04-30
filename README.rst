@@ -49,7 +49,19 @@ Team members
 Development
 ===========
 
+Firstly, install the package with all the dependencies in the development
+mode::
+
+  python setup.py develop
+
+You may want to use `virtualenv <https://pypi.python.org/pypi/virtualenv>`_
+if you don't want to pollute your operationg system's Python distrubution.
+
+Then introduce your changes and run all the tests::
+
+  python setup.py nosetests
+
 Please follow the guidelines from `PEP8
 <http://www.python.org/dev/peps/pep-0008>`_ (4 spaces for indentation!).
 If still in doubt, apply the coding style from the master branch.
-Remember to include appropriate tests.
+Remember to include appropriate tests for new modules.
