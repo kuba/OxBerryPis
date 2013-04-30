@@ -65,7 +65,8 @@ class ChannelParser(object):
     def parse_file(self, file_name):
         """Parse channel file."""
         with open(file_name, 'rb') as channel_file:
-            return self.parse_stream(channel_file)
+            for ret in self.parse_stream(channel_file):
+                yield ret
 
     def parse_channel(self, directory, channel_id):
         """Find channel file and parse it."""
