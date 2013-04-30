@@ -17,7 +17,8 @@ class Order(object):
         """Remove the order from the list."""
         if self.prev_elem is None and self.next_elem is None:
             # We are the last element so remove the limit as well.
-            # Uncomment the follwing if we do remove the limit
+            # Uncomment the follwing if we don't remove the limit (for 
+            # some reason)
             #self.limit.head_order = None
             #self.limit.tail_order = None
             self.limit.remove()
@@ -107,10 +108,45 @@ class LimitBook(object):
             order_id,
         )
 
+    def modify_order(self,order_id,new_quantity):
+        """Modify quantity of an order.
+
+        Modifies an order of any type as the messages can't
+        tell which type it is).
+
+        """
+        if order_id in self.buy_orders:
+            self.buy_orders[order_id].shares= new_quantity
+            
+        elif order_id in self.buy_orders:
+            self.sell_orders[order_id].shares= new_quantity
+        else:
+            raise OxBerryPisException('No Such Order: {}'.format(order_id))
+
+    def get_sell_head_order(self):
+        """ Gets first sell order
+
+        """
+        limit = self.sell_front.next_elem
+        if (limit == None)
+            raise OxBerryPisExecption('No Sell Orders')
+        else
+          return limit.head_order
+
+    def get_buy_head_order(self):
+        """ Gets first buy order
+
+        """
+        limit = self.buy_front.next_elem
+        if (limit == None)
+            raise OxBerryPisExecption('No Buy Orders')
+        else
+          return limit.head_order
+
     def remove_order(self, order_id):
         """Remove an order.
 
-        Removes and order of any type as the messages can't
+        Removes an order of any type as the messages can't
         tell which type it is).
 
         """
@@ -122,6 +158,8 @@ class LimitBook(object):
             del self.sell_orders[order_id]
         else:
             raise OxBerryPisException('No Such Order: {}'.format(order_id))
+
+
 
     def add_order(self, limits, front, orders, price, amount, order_id):
         """Add an order (paramterised by specifics)."""
