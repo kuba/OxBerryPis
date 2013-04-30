@@ -55,10 +55,10 @@ class ChannelParser(object):
         while True:
             pkt_header = self._parse_cls_from_stream(
                 PacketHeader,
-                channel_file
+                stream,
             )
 
-            msgs = self.parse_packet(pkt_header, channel_file)
+            msgs = self.parse_packet(pkt_header, stream)
             for msg in msgs:
                 yield (pkt_header, msg)
 
