@@ -127,7 +127,7 @@ class LimitBook(object):
         """Gets first sell order."""
         limit = self.sell_front.next_elem
         if limit is None:
-            raise OxBerryPisExecption('No Sell Orders')
+            raise OxBerryPisException('No Sell Orders')
         else:
             return limit.head_order
 
@@ -135,7 +135,7 @@ class LimitBook(object):
         """Gets first buy order."""
         limit = self.buy_front.next_elem
         if limit is None:
-            raise OxBerryPisExecption('No Buy Orders')
+            raise OxBerryPisException('No Buy Orders')
         else:
             return limit.head_order
 
