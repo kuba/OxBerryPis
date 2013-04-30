@@ -56,7 +56,7 @@ class TestPacketHeader(unittest.TestCase):
     def test_get_datetime(self):
         send_time = 1324271989
         send_time_ns = 267963000
-        model_dt = datetime.datetime(2011, 12, 19, 6, 19, 49, 267963)
+        model_dt = datetime.datetime(2011, 12, 19, 5, 19, 49, 267963)
 
         pkt_header = self.cls(0, 0, 0, 0, send_time, send_time_ns)
         pkt_dt = pkt_header.get_datetime()

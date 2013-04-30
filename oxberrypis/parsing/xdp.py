@@ -48,7 +48,7 @@ class PacketHeader(get_pkt_namedtuple('PacketHeader', pkt_header_spec)):
         """Get datetime when the packet was sent to the multicast
         channel for publication."""
         timestamp = self.SendTime + self.SendTimeNS / 1000000000.0
-        return datetime.datetime.fromtimestamp(timestamp)
+        return datetime.datetime.utcfromtimestamp(timestamp)
 
 
 # Message Header
