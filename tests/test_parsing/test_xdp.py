@@ -71,18 +71,20 @@ class TestMessageHeader(unittest.TestCase):
         self.cls = MsgHeader
 
     def test_is_known(self):
-        for known_msg in self.cls.known_msgs:
-            msg_hdr = self.cls(0, known_msg)
-            self.assertTrue(msg_hdr.is_known())
+        known_msgs = { 1: None }
+        msg_hdr = self.cls(0, 1)
+        self.assertTrue(msg_hdr.is_known(known_msgs))
 
     def test_is_not_know(self):
-        msg_hdr = self.cls(0, None)
-        self.assertFalse(msg_hdr.is_known())
+        known_msgs = { 1: None }
+        msg_hdr = self.cls(0, 2)
+        self.assertFalse(msg_hdr.is_known(known_msgs))
 
     def test_get_msg_cls(self):
-        for (known_msg, msg_cls) in self.cls.known_msgs.items():
-            msg_hdr = self.cls(0, known_msg)
-            self.assertEqual(msg_hdr.get_msg_cls(), msg_cls)
+        cls = object()
+        known_msgs = { 9: cls }
+        msg_hdr = self.cls(0, 9)
+        self.assertEqual(msg_hdr.get_msg_cls(known_msgs), cls)
 
     def test_get_msg_size(self):
         delta = 10

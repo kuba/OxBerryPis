@@ -71,13 +71,15 @@ class MsgHeader(get_pkt_namedtuple('MsgHeader', msg_header_spec)):
         cls.known_msgs[msg_cls.msg_type] = msg_cls
         return msg_cls
 
-    def is_known(self):
+    def is_known(self, known_msgs=None):
         """Checked whether payload message is known."""
-        return self.MsgType in self.known_msgs
+        known_msgs = known_msgs or self.known_msgs
+        return self.MsgType in known_msgs
 
-    def get_msg_cls(self):
+    def get_msg_cls(self, known_msgs=None):
         """Get payload message class."""
-        return self.known_msgs.get(self.MsgType)
+        known_msgs = known_msgs or self.known_msgs
+        return known_msgs.get(self.MsgType)
 
     def get_msg_size(self):
         """Return the size of the payload (message) only.
