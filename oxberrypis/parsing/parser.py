@@ -1,102 +1,170 @@
-"""Parser for NYSE Arca Integrated Feed stream"""
+"""Parsers for XDP streams."""
 import os
+import io
 import struct
 import os.path
 
-from oxberrypis.errors import OxBerryPisException
+from oxberrypis.errors import ParsingError
 
 from oxberrypis.parsing.xdp import PacketHeader
 from oxberrypis.parsing.xdp import MsgHeader
 
 
-class ChannelParser(object):
-    """ARCA Integrated Feed channel parser."""
+class XDPChannelUnpacker(object):
+    """XDP channel parser (unpacker).
 
-    """Standard channel file name."""
-    CHANNEL_FILE_NAME = "20111219-ARCA_XDP_IBF_{}.dat"
+    The parser reads the supplied stream, unpacks packet headers,
+    reads all message headers and unpacks only known messages.
 
-    def _get_channel_path(self, channel_file_name, directory, channel):
-        file_name = channel_file_name.format(channel)
-        path = os.path.join(directory, file_name)
-        return path
+    .. note::
 
-    def get_channel_path(self, directory, channel):
-        """Get path to the channel found in the directory."""
-        channel_file_name = self.CHANNEL_FILE_NAME
-        return self._get_channel_path(channel_file_name, directory, channel)
+       The parser assumes that the stream position is not manipulated
+       during the lifetime of this object. Packets and messages are
+       assumed to appear in the stream consecutively.
 
-    def _parse_cls_from_stream(self, cls, size, stream):
+    """
+
+    def __init__(self, stream):
+        """Initialise the parses with a stream."""
+        if not stream.readable():
+            raise ParsingError("The stream is not readable")
+
+        self.stream = stream
+
+    def parse_cls_from_stream(self, cls, size):
         """Read the stream and parse to create an instance of given class.
 
-        Returns `None` if the stream is empty.
+        Assumes `cls._make` is a method accepting a tuple of unpacked
+        data.
+
+        Returns `None` if the stream is empty and raises an error
+        if unpacking failed.
 
         """
-        data = stream.read(size)
+        data = self.stream.read(size)
         if not data:
             # stream is empty
             return None
 
-        unpacked = struct.unpack_from(cls.fmt, data)
+        try:
+            unpacked = struct.unpack_from(cls.fmt, data)
+        except struct.error as e:
+            raise ParsingError('Unpacking failed')
+
         parsed = cls._make(unpacked)
         return parsed
 
-    def parse_msg(self, header, stream):
-        """Parse a message from the stream."""
-        size = header.get_msg_size()
-        cls = header.get_msg_cls()
-        msg = self._parse_cls_from_stream(cls, size, stream)
+    def parse_msg(self, msg_header):
+        """Parse a message from the stream.
+
+        Message header is used to determined the size of the payload
+        and the type of the message contained within it.
+
+        """
+        size = msg_header.get_msg_size()
+        cls = msg_header.get_msg_cls()
+        msg = self.parse_cls_from_stream(cls, size)
         return msg
 
-    def parse_packet(self, pkt_header, stream):
-        """Parse a single packet."""
+    def advance(self, offset):
+        """Skip `offset` number of bytes in the stream."""
+        if self.stream.seekable():
+            self.stream.seek(offset, os.SEEK_CUR)
+        else:
+            self.stream.read(offset)
+
+    def parse_packet(self, pkt_header):
+        """Generator for messages found within packet.
+
+        Packet header is used to read off the number of messages
+        contained within the packet. Then unpacks message headers one
+        by one and if the message type is recognised, the message is
+        parsed. Otherwise position of the stream is advanced.
+
+        """
         count = pkt_header.NumberMsgs
 
         while count > 0:
-            header = self._parse_cls_from_stream(MsgHeader, MsgHeader.header_size, stream)
+            header = self.parse_cls_from_stream(
+                MsgHeader,
+                MsgHeader.header_size,
+            )
 
             if header.is_known():
-                msg = self.parse_msg(header, stream)
+                msg = self.parse_msg(header)
                 yield msg
             else:
                 offset = header.get_msg_size()
-                stream.seek(offset, os.SEEK_CUR)
+                self.advance(offset)
 
             count -= 1
 
-    def parse_stream(self, stream):
-        """Parse opened file-like stream."""
+    def parse(self):
+        """Generator for all the known messages from the stream.
+
+        As long as there is a data remaining in the stream (assumed to
+        be sufficiently long), it unpack the packet header. For each
+        packet header parses the messages contained within.
+
+        """
         while True:
-            pkt_header = self._parse_cls_from_stream(
+            pkt_header = self.parse_cls_from_stream(
                 PacketHeader,
                 PacketHeader.header_size,
-                stream,
             )
 
             if pkt_header is None:
                 # End reading the stream as no data remains
                 break
 
-            msgs = self.parse_packet(pkt_header, stream)
+            msgs = self.parse_packet(pkt_header)
             for msg in msgs:
                 yield (pkt_header, msg)
 
-    def parse_file(self, file_name):
-        """Parse channel file."""
-        with open(file_name, 'rb') as channel_file:
-            for ret in self.parse_stream(channel_file):
-                yield ret
+        # Close the stream when we are done
+        self.stream.close()
 
-    def parse_channel(self, directory, channel_id):
-        """Find channel file and parse it."""
-        channel_path = self.get_channel_path(directory, channel_id)
 
+class FileXDPChannelUnpacker(XDPChannelUnpacker):
+    """XDP channel parser (unpacker) with file stream."""
+
+    """Standard channel file name."""
+    CHANNEL_FILE_NAME_FMT = "20111219-ARCA_XDP_IBF_{}.dat"
+
+    def __init__(self, channel_path):
+        """Initialise the parser with the stream from opened file."""
+        stream = self.open_stream(channel_path)
+        super(FileXDPChannelUnpacker, self).__init__(stream)
+
+    def open_stream(self, channel_path):
+        """Return opened stream for the given file found at `channel_path`."""
         if not os.path.exists(channel_path):
-            raise OxBerryPisException(
-                "Channel {} not found".format(channel_path)
-            )
+            msg = "Channel {} not found".format(channel_path)
+            raise ParsingError(msg)
 
-        packets = self.parse_file(channel_path)
-        return packets
+        stream = io.open(channel_path, 'rb')
+
+        return stream
+
+    @classmethod
+    def get_channel_path(cls, directory, channel, channel_file_name_fmt=None):
+        """Get path to the channel found in the directory.
+
+        Channel file name format string defaults to string set in
+        `CHANNEL_FILE_NAME_FMT` but it may be changed by calling
+        the function with appropriate `channel_file_name_fmt` value.
+
+        """
+        channel_file_name_fmt = channel_file_name_fmt or cls.CHANNEL_FILE_NAME_FMT
+        file_name = channel_file_name_fmt.format(channel)
+        path = os.path.join(directory, file_name)
+        return path
+
+    @classmethod
+    def get_channel_unpacker(cls, directory, channel_id):
+        """Factory for channel unpacker given `directory` and `channel_id`."""
+        channel_path = cls.get_channel_path(directory, channel_id)
+        return cls(channel_path)
 
 def main():
     import sys
@@ -107,11 +175,11 @@ def main():
     directory = sys.argv[1]
     channel = sys.argv[2]
 
-    cp = ChannelParser()
+    unpacker = FileXDPChannelUnpacker.get_channel_unpacker(directory, channel)
 
-    for (pkt_header, msg) in cp.parse_channel(directory, channel):
-        t = pkt_header.get_datetime()
-        print t, msg
+    for (pkt_header, msg) in unpacker.parse():
+        pkt_time = pkt_header.get_datetime()
+        print pkt_time, msg
 
 if __name__ == '__main__':
     main()

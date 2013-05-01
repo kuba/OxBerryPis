@@ -1,12 +1,13 @@
 import unittest
 
-import os.path
+import io
 import struct
-from collections import namedtuple
-import StringIO
+import shutil
+import os.path
 import tempfile
+from collections import namedtuple
 
-from oxberrypis.errors import OxBerryPisException
+from oxberrypis.errors import ParsingError
 
 
 class DummyPkt(namedtuple('Dummy', 'a b')):
@@ -55,50 +56,42 @@ class DummyPacketHeader(namedtuple('DummyPacketHeader', 'no_msgs')):
         return struct.pack(cls.fmt, *cls.dummy_values)
 
 
-class TestChannelParser(unittest.TestCase):
+class TestXDPChannelUnpacker(unittest.TestCase):
 
-    def create_parser(self):
-        from oxberrypis.parsing.parser import ChannelParser
-        return ChannelParser()
+    def create_unpacker(self, stream=None):
+        from oxberrypis.parsing.parser import XDPChannelUnpacker
+        stream = stream or io.BytesIO()
+        return (stream, XDPChannelUnpacker(stream))
 
     def setUp(self):
-        self.cp = self.create_parser()
-
-    def test__get_channel_path(self):
-        channel_path = self.cp._get_channel_path('ABC{}XYZ', 'asd', 1)
-        model_path = os.path.join('asd', 'ABC1XYZ')
-        self.assertEqual(channel_path, model_path)
+        self.stream, self.cu = self.create_unpacker()
 
     def packed_to_stream(self, *packed):
-        stream = StringIO.StringIO()
         for packed_item in packed:
-            stream.write(packed_item)
-        stream.seek(0)
-        return stream
+            self.stream.write(packed_item)
+        self.stream.seek(0)
 
     def test_parse_cls_from_stream(self):
         packed = DummyPacketHeader.pack_dummy()
-        stream = self.packed_to_stream(packed)
-        parsed = self.cp._parse_cls_from_stream(
+        self.packed_to_stream(packed)
+        parsed = self.cu.parse_cls_from_stream(
             DummyPacketHeader,
             DummyPacketHeader.header_size,
-            stream,
         )
         self.assertTrue(isinstance(parsed, DummyPacketHeader))
         model = DummyPacketHeader.get_dummy()
         self.assertEqual(parsed, model)
 
     def test_parse_cls_from_empty_stream(self):
-        empty_stream = StringIO.StringIO()
-        pkt = self.cp._parse_cls_from_stream(None, 0, empty_stream)
+        pkt = self.cu.parse_cls_from_stream(None, 0)
         self.assertTrue(pkt is None)
 
     def _test_parse_msg(self, payload=0):
         msg_size = struct.calcsize(DummyPkt.fmt)
         header = DummyMsgHeader(DummyPkt, msg_size=msg_size + payload)
         packed = DummyPkt.pack_dummy()
-        stream = self.packed_to_stream(packed)
-        msg = self.cp.parse_msg(header, stream)
+        self.packed_to_stream(packed)
+        msg = self.cu.parse_msg(header)
         model = DummyPkt.get_dummy()
         self.assertTrue(isinstance(msg, DummyPkt))
         self.assertEqual(msg, model)
@@ -119,24 +112,48 @@ class TestChannelParser(unittest.TestCase):
             packed_msg_hdr2,
             packed_msg2,
         )
-        self.cp.parse_packet(hdr, stream)
+        self.cu.parse_packet(hdr, stream)
 
     def test_parse_stream(self):
         pass
 
-    def test_parse_channel_not_found(self):
-        tmp_directory_path = tempfile.mkdtemp()
+
+class TestFileXDPChannelUnpacker(unittest.TestCase):
+
+    def setUp(self):
+        from oxberrypis.parsing.parser import FileXDPChannelUnpacker
+        self.cls = FileXDPChannelUnpacker
+
+    def test_get_channel_path(self):
+        channel_path = self.cls.get_channel_path('asd', 1, 'ABC{}XYZ')
+        model_path = os.path.join('asd', 'ABC1XYZ')
+        self.assertEqual(channel_path, model_path)
+
+    def test_get_channel_path_default(self):
+        channel_path = self.cls.get_channel_path('asd', 1)
+        model_fmt = self.cls.CHANNEL_FILE_NAME_FMT.format(1)
+        model_path = os.path.join('asd', model_fmt)
+        self.assertEqual(channel_path, model_path)
+
+    def create_stream_source_file(self):
+        directory = tempfile.mkdtemp()
         channel_id = 0
+        path = self.cls.get_channel_path(directory, channel_id)
+        open(path, 'wb').close()
+        return (directory, channel_id, path)
 
-        with self.assertRaises(OxBerryPisException):
-            self.cp.parse_channel(tmp_directory_path, channel_id)
+    def test_open_stream(self):
+        _, _, path = self.create_stream_source_file()
+        unpacker = self.cls(path)
+        self.assertEqual(unpacker.stream.name, path)
 
-    def test_parse_channel(self):
-        tmp_directory_path = tempfile.mkdtemp()
-        channel_id = 0
+    def test_channel_not_found(self):
+        directory = tempfile.mkdtemp()
+        path = os.path.join(directory, 'channel0')
+        with self.assertRaises(ParsingError):
+            self.cls(path)
 
-        channel_path = self.cp.get_channel_path(tmp_directory_path, channel_id)
-        # Touch file
-        open(channel_path, 'w').close()
-
-        self.cp.parse_channel(tmp_directory_path, channel_id)
+    def test_get_channel_unpacker(self):
+        directory, channel_id, _ = self.create_stream_source_file()
+        self.cls.get_channel_unpacker(directory, channel_id)
+        shutil.rmtree(directory)
