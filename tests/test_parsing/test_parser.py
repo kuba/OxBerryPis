@@ -88,6 +88,11 @@ class TestChannelParser(unittest.TestCase):
         model = DummyPacketHeader.get_dummy()
         self.assertEqual(parsed, model)
 
+    def test_parse_cls_from_empty_stream(self):
+        empty_stream = StringIO.StringIO()
+        pkt = self.cp._parse_cls_from_stream(None, 0, empty_stream)
+        self.assertTrue(pkt is None)
+
     def _test_parse_msg(self, payload=0):
         msg_size = struct.calcsize(DummyPkt.fmt)
         header = DummyMsgHeader(DummyPkt, msg_size=msg_size + payload)

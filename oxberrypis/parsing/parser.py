@@ -26,8 +26,16 @@ class ChannelParser(object):
         return self._get_channel_path(channel_file_name, directory, channel)
 
     def _parse_cls_from_stream(self, cls, size, stream):
-        """Read the stream and parse to create an instance of given class."""
+        """Read the stream and parse to create an instance of given class.
+
+        Returns `None` if the stream is empty.
+
+        """
         data = stream.read(size)
+        if not data:
+            # stream is empty
+            return None
+
         unpacked = struct.unpack_from(cls.fmt, data)
         parsed = cls._make(unpacked)
         return parsed
@@ -63,6 +71,10 @@ class ChannelParser(object):
                 PacketHeader.header_size,
                 stream,
             )
+
+            if pkt_header is None:
+                # End reading the stream as no data remains
+                break
 
             msgs = self.parse_packet(pkt_header, stream)
             for msg in msgs:
