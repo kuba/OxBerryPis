@@ -83,3 +83,9 @@ class TestMessageHeader(unittest.TestCase):
         for (known_msg, msg_cls) in self.cls.known_msgs.items():
             msg_hdr = self.cls(0, known_msg)
             self.assertEqual(msg_hdr.get_msg_cls(), msg_cls)
+
+    def test_get_msg_size(self):
+        delta = 10
+        msg_hdr = self.cls(self.cls.header_size + delta, 0)
+        self.assertEqual(msg_hdr.get_msg_size(), delta)
+

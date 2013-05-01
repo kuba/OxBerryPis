@@ -11,7 +11,6 @@ from oxberrypis.errors import OxBerryPisException
 
 class DummyPkt(namedtuple('Dummy', 'a b')):
     fmt = 'II'
-    size = struct.calcsize(fmt)
 
     @classmethod
     def get_dummy(cls):
@@ -23,11 +22,12 @@ class DummyPkt(namedtuple('Dummy', 'a b')):
 
 class DummyMsgHeader(object):
     fmt = 'I'
-    size = struct.calcsize(fmt)
+    header_size = struct.calcsize(fmt)
 
-    def __init__(self, msg_cls, known=True):
+    def __init__(self, msg_cls, known=True, msg_size=0):
         self.known = known
         self.msg_cls = msg_cls
+        self.msg_size = msg_size
 
     def is_known(self):
         return self.known
@@ -35,12 +35,24 @@ class DummyMsgHeader(object):
     def get_msg_cls(self):
         return self.msg_cls
 
-class DummyPacketHeader(object):
+    def get_msg_size(self):
+        return self.msg_size
+
+class DummyPacketHeader(namedtuple('DummyPacketHeader', 'no_msgs')):
     fmt = 'I'
-    size = struct.calcsize(fmt)
+    header_size = struct.calcsize(fmt)
+    dummy_values = (1,)
 
     def __init__(self, msgs_num):
         self.NumberMsgs = msgs_num
+
+    @classmethod
+    def get_dummy(cls):
+        return DummyPacketHeader(*cls.dummy_values)
+
+    @classmethod
+    def pack_dummy(cls):
+        return struct.pack(cls.fmt, *cls.dummy_values)
 
 
 class TestChannelParser(unittest.TestCase):
@@ -65,15 +77,20 @@ class TestChannelParser(unittest.TestCase):
         return stream
 
     def test_parse_cls_from_stream(self):
-        packed = DummyPkt.pack_dummy()
+        packed = DummyPacketHeader.pack_dummy()
         stream = self.packed_to_stream(packed)
-        parsed = self.cp._parse_cls_from_stream(DummyPkt, stream)
-        self.assertTrue(isinstance(parsed, DummyPkt))
-        model = DummyPkt.get_dummy()
+        parsed = self.cp._parse_cls_from_stream(
+            DummyPacketHeader,
+            DummyPacketHeader.header_size,
+            stream,
+        )
+        self.assertTrue(isinstance(parsed, DummyPacketHeader))
+        model = DummyPacketHeader.get_dummy()
         self.assertEqual(parsed, model)
 
-    def test_parse_msg(self):
-        header = DummyMsgHeader(DummyPkt)
+    def _test_parse_msg(self, payload=0):
+        msg_size = struct.calcsize(DummyPkt.fmt)
+        header = DummyMsgHeader(DummyPkt, msg_size=msg_size + payload)
         packed = DummyPkt.pack_dummy()
         stream = self.packed_to_stream(packed)
         msg = self.cp.parse_msg(header, stream)
@@ -81,7 +98,14 @@ class TestChannelParser(unittest.TestCase):
         self.assertTrue(isinstance(msg, DummyPkt))
         self.assertEqual(msg, model)
 
-    def tes_parse_packet(self):
+    def test_parse_msg(self):
+        self._test_parse_msg()
+
+    def test_parse_msg_bigger_payload(self):
+        self._test_parse_msg(100)
+
+    def test_parse_packet(self):
+        return
         hdr = DummyPacketHeader(2)
         #msg1 = DummyMsgHeader(DummyPkt,
         stream = self.packed_to_stream(

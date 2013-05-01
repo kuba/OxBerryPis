@@ -42,7 +42,7 @@ class PacketHeader(get_pkt_namedtuple('PacketHeader', pkt_header_spec)):
     """XDP feed packet header."""
 
     fmt = get_pkt_format_string(pkt_header_spec)
-    size = struct.calcsize(fmt)
+    header_size = struct.calcsize(fmt)
 
     def get_datetime(self):
         """Get datetime when the packet was sent to the multicast
@@ -60,7 +60,7 @@ msg_header_spec = (
 class MsgHeader(get_pkt_namedtuple('MsgHeader', msg_header_spec)):
     """XDP Message header."""
     fmt = get_pkt_format_string(msg_header_spec)
-    size = struct.calcsize(fmt)
+    header_size = struct.calcsize(fmt)
 
     """Mapping between known message types and known message classes."""
     known_msgs = {}
@@ -78,6 +78,19 @@ class MsgHeader(get_pkt_namedtuple('MsgHeader', msg_header_spec)):
     def get_msg_cls(self):
         """Get payload message class."""
         return self.known_msgs.get(self.MsgType)
+
+    def get_msg_size(self):
+        """Return the size of the payload (message) only.
+
+          Customers should not hard code msg sizes in feed handlers;
+          instead the feed handler should use the Msg
+          Size field to determine where the next message in the packet
+          begins. This allows the XDP format to
+          accommodate the different market needs for data content and
+          allow the format to be more agile.
+
+        """
+        return self.MsgSize - self.header_size
 
 
 # Order Book Add Order Message
@@ -97,7 +110,6 @@ msg100_spec = (
 class OBAddOrderMsg(get_pkt_namedtuple('OBAddOrderMsg', msg100_spec)):
     """Order Book Add Order Message."""
     fmt = get_pkt_format_string(msg100_spec)
-    size = struct.calcsize(fmt)
     msg_type = 100
 
 
@@ -118,7 +130,6 @@ msg101_spec = (
 class OBModifyMsg(get_pkt_namedtuple('OBModifyMsg', msg101_spec)):
     """Order Book Modify Message."""
     fmt = get_pkt_format_string(msg101_spec)
-    size = struct.calcsize(fmt)
     msg_type = 101
 
 
@@ -137,7 +148,6 @@ msg102_spec = (
 class OBDeleteMsg(get_pkt_namedtuple('OBDeleteMsg', msg102_spec)):
     """Order Book Delete Message."""
     fmt = get_pkt_format_string(msg102_spec)
-    size = struct.calcsize(fmt)
     msg_type = 102
 
 
@@ -158,7 +168,6 @@ msg103_spec = (
 class OBExecutionMsg(get_pkt_namedtuple('OBExecutionMsg', msg103_spec)):
     """Order Book Execution Message."""
     fmt = get_pkt_format_string(msg103_spec)
-    size = struct.calcsize(fmt)
     msg_type = 103
 
 
@@ -187,5 +196,4 @@ msg220_spec = (
 class TradeMsg(get_pkt_namedtuple('TradeMsg', msg220_spec)):
     """Trade Message."""
     fmt = get_pkt_format_string(msg220_spec)
-    size = struct.calcsize(fmt)
     msg_type = 220

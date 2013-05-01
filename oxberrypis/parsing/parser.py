@@ -1,4 +1,5 @@
 """Parser for NYSE Arca Integrated Feed stream"""
+import os
 import struct
 import os.path
 
@@ -24,17 +25,18 @@ class ChannelParser(object):
         channel_file_name = self.CHANNEL_FILE_NAME
         return self._get_channel_path(channel_file_name, directory, channel)
 
-    def _parse_cls_from_stream(self, cls, stream):
+    def _parse_cls_from_stream(self, cls, size, stream):
         """Read the stream and parse to create an instance of given class."""
-        data = stream.read(cls.size)
-        unpacked = struct.unpack(cls.fmt, data)
+        data = stream.read(size)
+        unpacked = struct.unpack_from(cls.fmt, data)
         parsed = cls._make(unpacked)
         return parsed
 
     def parse_msg(self, header, stream):
-        """Parse a single message."""
-        msg_cls = header.get_msg_cls()
-        msg = self._parse_cls_from_stream(msg_cls, stream)
+        """Parse a message from the stream."""
+        size = header.get_msg_size()
+        cls = header.get_msg_cls()
+        msg = self._parse_cls_from_stream(cls, size, stream)
         return msg
 
     def parse_packet(self, pkt_header, stream):
@@ -42,11 +44,14 @@ class ChannelParser(object):
         count = pkt_header.NumberMsgs
 
         while count > 0:
-            header = self._parse_cls_from_stream(MsgHeader, stream)
+            header = self._parse_cls_from_stream(MsgHeader, MsgHeader.header_size, stream)
 
             if header.is_known():
                 msg = self.parse_msg(header, stream)
                 yield msg
+            else:
+                offset = header.get_msg_size()
+                stream.seek(offset, os.SEEK_CUR)
 
             count -= 1
 
@@ -55,6 +60,7 @@ class ChannelParser(object):
         while True:
             pkt_header = self._parse_cls_from_stream(
                 PacketHeader,
+                PacketHeader.header_size,
                 stream,
             )
 
@@ -92,7 +98,8 @@ def main():
     cp = ChannelParser()
 
     for (pkt_header, msg) in cp.parse_channel(directory, channel):
-        print msg
+        t = pkt_header.get_datetime()
+        print t, msg
 
 if __name__ == '__main__':
     main()
