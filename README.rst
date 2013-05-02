@@ -1,5 +1,5 @@
-About
-=====
+README
+======
 
 "Project A: Resilient and Rapid Raspberries" is Group Design Practical
 set by the `Department of Computer Science at the University of Oxford
@@ -39,7 +39,7 @@ to allow the pis to redistribute the work if one or more were to fail,
 without data loss.
 
 Team members
-============
+------------
 
 * Hynek Jemelik
 * Josh Peaker
@@ -47,7 +47,7 @@ Team members
 * Jakub Warmuz
 
 Development
-===========
+-----------
 
 Firstly, install the package with all the dependencies in the development
 mode::
