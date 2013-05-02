@@ -59,7 +59,7 @@ class DummyPacketHeader(namedtuple('DummyPacketHeader', 'no_msgs')):
 class TestXDPChannelUnpacker(unittest.TestCase):
 
     def create_unpacker(self, stream=None):
-        from oxberrypis.parsing.parser import XDPChannelUnpacker
+        from oxberrypis.parsing.parsers import XDPChannelUnpacker
         stream = stream or io.BytesIO()
         return (stream, XDPChannelUnpacker(stream))
 
@@ -121,7 +121,7 @@ class TestXDPChannelUnpacker(unittest.TestCase):
 class TestFileXDPChannelUnpacker(unittest.TestCase):
 
     def setUp(self):
-        from oxberrypis.parsing.parser import FileXDPChannelUnpacker
+        from oxberrypis.parsing.parsers import FileXDPChannelUnpacker
         self.cls = FileXDPChannelUnpacker
 
     def test_get_channel_path(self):
