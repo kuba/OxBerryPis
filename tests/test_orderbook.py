@@ -3,8 +3,9 @@ import unittest
 from oxberrypis.orderbook import Order
 from oxberrypis.orderbook import Limit
 from oxberrypis.orderbook import LimitBook
+from oxberrypis.errors import OxBerryPisException
 
-class TestOrderBook(object):
+class TestOrderBook(unittest.TestCase):
     def test_remove(self):
         lims = LimitBook()
         lims.add_buy(10,100,1)
@@ -14,20 +15,20 @@ class TestOrderBook(object):
         lims = LimitBook()
         lims.add_sell(10,100,2)
         self.assertEqual(lims.get_sell_head_order().order_id,2)
-        lims.remove_order(1)
+        lims.remove_order(2)
         self.assertRaises(OxBerryPisException,lims.get_sell_head_order)
 
     def test_modify(self):
         lims = LimitBook()
         lims.add_buy(10,100,1)
-        self.assertEqual(lims.get_buy_head_order().limit.price,10)
-        lims.modify_order(1,11)
-        self.assertEqual(lims.get_buy_head_order().limit.price,11)
+        self.assertEqual(lims.get_buy_head_order().shares,100)
+        lims.modify_order(1,110)
+        self.assertEqual(lims.get_buy_head_order().shares,110)
         
         lims.add_sell(10,100,2)
-        self.assertEqual(lims.get_sell_head_order().limit.price,10)
-        lims.modify_order(2,11)
-        self.assertEqual(lims.get_sell_head_order().order.limit.price,11)
+        self.assertEqual(lims.get_sell_head_order().shares,100)
+        lims.modify_order(2,110)
+        self.assertEqual(lims.get_sell_head_order().shares,110)
 
     def test_input(self):
         lims = LimitBook()
