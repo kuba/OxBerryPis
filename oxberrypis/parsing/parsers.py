@@ -6,8 +6,8 @@ import os.path
 
 from oxberrypis.errors import ParsingError
 
-from oxberrypis.parsing.xdp import PacketHeader
-from oxberrypis.parsing.xdp import MsgHeader
+from oxberrypis.parsing.headers import PacketHeader
+from oxberrypis.parsing.headers import MsgHeader
 
 
 class XDPChannelUnpacker(object):
