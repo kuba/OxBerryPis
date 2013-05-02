@@ -44,7 +44,7 @@ setup(
     keywords='raspberry pi cluster stock',
     author='Group 8',
     author_email='oxberrypis@googlegroups.com',
-    url='https://github.com/expipiplus1/oxberrypis',
+    url='https://github.com/kuba/oxberrypis',
     license='',
     packages=['oxberrypis'],
     include_package_data=True,
