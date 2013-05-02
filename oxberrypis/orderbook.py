@@ -17,7 +17,7 @@ class Order(object):
         """Remove the order from the list."""
         if self.prev_elem is None and self.next_elem is None:
             # We are the last element so remove the limit as well.
-            # Uncomment the follwing if we don't remove the limit (for 
+            # Uncomment the follwing if we don't remove the limit (for
             # some reason)
             #self.limit.head_order = None
             #self.limit.tail_order = None
@@ -129,7 +129,7 @@ class LimitBook(object):
             order_id,
         )
 
-    def modify_order(self,order_id,new_quantity):
+    def modify_order(self, order_id, new_quantity):
         """Modify quantity of an order.
 
         Modifies an order of any type as the messages can't
@@ -137,9 +137,16 @@ class LimitBook(object):
 
         """
         if order_id in self.buy_orders:
+<<<<<<< HEAD
             order = self.buy_orders[order_id]
         elif order_id in self.sell_orders:
             order = self.sell_orders[order_id]
+=======
+            self.buy_orders[order_id].shares = new_quantity
+
+        elif order_id in self.buy_orders:
+            self.sell_orders[order_id].shares = new_quantity
+>>>>>>> 8aa8087b3dc9b0b0fcb3f922130fde617e8e4a80
         else:
             raise OxBerryPisException('No Such Order: {}'.format(order_id))
         
@@ -149,24 +156,34 @@ class LimitBook(object):
         
             
     def get_sell_head_order(self):
-        """ Gets first sell order
-
-        """
+        """Gets first sell order."""
         limit = self.sell_front.next_elem
+<<<<<<< HEAD
         if (limit == None):
             raise OxBerryPisException('No Sell Orders')
         else:
           return limit.head_order
+=======
+        if limit is None:
+            raise OxBerryPisException('No Sell Orders')
+        else:
+            return limit.head_order
+>>>>>>> 8aa8087b3dc9b0b0fcb3f922130fde617e8e4a80
 
     def get_buy_head_order(self):
-        """ Gets first buy order
-
-        """
+        """Gets first buy order."""
         limit = self.buy_front.next_elem
+<<<<<<< HEAD
         if (limit == None):
             raise OxBerryPisException('No Buy Orders')
         else:
           return limit.head_order
+=======
+        if limit is None:
+            raise OxBerryPisException('No Buy Orders')
+        else:
+            return limit.head_order
+>>>>>>> 8aa8087b3dc9b0b0fcb3f922130fde617e8e4a80
 
     def remove_order(self, order_id):
         """Remove an order.
@@ -185,8 +202,6 @@ class LimitBook(object):
             del self.sell_orders[order_id]
         else:
             raise OxBerryPisException('No Such Order: {}'.format(order_id))
-
-
 
     def add_order(self, limits, front, orders, price, amount, order_id):
         """Add an order (paramterised by specifics)."""

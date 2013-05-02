@@ -4,7 +4,7 @@ About
 "Project A: Resilient and Rapid Raspberries" is Group Design Practical
 set by the `Department of Computer Science at the University of Oxford
 <http://www.cs.ox.ac.uk>`_ in the academic year 2012/2013. OxBerryPis
-is an implementation of the practical maintained by 5 university
+is an implementation of the practical maintained by 4 university
 students (Group 8).
 
 Design Brief
@@ -41,7 +41,6 @@ without data loss.
 Team members
 ============
 
-* Joseph Hermaszewski
 * Hynek Jemelik
 * Josh Peaker
 * Alexander Eyers-Taylor
