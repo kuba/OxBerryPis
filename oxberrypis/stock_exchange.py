@@ -17,7 +17,7 @@ class StockExchange:
         order = Order(order_id, limit_price, num_shares, order_type)
         book = self.get_book(order)
         book.add_order(order)
-        self.execute_orders(order)
+        #self.execute_orders(order)
     
     def remove_order(self, order_id):
         self.supply.remove_order(order_id)
@@ -27,8 +27,14 @@ class StockExchange:
         updated_order = Order(order_id, limit_price, num_shares, order_type)
         book = self.get_book(updated_order)
         book.update_order(updated_order)
-        self.execute_orders(updated_order)
-    
+        #self.execute_orders(updated_order)
+
+    def get_buy_head_order(self):
+        return self.demand.get_best()
+
+    def get_sell_head_order(self):
+        return self.supply.get_best()
+
     def execute_orders(self, order):
         opposite = self.get_opposite(order)
         best = opposite.get_best()
