@@ -4,15 +4,33 @@ message StockEvent {
   required int32 stock_id = 1;
   required int32 timestamp = 2;
   required int32 pi_id = 3;
-  required bool is_end =7;
-  optional int32 top_buy_price = 4;
-  optional int32 top_sell_price =5;
-  optional int32 tradePrice = 6;    
+
+  optional int32 top_buy_price = 5;
+  optional int32 top_sell_price = 6;
+  optional int32 trade_price = 7;    
 }
 
 message OrderBookMessage {
   required int32 stock_id = 1;
   required int32 timestamp = 2;
-
+  required MessageType message_type = 3;
+  optional int32 order_id = 4;
+  optional Side side = 5;
+  optional int32 volume = 6;
+  optional int32 price  = 7;   
+  
 }
 
+
+enum Side {
+  BUY = 0;
+  SELL = 1;
+}
+
+enum MessageType {
+  ADD_MESSAGE = 0;
+  MODIFY_MESSAGE = 1;
+  DELETE_MESSAGE = 2;
+  EXECUTION_MESSAGE = 3;
+  TRADE_MESSAGE = 4;
+}
