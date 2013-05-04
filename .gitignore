@@ -1,8 +1,14 @@
+# Python bytecode
 *.pyc
-*.egg/
-*.egg-info/
-build/
-dist/
+
+# Setuptools
+/*.egg/
+/*.egg-info/
+/build/
+/dist/
+
+# Documentation
+/docs/sphinx/_build
+
 .coverage
 *.pdf
-/docs/sphinx/_build
