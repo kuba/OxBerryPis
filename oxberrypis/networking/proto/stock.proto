@@ -1,1 +1,205 @@
+// Protocol Buffers proto file for NYSE stock messages
 package oxberrypis.networking.stock;
+
+
+message OBAdd {
+  optional uint32 source_time_ns = 1; // SourceTimeNS
+
+  optional uint32 symbol_index = 2; // SymbolIndex
+  optional uint32 symbol_seq_num = 3; // SymbolSeqNum
+
+  optional uint32 order_id = 4; // OrderID
+  optional uint32 price = 5; // Price
+  optional uint32 volume = 6; // Volume
+
+  enum Side {
+    BUY = 66; // 'B'
+    SELL = 83; // 'S'
+  }
+
+  //optional bool is_buy = 7; // Side
+  optional Side side = 7; // Side
+
+  enum OrderIDGTCIndicator {
+    DAY_ORDER = 0;
+    GTC_ORDER = 1;
+  }
+
+  //optional bool is_gtc_order = 8; // OrderIDGTCIndicator
+  optional OrderIDGTCIndicator order_id_gtc_indicator = 8; // OrderIDGTCIndicator
+
+  optional bytes trade_session = 9; // TradeSession
+}
+
+message OBModify {
+  optional uint32 source_time_ns = 1; // SourceTimeNS
+
+  optional uint32 symbol_index = 2; // SymbolIndex
+  optional uint32 symbol_seq_num = 3; // SymbolSeqNum
+
+  optional uint32 order_id = 4; // OrderID
+  optional uint32 price = 5; // Price
+  optional uint32 volume = 6; // Volume
+
+  enum Side {
+    BUY = 66; // 'B'
+    SELL = 83; // 'S'
+  }
+
+  //optional bool is_buy = 7; // Side
+  optional Side side = 7; // Side
+
+  enum OrderIDGTCIndicator {
+    DAY_ORDER = 0;
+    GTC_ORDER = 1;
+  }
+
+  //optional bool is_gtc_order = 8; // OrderIDGTCIndicator
+  optional OrderIDGTCIndicator order_id_gtc_indicator = 8; // OrderIDGTCIndicator
+
+  enum ReasonCode {
+    CHANGE = 5; // (lost position in book)
+    ROUTED = 6; // (keep position in book)
+    FILL = 7; // (keep position in book)
+  }
+
+  optional ReasonCode reason_code = 9; // ReasonCode
+}
+
+message OBDelete {
+  optional uint32 source_time_ns = 1; // SourceTimeNS
+
+  optional uint32 symbol_index = 2; // SymbolIndex
+  optional uint32 symbol_seq_num = 3; // SymbolSeqNum
+
+  optional uint32 order_id = 4; // OrderID
+
+  enum Side {
+    BUY = 66; // 'B'
+    SELL = 83; // 'S'
+  }
+
+  //optional bool is_buy = 5; // Side
+  optional Side side = 5; // Side
+
+  //optional bool is_gtc_order = 6; // OrderIDGTCIndicator
+  optional OrderIDGTCIndicator order_id_gtc_indicator = 6; // OrderIDGTCIndicator
+
+  enum OrderIDGTCIndicator {
+    DAY_ORDER = 0;
+    GTC_ORDER = 1;
+  }
+
+  enum ReasonCode {
+    USER_CANCEL = 1;
+    MODIFY = 2; // taken off book, Order ID may add again
+    DELETE = 3; // Delete Filled
+  }
+
+  optional ReasonCode reason_code = 7; // ReasonCode
+}
+
+message OBExecution {
+  optional uint32 source_time_ns = 1; // SourceTimeNS
+
+  optional uint32 symbol_index = 2; // SymbolIndex
+  optional uint32 symbol_seq_num = 3; // SymbolSeqNum
+
+  optional uint32 order_id = 4; // OrderID
+  optional uint32 price = 5; // Price
+  optional uint32 volume = 6; // Volume
+
+  enum OrderIDGTCIndicator {
+    DAY_ORDER = 0;
+    GTC_ORDER = 1;
+  }
+
+  //optional bool is_gtc_order = 7; // OrderIDGTCIndicator
+  optional OrderIDGTCIndicator order_id_gtc_indicator = 7; // OrderIDGTCIndicator
+
+  enum ReasonCode {
+    FILLED = 3;
+    PARTIAL = 7; // Partial Fill (Did not lose position)
+  }
+
+  optional ReasonCode reason_code = 8; // ReasonCode
+
+  optional uint32 TradeID = 9;
+}
+
+message Trade {
+  optional uint32 source_time_ns = 1; // SourceTimeNS
+
+  optional uint32 symbol_index = 2; // SymbolIndex
+  optional uint32 symbol_seq_num = 3; // SymbolSeqNum
+  optional uint32 trade_id = 4; // TradeID
+  optional uint32 price = 5; // Price
+  optional uint32 volume = 6; // Volume
+
+  enum TradeCond1 {
+    REGULAR_SALE1 = 64; // '@'
+    CASH = 67; // 'C'
+    NEXT_DAY_TRADE = 78; // 'N'
+    SELLER = 82; // 'R'
+  }
+
+  optional TradeCond1 trade_cond1 = 7; // TradeCond1
+
+  enum TradeCond2 {
+    NA2 = 32; // '0x20' N/A
+    INTERMARKET_SWEEP_ORDER = 70; // 'F'
+    MARKET_CENTER_OPENING_TRADE = 79; // 'I'
+    DERIVATELY_PRICED = 52; // '4'
+    MARKET_CENTER_REOPENING_TRADE = 53; // '5'
+    MARKET_CENTER_CLOSING_TRADE = 54; // '6'
+  }
+
+  optional TradeCond2 trade_cond2 = 8; // TradeCond2
+
+  enum TradeCond3 {
+    NA3 = 32; // '0x20' N/A
+    SOLD_LAST = 76; // 'L'
+    EXTENDED_HOURS_TRADE = 84; // 'T'
+    EXTENDED_HOURS_SOLD = 85; // 'U'
+    SOLD = 90; // 'Z'
+  }
+
+  optional TradeCond3 trade_cond3 = 9; // TradeCond3
+
+  enum TradeCond4 {
+    REGULAR_SALE4 = 64; // '@'
+    NA4 = 32; // '0x20' N/A
+    AVERAGE_PRICE_TRADE = 66; // 'B'
+    AUTOMATIC_EXECUTION = 69; // 'E'
+    PRICE_VARIATION_TRADE = 72; // 'H'
+    CAP_ELECTION_TRADE = 73; // 'I'
+    RULE_127_OR_155 = 75; // 'K'
+    OFFICIAL_CLOSING_PRICE = 77; // 'M'
+    PRIOR_REFERENCE_PRICE = 80; // 'P'
+    OFFICIAL_OPEN_PRICE = 81; // 'Q'
+    STOCK_OPTION_TRADE = 86; // 'V'
+    CROSS_TRADE = 88; // 'X'
+  }
+
+  optional TradeCond4 trade_cond4 = 10; // TradeCond4
+
+  enum TradeThroughExempt {
+    TRADE_THROUGH_EXEMPT_611 = 88; // 'X'
+    NA5 = 32; // '0x20' N/A
+  }
+
+  optional TradeThroughExempt trade_through_exempt = 11; // TradeThroughExempt
+
+  enum LiquidityIndicatorFlag {
+    BUY_SIDE = 1;
+    SELL_SIDE = 2;
+    NO_LIQUIDITY_ADDED = 3;
+  }
+
+  optional LiquidityIndicatorFlag liquidity_indicator_flag = 12; // LiquidityIndicatorFlag
+
+  optional uint32 ask_price = 13; // AskPrice
+  optional uint32 ask_volume = 14; // AskVolume
+  optional uint32 bid_price = 15; // BidPrice
+  optional uint32 bid_volume = 16; // BidVolume
+}
