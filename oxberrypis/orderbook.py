@@ -31,9 +31,28 @@ class Order(object):
             self.limit.tail_order = self.prev_elem
             self.prev_elem.next_elem = None
         else:
-            # we are in the morderIddle so
+            # we are in the middle so
             self.prev_elem.next_elem = self.prev_elem
             self.next_elem.prev_elem = self.next_elem
+
+    def to_back(self):
+        """ send ourselvess to the back"""
+        # if we are not at the back
+        if self.next_elem is not None:
+            # we must remove ourselves
+            if self.prev_elem is None:
+                # (we must be at the head of the queue but not at back so change the head and 
+                # the next elem
+                self.limit.head_order = self.next_elem
+                self.next_elem.prev_elem = None
+                
+            else:
+                # we are in the middle so just remove ourselves
+                self.prev_elem.next_elem = self.prev_elem
+                self.next_elem.prev_elem = self.next_elem
+                # now places ourselves at the back
+            self.next_elem = None
+            self.prev_elem = self.limit.tail_order  
 
 class Limit(object):
     """Represents a limit price."""
@@ -65,6 +84,8 @@ class Limit(object):
 
     def add(self, order_id, price, amount):
         """Add an order at the tail."""
+        if self.head_order is not None:
+            print("head at {} is {}".format(self.price,self.head_order.order_id))
         x = self.tail_order
         o = Order(order_id, amount, self, None, x)
         if x is None:
@@ -116,15 +137,19 @@ class LimitBook(object):
 
         """
         if order_id in self.buy_orders:
-            self.buy_orders[order_id].shares = new_quantity
-
-        elif order_id in self.buy_orders:
-            self.sell_orders[order_id].shares = new_quantity
+            order = self.buy_orders[order_id]
+        elif order_id in self.sell_orders:
+            order = self.sell_orders[order_id]
         else:
             raise OxBerryPisException('No Such Order: {}'.format(order_id))
 
+        if(order.shares < new_quantity):
+            order.to_back()
+        order.shares = new_quantity
+        
+            
     def get_sell_head_order(self):
-        """Gets first sell order."""
+        """Gets first sell order"""
         limit = self.sell_front.next_elem
         if limit is None:
             raise OxBerryPisException('No Sell Orders')
@@ -134,10 +159,12 @@ class LimitBook(object):
     def get_buy_head_order(self):
         """Gets first buy order."""
         limit = self.buy_front.next_elem
+
         if limit is None:
             raise OxBerryPisException('No Buy Orders')
         else:
             return limit.head_order
+
 
     def remove_order(self, order_id):
         """Remove an order.
@@ -146,10 +173,12 @@ class LimitBook(object):
         tell which type it is).
 
         """
+        print("removing: {}".format(order_id))
+        print("buy: {}, sell: {}".format(self.buy_orders,self.sell_orders))
         if order_id in self.buy_orders:
             self.buy_orders[order_id].remove()
             del self.buy_orders[order_id]
-        elif order_id in self.buy_orders:
+        elif order_id in self.sell_orders:
             self.sell_orders[order_id].remove()
             del self.sell_orders[order_id]
         else:
@@ -157,6 +186,7 @@ class LimitBook(object):
 
     def add_order(self, limits, front, orders, price, amount, order_id):
         """Add an order (paramterised by specifics)."""
+        print(limits)
         if price in limits:
             # if the limit exists get it from the map
             limit = limits[price]
@@ -164,12 +194,14 @@ class LimitBook(object):
             # otherwise find a postion and create a new limit
             a = self.search_list_from(front, price)
             limit = Limit(price, self, None, None, a.next_elem, a)
+            limits[price] = limit
             a.next_elem = limit
             if limit.next_elem is not None:
                 limit.next_elem.prev_elem = limit
 
         o = limit.add(order_id, price, amount)
         orders[order_id] = o
+        print ("added :{}, orders: {}".format(order_id,orders))
 
     def search_list_from(self, x, price):
         """Simple search."""
