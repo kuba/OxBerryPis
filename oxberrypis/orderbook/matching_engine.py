@@ -2,7 +2,7 @@
 
 Created on Apr 28, 2013
 
-.. codeauhtor:: Hynek Jemelik
+.. codeauthor:: Hynek Jemelik
 
 """
 from ..errors import OxBerryPisException
