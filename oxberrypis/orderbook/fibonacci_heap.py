@@ -1,8 +1,9 @@
-"""Fibonacci Heap
+"""Fibonacci Heap implementation.
 
-   Fibonacci heaps are especially desirable when the number of
-   extract_min() and delete() operations is small relative to the
-   number of other operations performed.
+Fibonacci heaps are especially desirable when the number of
+`extract_min` and `delete` operations is small relative to the
+number of other operations performed.
+
 """
 
 
@@ -24,7 +25,7 @@ class FibonacciHeapNode:
         self.left = self
         self.right = self
         self.mark = False
-        
+
 def make_heap():
     return FibonacciHeap()
 
@@ -120,7 +121,7 @@ def __add_list(y, x):
     z.right = x
     x.left = z
 
-        
+
 
 def __union(H1, H2):
     H = FibonacciHeap()
@@ -182,7 +183,7 @@ def __consolidate(H):
                     H.min = x
 
 def __print_node_info(x):
-    
+
     print """
     --- node info ---
     key = %.1f

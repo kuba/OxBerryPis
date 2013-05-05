@@ -1,12 +1,14 @@
-'''
+"""Order book matching engine.
+
 Created on Apr 28, 2013
 
-@author: hynek
-'''
+.. codeauhtor:: Hynek Jemelik
 
+"""
 from ..errors import OxBerryPisException
 from .book import OrderBook
 from .order import Order
+
 
 class MatchingEngine:
     def __init__(self):
@@ -43,7 +45,7 @@ class MatchingEngine:
                 self.remove_order(order.id)
             else:
                 self.execute_orders(order)
-            
+
     def can_trade(self, o1, o2):
         if o1 is None or o2 is None:
             return False
@@ -55,7 +57,7 @@ class MatchingEngine:
                 buy = o1
                 sell = o2
             return sell.price <= buy.price
-    
+
     def get_book(self, order):
         if order.type == "sell":
             return self.supply
@@ -64,7 +66,7 @@ class MatchingEngine:
         else:
             msg = 'Order type {} not recognized.'.format(order.type)
             raise OxBerryPisException(msg)
-    
+
     def get_opposite(self, order):
         if order.type == "sell":
             return self.demand
@@ -73,7 +75,7 @@ class MatchingEngine:
         else:
             msg = 'Order type {} not recognized.'.format(order.type)
             raise OxBerryPisException(msg)
-    
+
 def test():
     s = MatchingEngine()
     s.add_order(1, 10, 7000, "buy")
@@ -115,7 +117,7 @@ def test():
     s.add_order(12, 8, 3000, "sell")
     # Trading 3000 shares at price 10.
     # 13: +6000, 10: -3000
-    
+
 if __name__ == '__main__':
     test()
-        
+

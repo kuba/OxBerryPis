@@ -1,5 +1,4 @@
 """Order book implementation."""
-
 from ..errors import OxBerryPisException
 
 

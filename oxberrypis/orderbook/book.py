@@ -1,12 +1,14 @@
-'''
+"""Order book implementation.
+
 Created on Apr 28, 2013
 
-@author: hynek
-'''
+.. codeauthor:: Hynek Jemelik
 
+"""
 from ..errors import OxBerryPisException
 import .fibonacci_heap
 from .linked_list import LinkedList
+
 
 class OrderBook:
     def __init__(self):
@@ -27,7 +29,7 @@ class OrderBook:
                 return self.get_best()
             else:
                 return limitbook.get_first_value()
-    
+
     def add_order(self, order):
         if order.id in self.orders:
             msg = 'Order {} already exists.'.format(order.id)
@@ -41,7 +43,7 @@ class OrderBook:
             limitbook = self.limitbooks[order.price].data
         order_node = limitbook.append_value(order)
         self.orders[order.id] = order_node
-    
+
     def remove_order(self, order_id):
         if order_id not in self.orders:
             return
@@ -52,7 +54,7 @@ class OrderBook:
         # We might at this point remove limitbook if it is empty,
         # but it might be better for performance reasons to keep it there.
         del self.orders[order_id]
-    
+
     def update_order(self, updated_order):
         if updated_order.id not in self.orders:
             msg = 'Cannot update non-existing order {}.'.format(updated_order.id)
@@ -74,5 +76,5 @@ class OrderBook:
             # Changing price is equivalent to removing and adding again
             self.remove_order(order.id)
             self.add_order(updated_order)
-        
-            
+
+
