@@ -4,16 +4,16 @@ Created on Apr 28, 2013
 @author: hynek
 '''
 
-from errors import OxBerryPisException
-import fibonacci_heap
-from linked_list import LinkedList
+from ..errors import OxBerryPisException
+import .fibonacci_heap
+from .linked_list import LinkedList
 
 class OrderBook:
     def __init__(self):
         self.orders = {}
         self.limitbooks = {}
         self.book = fibonacci_heap.make_heap()
-    
+
     def get_best(self):
         if fibonacci_heap.is_empty(self.book):
             return None

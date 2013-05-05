@@ -1,6 +1,6 @@
 """Order book implementation."""
 
-from oxberrypis.errors import OxBerryPisException
+from ..errors import OxBerryPisException
 
 
 class Order(object):

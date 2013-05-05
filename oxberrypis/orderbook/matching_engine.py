@@ -4,31 +4,31 @@ Created on Apr 28, 2013
 @author: hynek
 '''
 
-from errors import OxBerryPisException
-from order_book import OrderBook
-from order import Order
+from ..errors import OxBerryPisException
+from .book import OrderBook
+from .order import Order
 
 class MatchingEngine:
     def __init__(self):
         self.supply = OrderBook()
         self.demand = OrderBook()
-    
+
     def add_order(self, order_id, limit_price, num_shares, order_type):
         order = Order(order_id, limit_price, num_shares, order_type)
         book = self.get_book(order)
         book.add_order(order)
         self.execute_orders(order)
-    
+
     def remove_order(self, order_id):
         self.supply.remove_order(order_id)
         self.demand.remove_order(order_id)
-        
+
     def update_order(self, order_id, limit_price, num_shares, order_type):
         updated_order = Order(order_id, limit_price, num_shares, order_type)
         book = self.get_book(updated_order)
         book.update_order(updated_order)
         self.execute_orders(updated_order)
-    
+
     def execute_orders(self, order):
         opposite = self.get_opposite(order)
         best = opposite.get_best()
