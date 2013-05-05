@@ -1,5 +1,5 @@
 // Protocol Buffers proto file for NYSE stock messages
-package oxberrypis.net.stock;
+package oxberrypis.net.proto.stock;
 
 
 message OBAdd {
