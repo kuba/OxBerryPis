@@ -5,7 +5,7 @@ Created on Apr 28, 2013
 .. codeauthor:: Hynek Jemelik
 
 """
-from ..errors import OxBerryPisException
+from ..errors import OrderBookError
 
 from .fibonacci_heap import FibonacciHeap
 from .fibonacci_heap import FibonacciHeapNode
@@ -36,7 +36,7 @@ class OrderBook:
     def add_order(self, order):
         if order.id in self.orders:
             msg = 'Order {} already exists.'.format(order.id)
-            raise OxBerryPisException(msg)
+            raise OrderBookError(msg)
         if order.price not in self.limitbooks:
             limitbook = LinkedList()
             limitbook_node = FibonacciHeapNode(order.key(), limitbook)
@@ -61,7 +61,7 @@ class OrderBook:
     def update_order(self, updated_order):
         if updated_order.id not in self.orders:
             msg = 'Cannot update non-existing order {}.'.format(updated_order.id)
-            raise OxBerryPisException(msg)
+            raise OrderBookError(msg)
         order_node = self.orders[updated_order.id]
         order = order_node.data
         if updated_order.price == order.price:

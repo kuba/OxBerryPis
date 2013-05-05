@@ -5,7 +5,7 @@ Created on Apr 28, 2013
 .. codeauthor:: Hynek Jemelik
 
 """
-from ..errors import OxBerryPisException
+from ..errors import OrderBookError
 from .book import OrderBook
 from .order import Order
 
@@ -70,7 +70,7 @@ class MatchingEngine(object):
             return self.demand
         else:
             msg = 'Order type {} not recognized.'.format(order.type)
-            raise OxBerryPisException(msg)
+            raise OrderBookError(msg)
 
     def get_opposite(self, order):
         if order.type == "sell":
@@ -79,4 +79,4 @@ class MatchingEngine(object):
             return self.supply
         else:
             msg = 'Order type {} not recognized.'.format(order.type)
-            raise OxBerryPisException(msg)
+            raise OrderBookError(msg)
