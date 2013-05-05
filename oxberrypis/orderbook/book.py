@@ -6,7 +6,10 @@ Created on Apr 28, 2013
 
 """
 from ..errors import OxBerryPisException
-import fibonacci_heap
+
+from .fibonacci_heap import FibonacciHeap
+from .fibonacci_heap import FibonacciHeapNode
+
 from .linked_list import LinkedList
 
 
@@ -14,17 +17,17 @@ class OrderBook:
     def __init__(self):
         self.orders = {}
         self.limitbooks = {}
-        self.book = fibonacci_heap.make_heap()
+        self.book = FibonacciHeap()
 
     def get_best(self):
-        if fibonacci_heap.is_empty(self.book):
+        if self.book.is_empty():
             return None
         else:
-            limitbook_node = fibonacci_heap.minimum(self.book)
+            limitbook_node = self.book.minimum
             limitbook = limitbook_node.data
             if limitbook.is_empty():
                 # Removing empty limitbook'
-                fibonacci_heap.extract(self.book)
+                self.book.extract()
                 del self.limitbooks[abs(limitbook_node.key)]
                 return self.get_best()
             else:
@@ -36,8 +39,8 @@ class OrderBook:
             raise OxBerryPisException(msg)
         if order.price not in self.limitbooks:
             limitbook = LinkedList()
-            limitbook_node = fibonacci_heap.make_node(order.key(), limitbook)
-            fibonacci_heap.insert(self.book, limitbook_node)
+            limitbook_node = FibonacciHeapNode(order.key(), limitbook)
+            self.book.insert(limitbook_node)
             self.limitbooks[order.price] = limitbook_node
         else:
             limitbook = self.limitbooks[order.price].data
@@ -76,5 +79,3 @@ class OrderBook:
             # Changing price is equivalent to removing and adding again
             self.remove_order(order.id)
             self.add_order(updated_order)
-
-

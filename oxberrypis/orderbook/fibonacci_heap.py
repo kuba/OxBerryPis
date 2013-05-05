@@ -7,12 +7,8 @@ number of other operations performed.
 """
 
 
-class FibonacciHeap:
-    def __init__(self):
-        self.min = None
-        self.n = 0
-
-class FibonacciHeapNode:
+class FibonacciHeapNode(object):
+    """Fibonacci heap node."""
     def __init__(self, key, data):
         self.key = key
         self.data = data
@@ -26,190 +22,186 @@ class FibonacciHeapNode:
         self.right = self
         self.mark = False
 
-def make_heap():
-    return FibonacciHeap()
+class FibonacciHeap(object):
+    """Fibonacci heap."""
 
-def make_node(k, d):
-    return FibonacciHeapNode(k, d)
+    def __init__(self):
+        self.minimum = None
+        self.n = 0
 
-def minimum(H):
-    return H.min
+    def is_empty(self):
+        """Check if the heap is empty."""
+        return self.n == 0
 
-def is_empty(H):
-    return H.n == 0
+    def insert(self, node):
+        """Insert a node into the heap."""
+        node.refresh()
 
-def insert(H, x):
-    x.refresh()
-    if H.min == None:
-        H.min = x
-    else:
-        w = H.min.left
-        y = H.min
-        x.left = w
-        x.right = y
-        w.right = x
-        y.left = x
-        if x.key < H.min.key:
-            H.min = x
-    H.n = H.n + 1
+        if self.minimum is None:
+            self.minimum = node
+        else:
+            w = self.minimum.left
+            y = self.minimum
+            node.left = w
+            node.right = y
+            w.right = node
+            y.left = node
+            if node.key < self.minimum.key:
+                self.minimum = node
 
-def extract(H):
-    x = H.min
-    if x != None:
-        if x.child != None:
-            __add_list(x.child, x)
+        self.n = self.n + 1
+
+    def extract(self):
+        """Extract minimum node from the heap."""
+        node = self.minimum
+        if node is not None:
+            if node.child is not None:
+                self._add_list(node.child, node)
+            node.left.right = node.right
+            node.right.left = node.left
+            if node == node.right:
+                self.minimum = None
+            else:
+                self.minimum = node.right
+                self._consolidate()
+            self.n = self.n - 1
+            node.refresh()
+        return node
+
+    def decrease_key(self, node, new_key):
+        """Decrease node's key."""
+        assert(new_key <= node.key)
+        if new_key == node.key:
+            return
+        node.key = new_key
+        y = node.parent
+        if y is not None and node.key < y.key:
+            __cut(self, node, y)
+            __cascading_cut(self, y)
+        if node.key < self.minimum.key:
+            self.minimum = node
+
+    def _cut(self, x, y):
+        # remove x from the child list of y, decrementing y.degree.
         x.left.right = x.right
         x.right.left = x.left
+        y.degree = y.degree - 1
+        y.child = x.right
         if x == x.right:
-            H.min = None
-        else:
-            H.min = x.right
-            __consolidate(H)
-        H.n = H.n - 1
-        x.refresh()
-    return x
+            y.child = None
+        # add x to the root list of self
+        x.parent = None
+        x.mark = False
+        x.left = self.minimum.left
+        x.right = self.minimum
+        x.left.right = x
+        x.right.left = x
+        #self._add_list(x, self.minimum)
 
-def decrease_key(H, x, k):
-    assert(k <= x.key)
-    if k == x.key:
-        return
-    x.key = k
-    y = x.parent
-    if y != None and x.key < y.key:
-        __cut(H, x, y)
-        __cascading_cut(H, y)
-    if x.key < H.min.key:
-        H.min = x
+    def _cascading_cut(self, y):
+        z = y.parent
+        if z is not None:
+            if y.mark == False:
+                y.mark = True
+            else:
+                self._cut(y, z)
+                self._cascading_cut(z)
 
-def __cut(H, x, y):
-    # remove x from the child list of y, decrementing y.degree.
-    x.left.right = x.right
-    x.right.left = x.left
-    y.degree = y.degree - 1
-    y.child = x.right
-    if x == x.right:
-        y.child = None
-    # add x to the root list of H
-    x.parent = None
-    x.mark = False
-    x.left = H.min.left
-    x.right = H.min
-    x.left.right = x
-    x.right.left = x
-    #__add_list(x, H.min)
-
-def __cascading_cut(H, y):
-    z = y.parent
-    if z != None:
-        if y.mark == False:
-            y.mark = True
-        else:
-            __cut(H, y, z)
-            __cascading_cut(H, z)
-
-def __add_list(y, x):
-    """Add list y to x."""
-    if y == None or x == None:
-        return
-    z = y
-    while z.right != y:
+    def _add_list(self, y, x):
+        """Add list y to x."""
+        if y is None or x is None:
+            return
+        z = y
+        while z.right != y:
+            z.parent = x.parent
+            z = z.right
         z.parent = x.parent
-        z = z.right
-    z.parent = x.parent
-    y.left = x.left
-    x.left.right = y
-    z.right = x
-    x.left = z
+        y.left = x.left
+        x.left.right = y
+        z.right = x
+        x.left = z
 
+    def _union(self, H2):
+        H = FibonacciHeap()
+        if self.minimum is not None and H2.minimum is None:
+            H.minimum = self.minimum
+            H.n = self.n
+        elif self.minimum is None and H2.minimum is not None:
+            H.minimum = H2.minimum
+            H.n = H2.n
+        elif self.minimum is not None and H2.minimum is not None:
+            __add_list(H2.minimum, self.minimum)
+            if self.minimum.key <= H2.minimum.key:
+                H.minimum = self.minimum
+            else:
+                H.minimum = H2.minimum
+            H.n = self.n + H2.n
+        return H
 
+    def __add__(self, other):
+        return self._union(other)
 
-def __union(H1, H2):
-    H = FibonacciHeap()
-    if H1.min != None and H2.min == None:
-        H.min = H1.min
-        H.n = H1.n
-    elif H1.min == None and H2.min != None:
-        H.min = H2.min
-        H.n = H2.n
-    elif H1.min != None and H2.min != None:
-        __add_list(H2.min, H1.min)
-        if H1.min.key <= H2.min.key:
-            H.min = H1.min
-        else:
-            H.min = H2.min
-        H.n = H1.n + H2.n
-    return H
+    def _torange(self, a, b, step=1):
+        return xrange(a, b+1, step)
 
-def __torange(a, b, step=1):
-    return xrange(a, b+1, step)
-
-def __consolidate(H):
-    max_degree = __max_degree(H.n)
-    A = []
-    for i in __torange(0, max_degree):
-        A.append(None)
-    root_list = []
-    x = H.min
-    x.left.right = None
-    while x != None:
-        next_x = x.right
-        x.left = x
-        x.right = x
-        root_list.append(x)
-        x = next_x
-    for x in root_list:
-        #__print_node_info(x)
-        d = x.degree
-        #print "index=", d, "max_degree=", max_degree, "H.n=",H.n
-        while A[d] != None:
-            y = A[d]
-            if y.key < x.key:
-                x,y = y,x
-            __link(y, x)
-            A[d] = None
-            d = d + 1
-        A[d] = x
-    H.min = None
-    for x in A:
-        if x != None:
+    def _consolidate(self):
+        max_degree = self._max_degree(self.n)
+        A = []
+        for i in self._torange(0, max_degree):
+            A.append(None)
+        root_list = []
+        x = self.minimum
+        x.left.right = None
+        while x is not None:
+            next_x = x.right
             x.left = x
             x.right = x
-            x.parent = None
-            if H.min == None:
-                H.min = x
-            else:
-                __add_list(x, H.min)
-                if x.key < H.min.key:
-                    H.min = x
+            root_list.append(x)
+            x = next_x
+        for x in root_list:
+            d = x.degree
+            #print "index=", d, "max_degree=", max_degree, "self.n=",self.n
+            while A[d] is not None:
+                y = A[d]
+                if y.key < x.key:
+                    x,y = y,x
+                self._link(y, x)
+                A[d] = None
+                d = d + 1
+            A[d] = x
+        self.minimum = None
+        for x in A:
+            if x is not None:
+                x.left = x
+                x.right = x
+                x.parent = None
+                if self.minimum is None:
+                    self.minimum = x
+                else:
+                    self._add_list(x, self.minimum)
+                    if x.key < self.minimum.key:
+                        self.minimum = x
 
-def __print_node_info(x):
+    def _max_degree(self, n):
+        """floor(lg(n))"""
+        lg = 0
+        while n/2 > 0:
+            lg = lg + 1
+            n = n / 2
+        return lg
 
-    print """
-    --- node info ---
-    key = %.1f
-    """ % (x.key)
-
-
-def __max_degree(n):
-    """floor(lg(n))"""
-    lg = 0
-    while n/2 > 0:
-        lg = lg + 1
-        n = n / 2
-    return lg
-
-def __link(y, x):
-    y.left.right = y.right
-    y.right.left = y.left
-    y.parent = x
-    if x.child != None:
-        x.child.left.right = y
-        y.left = x.child.left
-        y.right = x.child
-        x.child.left = y
-    else:
-        x.child = y
-        y.left = y
-        y.right = y
-    x.degree = x.degree + 1
-    y.mark = False
+    def _link(self, y, x):
+        y.left.right = y.right
+        y.right.left = y.left
+        y.parent = x
+        if x.child is not None:
+            x.child.left.right = y
+            y.left = x.child.left
+            y.right = x.child
+            x.child.left = y
+        else:
+            x.child = y
+            y.left = y
+            y.right = y
+        x.degree = x.degree + 1
+        y.mark = False
