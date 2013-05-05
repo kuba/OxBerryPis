@@ -6,7 +6,7 @@ Created on Apr 28, 2013
 
 """
 from ..errors import OxBerryPisException
-import .fibonacci_heap
+import fibonacci_heap
 from .linked_list import LinkedList
 
 
