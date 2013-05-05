@@ -7,7 +7,7 @@ Created on Apr 28, 2013
 """
 
 
-class Order:
+class Order(object):
     def __init__(self, order_id, limit_price, num_shares, order_type):
         self.id = order_id
         self.price = limit_price

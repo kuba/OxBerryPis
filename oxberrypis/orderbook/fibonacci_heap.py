@@ -22,6 +22,7 @@ class FibonacciHeapNode(object):
         self.right = self
         self.mark = False
 
+
 class FibonacciHeap(object):
     """Fibonacci heap."""
 

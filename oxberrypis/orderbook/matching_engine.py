@@ -9,6 +9,7 @@ from ..errors import OrderBookError
 from .book import OrderBook
 from .order import Order
 
+
 class PrintingMatchingEngineCallback(object):
     def trade(self, num_shares, price):
         print 'Trading {} shares at price {}.'.format(num_shares, price)

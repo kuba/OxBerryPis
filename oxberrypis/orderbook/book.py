@@ -13,7 +13,9 @@ from .fibonacci_heap import FibonacciHeapNode
 from .linked_list import LinkedList
 
 
-class OrderBook:
+class OrderBook(object):
+    """Order book."""
+
     def __init__(self):
         self.orders = {}
         self.limitbooks = {}
@@ -26,7 +28,7 @@ class OrderBook:
             limitbook_node = self.book.minimum
             limitbook = limitbook_node.data
             if limitbook.is_empty():
-                # Removing empty limitbook'
+                # Removing empty limitbook
                 self.book.extract()
                 del self.limitbooks[abs(limitbook_node.key)]
                 return self.get_best()

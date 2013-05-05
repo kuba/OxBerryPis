@@ -7,13 +7,14 @@ Created on Apr 28, 2013
 """
 
 
-class LinkedListNode:
+class LinkedListNode(object):
     def __init__(self, data):
         self.prev = None
         self.next = None
         self.data = data
 
-class LinkedList:
+
+class LinkedList(object):
     def __init__(self):
         self.first = None
         self.last = None
@@ -57,6 +58,3 @@ class LinkedList:
         node = self.first
         self.remove_node(node)
         return node.data
-
-
-
