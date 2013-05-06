@@ -9,6 +9,7 @@ number of other operations performed.
 
 class FibonacciHeapNode(object):
     """Fibonacci heap node."""
+
     def __init__(self, key, data):
         self.key = key
         self.data = data
@@ -33,13 +34,13 @@ class FibonacciHeap(object):
     def is_empty(self):
         """Check if the heap is empty."""
         return self.n == 0
-    
+
     def insert(self, key, data):
         """Insert a pair of key and data into the heap."""
         node = FibonacciHeapNode(key, data)
         self._insert_node(node)
         return node
-    
+
     def front(self):
         """Returns minimum node from the heap."""
         return self.minimum
@@ -73,7 +74,7 @@ class FibonacciHeap(object):
             self._cascading_cut(self, y)
         if node.key < self.minimum.key:
             self.minimum = node
-    
+
     def _insert_node(self, node):
         node.refresh()
 
