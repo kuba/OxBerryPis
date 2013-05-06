@@ -5,26 +5,29 @@ Created on Apr 28, 2013
 .. codeauthor:: Hynek Jemelik
 
 """
-
 from ..errors import OrderBookError
 
+from .fibonacci_heap import FibonacciHeap
+from .linked_list import LinkedList
+
+
 class OrderBook(object):
+    """Order book.
+
+    Keeps order in either demand or supply for single stock.
+
     """
-        Keeps order in either demand or supply for single stock.
-    """
-    def create_book_structure(self):
-        from .fibonacci_heap import FibonacciHeap
-        return FibonacciHeap()
-    
-    def create_limit_book_structure(self):
-        from .linked_list import LinkedList
-        return LinkedList()
-    
     def __init__(self):
         self.orders = {}
         self.limitbooks = {}
         self.book = self.create_book_structure()
-    
+
+    def create_book_structure(self):
+        return FibonacciHeap()
+
+    def create_limit_book_structure(self):
+        return LinkedList()
+
     def get_best(self):
         if self.book.is_empty():
             return None
@@ -38,7 +41,7 @@ class OrderBook(object):
                 return self.get_best()
             else:
                 return limitbook.front()
-      
+
     def add_order(self, order):
         if order.id in self.orders:
             msg = 'Order {} already exists.'.format(order.id)
