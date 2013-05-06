@@ -41,7 +41,10 @@ class MatchingEngine(object):
         book = self.get_book(updated_order)
         book.update_order(updated_order)
         self.execute_orders(updated_order)
-
+    
+    def get_best_orders(self):
+        return (self.supply.get_best(), self.demand.get_best())
+    
     def execute_orders(self, order):
         opposite = self.get_opposite(order)
         best = opposite.get_best()
