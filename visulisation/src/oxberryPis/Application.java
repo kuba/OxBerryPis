@@ -17,7 +17,7 @@ public class Application extends JFrame{
 	JTextField priceField;
 	JSplitPane p;
 	DefaultListModel keyListModel;
-//	Queue<Protbuf.StockEvent> q1;
+//	Queue<VisProt.StockEvent> q1;
 	private static final long serialVersionUID = 1L;
 	public Application() {
 		data = new HashMap<String,Integer>();
@@ -33,19 +33,18 @@ public class Application extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		p = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,keyList, priceField);
 		add(p);
-		pack();
 		this.setVisible(true);
 		this.setLocation(200, 200);
 		this.setSize(600,200);
-		Protbuf.StockEvent k = Protbuf.StockEvent.newBuilder().setStockId(1234).setTimestamp(3).setPiId(1).setIsEnd(false).setTradePrice(new Integer(2)).build();
+		VisProt.StockEvent k = VisProt.StockEvent.newBuilder().setStockId(1234).setTimestamp(3).setSeqNumber(1).setPiId(1).setTradePrice(new Integer(2)).build();
 		useMessage(k);
-		Protbuf.StockEvent p = Protbuf.StockEvent.newBuilder().setStockId(1234).setTimestamp(3).setPiId(1).setIsEnd(false).setTradePrice(new Integer(9)).build();
+		VisProt.StockEvent p = VisProt.StockEvent.newBuilder().setStockId(1234).setTimestamp(3).setSeqNumber(3).setPiId(1).setTradePrice(new Integer(9)).build();
 		useMessage(p);
-		Protbuf.StockEvent a = Protbuf.StockEvent.newBuilder().setStockId(1).setTimestamp(3).setPiId(1).setIsEnd(false).setTradePrice(new Integer(3)).build();
+		VisProt.StockEvent a = VisProt.StockEvent.newBuilder().setStockId(1).setTimestamp(3).setSeqNumber(1).setPiId(1).setTradePrice(new Integer(3)).build();
 		useMessage(a);
 	}
 	
-	public void useMessage(Protbuf.StockEvent message) {
+	public void useMessage(VisProt.StockEvent message) {
 		// TODO: Map id to name, instead of just using ID as here.
 		String name = ""+message.getStockId(); Integer price = message.getTradePrice();
 		data.put(name, price);
@@ -57,7 +56,7 @@ public class Application extends JFrame{
 	}
 		
 	// Returns earliest StockEvent from sequence of queues. Returns null if all queues are empty
-	public Protbuf.StockEvent chooseEarliest(Queue<Protbuf.StockEvent>[] seq) {
+	public VisProt.StockEvent chooseEarliest(Queue<VisProt.StockEvent>[] seq) {
 		int n = seq.length; int j = 0;
 		for(int i = 0; i<n; i++) {if(!seq[i].isEmpty()) {j = Math.min(j, seq[i].peek().getTimestamp());}}
 		return seq[j].poll();
