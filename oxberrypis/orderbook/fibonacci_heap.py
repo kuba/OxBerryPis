@@ -33,24 +33,16 @@ class FibonacciHeap(object):
     def is_empty(self):
         """Check if the heap is empty."""
         return self.n == 0
-
-    def insert(self, node):
-        """Insert a node into the heap."""
-        node.refresh()
-
-        if self.minimum is None:
-            self.minimum = node
-        else:
-            w = self.minimum.left
-            y = self.minimum
-            node.left = w
-            node.right = y
-            w.right = node
-            y.left = node
-            if node.key < self.minimum.key:
-                self.minimum = node
-
-        self.n = self.n + 1
+    
+    def insert(self, key, data):
+        """Insert a pair of key and data into the heap."""
+        node = FibonacciHeapNode(key, data)
+        self._insert_node(node)
+        return node
+    
+    def front(self):
+        """Returns minimum node from the heap."""
+        return self.minimum
 
     def extract(self):
         """Extract minimum node from the heap."""
@@ -81,6 +73,23 @@ class FibonacciHeap(object):
             self._cascading_cut(self, y)
         if node.key < self.minimum.key:
             self.minimum = node
+    
+    def _insert_node(self, node):
+        node.refresh()
+
+        if self.minimum is None:
+            self.minimum = node
+        else:
+            w = self.minimum.left
+            y = self.minimum
+            node.left = w
+            node.right = y
+            w.right = node
+            y.left = node
+            if node.key < self.minimum.key:
+                self.minimum = node
+
+        self.n = self.n + 1
 
     def _cut(self, x, y):
         # remove x from the child list of y, decrementing y.degree.

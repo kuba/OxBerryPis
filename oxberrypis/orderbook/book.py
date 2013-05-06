@@ -29,10 +29,10 @@ class OrderBook(object):
         if self.book.is_empty():
             return None
         else:
-            limitbook_node = self.book.minimum()
+            limitbook_node = self.book.front()
             limitbook = limitbook_node.data
             if limitbook.is_empty():
-                # Removing empty limitbook'
+                # Removing empty limit book
                 self.book.extract()
                 del self.limitbooks[abs(limitbook_node.key)]
                 return self.get_best()
@@ -48,8 +48,8 @@ class OrderBook(object):
             limitbook_node = self.book.insert(order.key(), limitbook)
             self.limitbooks[order.price] = limitbook_node
         else:
-            pricelevel = self.pricelevels[order.price].data
-        order_node = pricelevel.add(order)
+            limitbook = self.limitbooks[order.price].data
+        order_node = limitbook.add(order)
         self.orders[order.id] = order_node
 
     def remove_order(self, order_id):
@@ -57,9 +57,9 @@ class OrderBook(object):
             return
         order_node = self.orders[order_id]
         price = order_node.data.price
-        pricelevel = self.pricelevels[price].data
-        pricelevel.remove(order_node)
-        # We might at this point remove pricelevel if it is empty,
+        limitbook = self.limitbooks[price].data
+        limitbook.remove(order_node)
+        # We might at this point remove limit book if it is empty,
         # but it might be better for performance reasons to keep it there.
         del self.orders[order_id]
 
@@ -70,15 +70,15 @@ class OrderBook(object):
         order_node = self.orders[updated_order.id]
         order = order_node.data
         if updated_order.price == order.price:
-            # We can do change locally inside pricelevel
+            # We can do change locally inside limit book
             if updated_order.num_shares < order.num_shares:
                 # Order stays at its position in queue
                 order_node.data = updated_order
             else:
                 # Order moves at the end of queue
-                pricelevel = self.pricelevels[order.price].data
-                pricelevel.remove(order_node)
-                updated_order_node = pricelevel.add(updated_order)
+                limitbook = self.limitbooks[order.price].data
+                limitbook.remove(order_node)
+                updated_order_node = limitbook.add(updated_order)
                 self.orders[updated_order.id] = updated_order_node
         else:
             # Changing price is equivalent to removing and adding again

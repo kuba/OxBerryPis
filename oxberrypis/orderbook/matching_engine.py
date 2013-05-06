@@ -16,6 +16,11 @@ class PrintingMatchingEngineCallback(object):
 
 
 class MatchingEngine(object):
+    """
+        Main class for processing each individual stock, it implements
+        rules and logic of stock exchange and maintains orders in correct
+        order. It allows adding, changing, and removing orders.
+    """
     def __init__(self, callback=None):
         self.supply = OrderBook()
         self.demand = OrderBook()
