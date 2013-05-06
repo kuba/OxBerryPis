@@ -11,6 +11,12 @@ class LinkedListNode:
         self.data = data
 
 class LinkedList:
+    """
+        Implementation of double linked list, which is used for keeping orders
+        at one prize. Ii allows adding a data at the end, removing node by
+        pointer, getting and extracting first element, and check for empty. 
+    """
+    
     def __init__(self):
         self.first = None
         self.last = None
@@ -19,22 +25,12 @@ class LinkedList:
     def is_empty(self):
         return self.size <= 0
     
-    def append_node(self, node):
-        prev_node = self.last
-        if prev_node is not None:
-            prev_node.next = node
-        node.prev = prev_node
-        if self.first is None:
-            self.first = node
-        self.last = node
-        self.size += 1
-    
-    def append_value(self, data):
+    def add(self, data):
         node = LinkedListNode(data)
-        self.append_node(node)
+        self.__append_node(node)
         return node
     
-    def remove_node(self, node):
+    def remove(self, node):
         prev_node = node.prev
         next_node = node.next
         if prev_node is not None:
@@ -47,13 +43,20 @@ class LinkedList:
             self.last = prev_node
         self.size -= 1
     
-    def get_first_value(self):
+    def front(self):
         return self.first.data
     
-    def extract_first_value(self):
+    def extract(self):
         node = self.first
-        self.remove_node(node)
+        self.remove(node)
         return node.data
     
-        
-        
+    def __append_node(self, node):
+        prev_node = self.last
+        if prev_node is not None:
+            prev_node.next = node
+        node.prev = prev_node
+        if self.first is None:
+            self.first = node
+        self.last = node
+        self.size += 1

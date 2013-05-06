@@ -1,15 +1,34 @@
-"""Fibonacci Heap
+'''
+Created on Apr 21, 2013
 
-   Fibonacci heaps are especially desirable when the number of
-   extract_min() and delete() operations is small relative to the
-   number of other operations performed.
-"""
-
+@author: hynek
+'''
 
 class FibonacciHeap:
+    """
+        Implementation of fibonacci heap, which is used for keeping price
+        levels of order book. It allows inserting key data pair, getting
+        and extracting first element, and check for empty.
+        Based on 'Examples of Python Code' by Alistair Rendell from
+        Australian National University.
+    """
     def __init__(self):
         self.min = None
         self.n = 0
+    
+    def is_empty(self):
+        return is_empty(self)
+    
+    def minimum(self):
+        return minimum(self)
+    
+    def extract(self):
+        return extract(self)
+    
+    def insert(self, key, data):
+        node = FibonacciHeapNode(key, data)
+        insert(self, node)
+        return node
 
 class FibonacciHeapNode:
     def __init__(self, key, data):
@@ -24,12 +43,6 @@ class FibonacciHeapNode:
         self.left = self
         self.right = self
         self.mark = False
-        
-def make_heap():
-    return FibonacciHeap()
-
-def make_node(k, d):
-    return FibonacciHeapNode(k, d)
 
 def minimum(H):
     return H.min

@@ -5,6 +5,9 @@ Created on Apr 28, 2013
 '''
 
 class Order:
+    """
+        Basic class for each order.
+    """
     def __init__(self, order_id, limit_price, num_shares, order_type):
         self.id = order_id
         self.price = limit_price

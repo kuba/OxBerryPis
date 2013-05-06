@@ -9,6 +9,11 @@ from order_book import OrderBook
 from order import Order
 
 class MatchingEngine:
+    """
+        Main class for processing each individual stock, it implements
+        rules and logic of stock exchange and maintains orders in correct
+        order. It allows adding, changing, and removing orders.
+    """
     def __init__(self):
         self.supply = OrderBook()
         self.demand = OrderBook()
@@ -28,6 +33,9 @@ class MatchingEngine:
         book = self.get_book(updated_order)
         book.update_order(updated_order)
         self.execute_orders(updated_order)
+    
+    def get_best_orders(self):
+        return (self.supply.get_best(), self.demand.get_best())
     
     def execute_orders(self, order):
         opposite = self.get_opposite(order)
