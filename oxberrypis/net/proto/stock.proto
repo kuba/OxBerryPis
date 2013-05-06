@@ -79,6 +79,7 @@ message OBModify {
   optional OrderIDGTCIndicator order_id_gtc_indicator = 8; // OrderIDGTCIndicator
 
   enum ReasonCode {
+    NONE = 0; // Field not yet implemented
     CHANGE = 5; // (lost position in book)
     ROUTED = 6; // (keep position in book)
     FILL = 7; // (keep position in book)
@@ -112,6 +113,7 @@ message OBDelete {
   }
 
   enum ReasonCode {
+    NONE = 0; // Field not yet implemented
     USER_CANCEL = 1;
     MODIFY = 2; // taken off book, Order ID may add again
     DELETE = 3; // Delete Filled
@@ -139,6 +141,7 @@ message OBExecution {
   optional OrderIDGTCIndicator order_id_gtc_indicator = 7; // OrderIDGTCIndicator
 
   enum ReasonCode {
+    NONE = 0; // Field not yet implemented
     FILLED = 3;
     PARTIAL = 7; // Partial Fill (Did not lose position)
   }
