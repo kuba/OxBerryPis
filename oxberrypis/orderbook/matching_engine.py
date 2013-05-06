@@ -56,7 +56,7 @@ class MatchingEngine(object):
         if o1 is None or o2 is None:
             return False
         else:
-            if o1.type == "sell":
+            if o1.type == Order.SELL:
                 sell = o1
                 buy = o2
             else:
@@ -65,18 +65,18 @@ class MatchingEngine(object):
             return sell.price <= buy.price
 
     def get_book(self, order):
-        if order.type == "sell":
+        if order.type == Order.SELL:
             return self.supply
-        elif order.type == "buy":
+        elif order.type == Order.BUY:
             return self.demand
         else:
             msg = 'Order type {} not recognized.'.format(order.type)
             raise OrderBookError(msg)
 
     def get_opposite(self, order):
-        if order.type == "sell":
+        if order.type == Order.SELL:
             return self.demand
-        elif order.type == "buy":
+        elif order.type == Order.BUY:
             return self.supply
         else:
             msg = 'Order type {} not recognized.'.format(order.type)

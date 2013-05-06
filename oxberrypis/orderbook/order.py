@@ -6,8 +6,17 @@ Created on Apr 28, 2013
 
 """
 
+def enum(*sequential, **named):
+    """Create enum type with (optionally) auto increment key."""
+    enums = dict(zip(sequential, range(len(sequential))), **named)
+    return type('Enum', (), enums)
 
 class Order(object):
+
+    types = enum('BUY', 'SELL')
+    BUY = types.BUY
+    SELL = types.SELL
+
     def __init__(self, order_id, limit_price, num_shares, order_type):
         self.id = order_id
         self.price = limit_price
@@ -15,7 +24,7 @@ class Order(object):
         self.type = order_type
 
     def key(self):
-        if self.type == "sell":
+        if self.type == self.SELL:
             return self.price
         else:
             return - self.price
