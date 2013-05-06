@@ -30,6 +30,7 @@ class TestMatchingEngine(unittest.TestCase):
         s.add_order(2, 10, 1000, Order.SELL)
 
         # Trading 1000 shares at price 10.
+        self.assertEqual(len(callback.trades), 1)
         self.assertEqual(callback.trades[-1], (1000, 10))
 
         # 10: -6000
@@ -43,6 +44,7 @@ class TestMatchingEngine(unittest.TestCase):
 
         # Trading 1000 shares at price 11.
         # Trading 6000 shares at price 12.
+        self.assertEqual(len(callback.trades), 3)
         self.assertEqual(callback.trades[-2], (1000, 11))
         self.assertEqual(callback.trades[-1], (6000, 12))
 
@@ -60,6 +62,7 @@ class TestMatchingEngine(unittest.TestCase):
         # Trading 1000 shares at price 12.
         # Trading 3000 shares at price 12.
         # Trading 3000 shares at price 12.
+        self.assertEqual(len(callback.trades), 6)
         self.assertEqual(callback.trades[-3], (1000, 12))
         self.assertEqual(callback.trades[-2], (3000, 12))
         self.assertEqual(callback.trades[-1], (3000, 12))
@@ -68,12 +71,14 @@ class TestMatchingEngine(unittest.TestCase):
         s.add_order(10, 11, 2000, Order.SELL)
 
         # Trading 1000 shares at price 12.
+        self.assertEqual(len(callback.trades), 7)
         self.assertEqual(callback.trades[-1], (1000, 12))
 
         # 13: +6000, 11: +1000, 10: -6000
         s.add_order(11, 11, 3000, Order.BUY)
 
         # Trading 1000 shares at price 11.
+        self.assertEqual(len(callback.trades), 8)
         self.assertEqual(callback.trades[-1], (1000, 11))
 
         # 13: +6000, 11: -2000, 10: -6000
@@ -82,6 +87,7 @@ class TestMatchingEngine(unittest.TestCase):
         s.add_order(12, 8, 3000, Order.SELL)
 
         # Trading 3000 shares at price 10.
+        self.assertEqual(len(callback.trades), 9)
         self.assertEqual(callback.trades[-1], (3000, 10))
 
         # 13: +6000, 10: -3000
