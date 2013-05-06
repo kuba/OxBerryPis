@@ -1,6 +1,27 @@
 // Protocol Buffers proto file for NYSE stock messages
 package oxberrypis.net.proto.stock;
 
+message StockMessage {
+  // Based on https://developers.google.com/protocol-buffers/docs/techniques#union
+
+  enum Type {
+    ADD = 1;
+    MODIFY = 2;
+    DELETE = 3;
+    EXECUTE = 4;
+    TRADE = 5;
+  }
+
+  // Identifies which field is filled in.
+  required Type type = 1;
+
+  // One of the following will be filled in.
+  optional OBAdd add = 2;
+  optional OBModify modify = 3;
+  optional OBDelete delete = 4;
+  optional OBExecution execution = 5;
+  optional Trade trade = 6;
+}
 
 message OBAdd {
   optional uint32 source_time_ns = 1; // SourceTimeNS
