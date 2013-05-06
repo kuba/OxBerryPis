@@ -1,33 +1,35 @@
-'''
+"""Linked lists implementation.
+
 Created on Apr 28, 2013
 
-@author: hynek
-'''
+.. codeauthor:: Hynek Jemelik
 
-class LinkedListNode:
+"""
+
+
+class LinkedListNode(object):
     def __init__(self, data):
         self.prev = None
         self.next = None
         self.data = data
 
-class LinkedList:
+class LinkedList(object):
     """
         Implementation of double linked list, which is used for keeping orders
         at one prize. Ii allows adding a data at the end, removing node by
         pointer, getting and extracting first element, and check for empty. 
     """
-    
     def __init__(self):
         self.first = None
         self.last = None
         self.size = 0
-    
+
     def is_empty(self):
         return self.size <= 0
     
     def add(self, data):
         node = LinkedListNode(data)
-        self.__append_node(node)
+        self._append_node(node)
         return node
     
     def remove(self, node):
@@ -51,7 +53,7 @@ class LinkedList:
         self.remove(node)
         return node.data
     
-    def __append_node(self, node):
+    def _append_node(self, node):
         prev_node = self.last
         if prev_node is not None:
             prev_node.next = node
