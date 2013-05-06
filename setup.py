@@ -8,6 +8,7 @@ install_requires = [
     'nose',
     'coverage',
     'protobuf',
+    'pyzmq',
 ]
 
 

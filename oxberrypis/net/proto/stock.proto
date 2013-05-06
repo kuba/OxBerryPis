@@ -26,20 +26,20 @@ message StockMessage {
 message OBAdd {
   optional uint32 source_time_ns = 1; // SourceTimeNS
 
-  optional uint32 symbol_index = 2; // SymbolIndex
+  required uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
 
-  optional uint32 order_id = 4; // OrderID
-  optional uint32 price = 5; // Price
-  optional uint32 volume = 6; // Volume
+  required uint32 order_id = 4; // OrderID
+  required uint32 price = 5; // Price
+  required uint32 volume = 6; // Volume
 
   enum Side {
     BUY = 66; // 'B'
     SELL = 83; // 'S'
   }
 
-  //optional bool is_buy = 7; // Side
-  optional Side side = 7; // Side
+  //required bool is_buy = 7; // Side
+  required Side side = 7; // Side
 
   enum OrderIDGTCIndicator {
     DAY_ORDER = 0;
@@ -55,20 +55,20 @@ message OBAdd {
 message OBModify {
   optional uint32 source_time_ns = 1; // SourceTimeNS
 
-  optional uint32 symbol_index = 2; // SymbolIndex
+  required uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
 
-  optional uint32 order_id = 4; // OrderID
-  optional uint32 price = 5; // Price
-  optional uint32 volume = 6; // Volume
+  required uint32 order_id = 4; // OrderID
+  required uint32 price = 5; // Price
+  required uint32 volume = 6; // Volume
 
   enum Side {
     BUY = 66; // 'B'
     SELL = 83; // 'S'
   }
 
-  //optional bool is_buy = 7; // Side
-  optional Side side = 7; // Side
+  //required bool is_buy = 7; // Side
+  required Side side = 7; // Side
 
   enum OrderIDGTCIndicator {
     DAY_ORDER = 0;
@@ -91,18 +91,18 @@ message OBModify {
 message OBDelete {
   optional uint32 source_time_ns = 1; // SourceTimeNS
 
-  optional uint32 symbol_index = 2; // SymbolIndex
+  required uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
 
-  optional uint32 order_id = 4; // OrderID
+  required uint32 order_id = 4; // OrderID
 
   enum Side {
     BUY = 66; // 'B'
     SELL = 83; // 'S'
   }
 
-  //optional bool is_buy = 5; // Side
-  optional Side side = 5; // Side
+  //required bool is_buy = 5; // Side
+  required Side side = 5; // Side
 
   //optional bool is_gtc_order = 6; // OrderIDGTCIndicator
   optional OrderIDGTCIndicator order_id_gtc_indicator = 6; // OrderIDGTCIndicator
