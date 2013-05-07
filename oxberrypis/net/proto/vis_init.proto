@@ -1,0 +1,16 @@
+package oxberrypis.net.proto.setup;
+// mesasage used by visualisation for setup
+// should be sent by parser
+
+message SetupVisualisation {
+  required int32 denomPower = 1;
+  message SymbolDefn {
+    required int32 symbol_id =1;
+    required string symbol_name =2;
+    required int32 stream_id =3; //which file is this symbol from
+    repeated int32 pi_ids =4; // which pis have this symbol
+
+  }
+  repeated SymbolDefn symbol = 2;
+}
+

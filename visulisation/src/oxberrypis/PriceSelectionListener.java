@@ -1,4 +1,4 @@
-package oxberryPis;
+package oxberrypis;
 
 import javax.swing.JList;
 import javax.swing.JTextField;
