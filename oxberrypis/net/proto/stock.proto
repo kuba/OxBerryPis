@@ -4,6 +4,9 @@ package oxberrypis.net.proto.stock;
 message StockMessage {
   // Based on https://developers.google.com/protocol-buffers/docs/techniques#union
 
+  required fixed32 packet_time = 1;
+  required fixed32 packet_time_ns = 2;
+
   enum Type {
     ADD = 1;
     MODIFY = 2;
@@ -13,14 +16,14 @@ message StockMessage {
   }
 
   // Identifies which field is filled in.
-  required Type type = 1;
+  required Type type = 3;
 
   // One of the following will be filled in.
-  optional OBAdd add = 2;
-  optional OBModify modify = 3;
-  optional OBDelete delete = 4;
-  optional OBExecution execution = 5;
-  optional Trade trade = 6;
+  optional OBAdd add = 4;
+  optional OBModify modify = 5;
+  optional OBDelete delete = 6;
+  optional OBExecution execution = 7;
+  optional Trade trade = 8;
 }
 
 message OBAdd {
