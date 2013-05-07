@@ -7,6 +7,8 @@ version = '0.1'
 install_requires = [
     'nose',
     'coverage',
+    'protobuf',
+    'pyzmq',
 ]
 
 

@@ -10,5 +10,8 @@
 # Documentation
 /docs/sphinx/_build
 
+# Protocol Buffers
+*_pb2.py
+
 .coverage
 *.pdf
