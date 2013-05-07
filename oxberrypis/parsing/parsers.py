@@ -13,8 +13,8 @@ from oxberrypis.parsing.headers import MsgHeader
 class XDPChannelUnpacker(object):
     """XDP channel parser (unpacker).
 
-    The parser reads the supplied stream, unpacks packet headers,
-    reads all message headers and unpacks only known messages.
+    The parser reads the supplied :py:attr:`stream`, unpacks packet
+    headers, reads all message headers and unpacks only known messages.
 
     .. note::
 
@@ -22,22 +22,38 @@ class XDPChannelUnpacker(object):
        during the lifetime of this object. Packets and messages are
        assumed to appear in the stream consecutively.
 
+    The parsers uses :py:class:`.headers.PacketHeader` and
+    :py:class:`.headers.MsgHeader` for parsing, but you can supply your
+    own header classes by setting :py:attr:`pkt_hdr_cls` and
+    :py:attr:`msg_header_cls` to appropriate values.
+
     """
 
-    def __init__(self, stream):
-        """Initialise the parses with a stream."""
+    def __init__(self, stream, pkt_hdr_cls=None, msg_hdr_cls=None):
+        """Initialise the parser with a stream.
+
+        :param stream: Readable stream which feeds the parser.
+        :param pkt_hdr_cls: Packet header class. Defaults to
+                            :py:class:`.headers.PacketHeader`.
+        :param msg_hdr_cls: Message header class. Defaults to
+                            :py:class:`.headers.MessageHeader`.
+
+        """
         if not stream.readable():
             raise ParsingError("The stream is not readable")
 
         self.stream = stream
 
+        self.pkt_hdr_cls = pkt_hdr_cls or PacketHeader
+        self.msg_hdr_cls = msg_hdr_cls or MsgHeader
+
     def parse_cls_from_stream(self, cls, size):
         """Read the stream and parse to create an instance of given class.
 
-        Assumes `cls._make` is a method accepting a tuple of unpacked
+        Assumes ``cls._make`` is a method accepting a tuple of unpacked
         data.
 
-        Returns `None` if the stream is empty and raises an error
+        Returns ``None`` if the stream is empty and raises an error
         if unpacking failed.
 
         """
@@ -67,7 +83,7 @@ class XDPChannelUnpacker(object):
         return msg
 
     def advance(self, offset):
-        """Skip `offset` number of bytes in the stream."""
+        """Skip ``offset`` number of bytes in the stream."""
         if self.stream.seekable():
             self.stream.seek(offset, os.SEEK_CUR)
         else:
@@ -86,8 +102,8 @@ class XDPChannelUnpacker(object):
 
         while count > 0:
             header = self.parse_cls_from_stream(
-                MsgHeader,
-                MsgHeader.header_size,
+                self.msg_hdr_cls,
+                self.msg_hdr_cls.header_size,
             )
 
             if header.is_known():
@@ -109,8 +125,8 @@ class XDPChannelUnpacker(object):
         """
         while True:
             pkt_header = self.parse_cls_from_stream(
-                PacketHeader,
-                PacketHeader.header_size,
+                self.pkt_hdr_cls,
+                self.pkt_hdr_cls.header_size,
             )
 
             if pkt_header is None:
@@ -131,13 +147,18 @@ class FileXDPChannelUnpacker(XDPChannelUnpacker):
     """Standard channel file name."""
     CHANNEL_FILE_NAME_FMT = "20111219-ARCA_XDP_IBF_{}.dat"
 
-    def __init__(self, channel_path):
+    def __init__(self, channel_path, pkt_hdr_cls=None, msg_hdr_cls=None):
         """Initialise the parser with the stream from opened file."""
         stream = self.open_stream(channel_path)
-        super(FileXDPChannelUnpacker, self).__init__(stream)
+
+        super(FileXDPChannelUnpacker, self).__init__(
+            stream,
+            pkt_hdr_cls,
+            msg_hdr_cls,
+        )
 
     def open_stream(self, channel_path):
-        """Return opened stream for the given file found at `channel_path`."""
+        """Return opened stream for the given file found at ``channel_path``."""
         if not os.path.exists(channel_path):
             msg = "Channel {} not found".format(channel_path)
             raise ParsingError(msg)
@@ -151,8 +172,8 @@ class FileXDPChannelUnpacker(XDPChannelUnpacker):
         """Get path to the channel found in the directory.
 
         Channel file name format string defaults to string set in
-        `CHANNEL_FILE_NAME_FMT` but it may be changed by calling
-        the function with appropriate `channel_file_name_fmt` value.
+        :py:attr:`CHANNEL_FILE_NAME_FMT` but it may be changed by calling
+        the function with appropriate ``channel_file_name_fmt`` value.
 
         """
         channel_file_name_fmt = channel_file_name_fmt or cls.CHANNEL_FILE_NAME_FMT
@@ -162,7 +183,7 @@ class FileXDPChannelUnpacker(XDPChannelUnpacker):
 
     @classmethod
     def get_channel_unpacker(cls, directory, channel_id):
-        """Factory for channel unpacker given `directory` and `channel_id`."""
+        """Factory for channel unpacker given ``directory`` and ``channel_id``."""
         channel_path = cls.get_channel_path(directory, channel_id)
         return cls(channel_path)
 
