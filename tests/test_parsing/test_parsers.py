@@ -25,6 +25,10 @@ class DummyMessage1(namedtuple('DummyMessage1', 'a b')):
     def pack(self):
         return struct.pack(self.fmt, *self)
 
+    @classmethod
+    def get_header(cls):
+        return DummyMsgHeader(cls.get_size(), 1)
+
 
 class DummyMessage2(namedtuple('DummyMessage2', 'c')):
     fmt = 'c'
@@ -40,6 +44,10 @@ class DummyMessage2(namedtuple('DummyMessage2', 'c')):
 
     def pack(self):
         return struct.pack(self.fmt, *self)
+
+    @classmethod
+    def get_header(cls):
+        return DummyMsgHeader(cls.get_size(), 2)
 
 
 class DummyMsgHeader(namedtuple('DummyMsgHeader', 'size type')):
@@ -182,25 +190,19 @@ class TestXDPChannelUnpacker(unittest.TestCase):
     def test_parse_packet(self):
         hdr = DummyPacketHeader(3)
 
-        msg1_hdr = DummyMsgHeader(
-            DummyMessage1.get_size(),
-            1,
-        )
-        packed_msg1_hdr = msg1_hdr.pack()
         msg1 = DummyMessage1.get_dummy()
         packed_msg1 = msg1.pack()
+        msg1_hdr = msg1.get_header()
+        packed_msg1_hdr = msg1_hdr.pack()
 
         msg2_hdr = DummyMsgHeader(10, 3)
         packed_msg2_hdr = msg2_hdr.pack()
         packed_msg2 = ' ' * 10
 
-        msg3_hdr = DummyMsgHeader(
-            DummyMessage1.get_size(),
-            2,
-        )
-        packed_msg3_hdr = msg3_hdr.pack()
         msg3 = DummyMessage2.get_dummy()
         packed_msg3 = msg3.pack()
+        msg3_hdr = msg3.get_header()
+        packed_msg3_hdr = msg3_hdr.pack()
 
         self.packed_to_stream(
             packed_msg1_hdr,
@@ -217,6 +219,46 @@ class TestXDPChannelUnpacker(unittest.TestCase):
         self.assertEqual(len(msgs), 2)
         self.assertEqual(msgs[0], msg1)
         self.assertEqual(msgs[1], msg3)
+
+    def test_parse_empty_stream(self):
+        parsed = list(self.cu.parse())
+        count = len(parsed)
+        self.assertEqual(count, 0)
+
+    def packet_to_stream(self, *packets):
+        packed = map(lambda p: p.pack(), packets)
+        self.packed_to_stream(*packed)
+
+    def test_parse(self):
+        pkt_hdr1 = DummyPacketHeader(1)
+        pkt_hdr2 = DummyPacketHeader(0)
+        pkt_hdr3 = DummyPacketHeader(2)
+
+        msg1 = DummyMessage1(34, 87)
+        msg2 = DummyMessage2('@')
+        msg3 = DummyMessage1(100, 4235)
+
+        msg1_hdr = msg1.get_header()
+        msg2_hdr = msg2.get_header()
+        msg3_hdr = msg3.get_header()
+
+        self.packet_to_stream(
+            pkt_hdr1,
+            msg1_hdr,
+            msg1,
+            pkt_hdr2,
+            pkt_hdr3,
+            msg2_hdr,
+            msg2,
+            msg3_hdr,
+            msg3,
+        )
+
+        parsed = list(self.cu.parse())
+        self.assertEqual(len(parsed), 3)
+        self.assertEqual(parsed[0], (pkt_hdr1, msg1))
+        self.assertEqual(parsed[1], (pkt_hdr3, msg2))
+        self.assertEqual(parsed[2], (pkt_hdr3, msg3))
 
 
 class TestFileXDPChannelUnpacker(unittest.TestCase):
