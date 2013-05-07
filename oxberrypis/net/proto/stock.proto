@@ -24,7 +24,7 @@ message StockMessage {
 }
 
 message OBAdd {
-  optional uint32 source_time_ns = 1; // SourceTimeNS
+  optional fixed32 source_time_ns = 1; // SourceTimeNS
 
   required uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
@@ -53,7 +53,7 @@ message OBAdd {
 }
 
 message OBModify {
-  optional uint32 source_time_ns = 1; // SourceTimeNS
+  optional fixed32 source_time_ns = 1; // SourceTimeNS
 
   required uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
@@ -89,7 +89,7 @@ message OBModify {
 }
 
 message OBDelete {
-  optional uint32 source_time_ns = 1; // SourceTimeNS
+  optional fixed32 source_time_ns = 1; // SourceTimeNS
 
   required uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
@@ -123,7 +123,7 @@ message OBDelete {
 }
 
 message OBExecution {
-  optional uint32 source_time_ns = 1; // SourceTimeNS
+  optional fixed32 source_time_ns = 1; // SourceTimeNS
 
   optional uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
@@ -152,7 +152,7 @@ message OBExecution {
 }
 
 message Trade {
-  optional uint32 source_time_ns = 1; // SourceTimeNS
+  optional fixed32 source_time_ns = 1; // SourceTimeNS
 
   optional uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
