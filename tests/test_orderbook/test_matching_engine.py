@@ -19,7 +19,7 @@ class TestMatchingEngine(unittest.TestCase):
     def setUp(self):
         self.cls = self.get_cls()
 
-    def test_it(self):
+    def test_trades(self):
         from oxberrypis.orderbook.order import Order
 
         callback = DummyMatchingEngineCallback()
@@ -91,3 +91,40 @@ class TestMatchingEngine(unittest.TestCase):
         self.assertEqual(callback.trades[-1], (3000, 10))
 
         # 13: +6000, 10: -3000
+    
+    def test_order_changes(self):
+        from oxberrypis.orderbook.order import Order
+
+        callback = DummyMatchingEngineCallback()
+        s = self.cls(callback)
+
+        s.add_order(1, 300, 10000, Order.SELL)
+        s.add_order(2, 200, 10000, Order.BUY)
+
+        (sell, buy) = s.get_best_orders()
+        self.assertEqual(len(callback.trades), 0)
+        self.assertEqual(sell.num_shares, 10000)
+        self.assertEqual(sell.price, 300)
+        self.assertEqual(buy.num_shares, 10000)
+        self.assertEqual(buy.price, 200)
+        
+        s.update_order(1, 400, 10000, Order.SELL)
+        s.decrease_order_amount_by(2, 3000)
+        
+        (sell, buy) = s.get_best_orders()
+        self.assertEqual(len(callback.trades), 0)
+        self.assertEqual(sell.num_shares, 10000)
+        self.assertEqual(sell.price, 400)
+        self.assertEqual(buy.num_shares, 7000)
+        self.assertEqual(buy.price, 200)
+        
+        s.update_order(2, 500, 2000, Order.BUY)
+        
+        (sell, buy) = s.get_best_orders()
+        self.assertEqual(len(callback.trades), 1)
+        self.assertEqual(callback.trades[-1], (2000, 400))
+        self.assertEqual(sell.num_shares, 8000)
+        self.assertEqual(sell.price, 400)
+        self.assertIsNone(buy)
+        
+        

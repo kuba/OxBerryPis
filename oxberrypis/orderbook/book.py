@@ -41,6 +41,12 @@ class OrderBook(object):
                 return self.get_best()
             else:
                 return limitbook.front()
+    
+    def get_order_by_id(self, order_id):
+        if order_id in self.orders:
+            return self.orders[order_id].data
+        else:
+            return None
 
     def add_order(self, order):
         if order.id in self.orders:
