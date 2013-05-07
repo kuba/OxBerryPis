@@ -10,60 +10,108 @@ from collections import namedtuple
 from oxberrypis.errors import ParsingError
 
 
-class DummyPkt(namedtuple('Dummy', 'a b')):
+class DummyMessage1(namedtuple('DummyMessage1', 'a b')):
     fmt = 'II'
+    dummy = (1, 7,)
 
     @classmethod
     def get_dummy(cls):
-        return DummyPkt(1, 2)
+        return cls(*cls.dummy)
 
     @classmethod
-    def pack_dummy(cls):
-        return struct.pack(cls.fmt, 1, 2)
+    def get_size(cls):
+        return struct.calcsize(cls.fmt)
 
-class DummyMsgHeader(object):
-    fmt = 'I'
+    def pack(self):
+        return struct.pack(self.fmt, *self)
+
+
+class DummyMessage2(namedtuple('DummyMessage2', 'c')):
+    fmt = 'c'
+    dummy = ('!',)
+
+    @classmethod
+    def get_size(cls):
+        return struct.calcsize(cls.fmt)
+
+    @classmethod
+    def get_dummy(cls):
+        return cls(*cls.dummy)
+
+    def pack(self):
+        return struct.pack(self.fmt, *self)
+
+
+class DummyMsgHeader(namedtuple('DummyMsgHeader', 'size type')):
+    fmt = 'II'
     header_size = struct.calcsize(fmt)
 
-    def __init__(self, msg_cls, known=True, msg_size=0):
-        self.known = known
-        self.msg_cls = msg_cls
-        self.msg_size = msg_size
+    known_msgs = {
+        1: DummyMessage1,
+        2: DummyMessage2,
+    }
 
     def is_known(self):
-        return self.known
+        return self.type in self.known_msgs.keys()
 
     def get_msg_cls(self):
-        return self.msg_cls
+        assert self.is_known()
+        return self.known_msgs[self.type]
 
     def get_msg_size(self):
-        return self.msg_size
+        return self.size
 
-class DummyPacketHeader(namedtuple('DummyPacketHeader', 'no_msgs')):
+    def pack(self):
+        packed = struct.pack(self.fmt, *self)
+        return packed
+
+
+class DummyPacketHeader(namedtuple('DummyPacketHeader', 'NumberMsgs')):
     fmt = 'I'
     header_size = struct.calcsize(fmt)
-    dummy_values = (1,)
 
-    def __init__(self, msgs_num):
-        self.NumberMsgs = msgs_num
+    def pack(self):
+        packed = struct.pack(self.fmt, *self)
+        return packed
 
-    @classmethod
-    def get_dummy(cls):
-        return DummyPacketHeader(*cls.dummy_values)
 
-    @classmethod
-    def pack_dummy(cls):
-        return struct.pack(cls.fmt, *cls.dummy_values)
+class UnreadableStrem(object):
+    def readable(self):
+        return False
+
+
+class SeekableStream(object):
+    def __init__(self, is_seekable):
+        self.is_seekable = is_seekable
+        self.position = 0
+
+    def readable(self):
+        return True
+
+    def seekable(self):
+        return self.is_seekable
+
+    def seek(self, num, relative):
+        assert self.is_seekable
+        self.position += num
+
+    def read(self, num):
+        self.position += num
 
 
 class TestXDPChannelUnpacker(unittest.TestCase):
 
-    def create_unpacker(self, stream=None):
+    def get_cls(self):
         from oxberrypis.parsing.parsers import XDPChannelUnpacker
+        return XDPChannelUnpacker
+
+    def create_unpacker(self, stream=None):
         stream = stream or io.BytesIO()
-        return (stream, XDPChannelUnpacker(stream))
+        unpacker = self.cls(stream, DummyPacketHeader, DummyMsgHeader)
+        return (stream, unpacker)
 
     def setUp(self):
+        self.cls = self.get_cls()
         self.stream, self.cu = self.create_unpacker()
 
     def packed_to_stream(self, *packed):
@@ -71,29 +119,46 @@ class TestXDPChannelUnpacker(unittest.TestCase):
             self.stream.write(packed_item)
         self.stream.seek(0)
 
+    def test_stream_not_readable(self):
+        stream = UnreadableStrem()
+        with self.assertRaises(ParsingError):
+            self.cls(stream)
+
     def test_parse_cls_from_stream(self):
-        packed = DummyPacketHeader.pack_dummy()
+        model = DummyPacketHeader(69)
+        packed = model.pack()
         self.packed_to_stream(packed)
+
         parsed = self.cu.parse_cls_from_stream(
             DummyPacketHeader,
             DummyPacketHeader.header_size,
         )
+
         self.assertTrue(isinstance(parsed, DummyPacketHeader))
-        model = DummyPacketHeader.get_dummy()
         self.assertEqual(parsed, model)
 
     def test_parse_cls_from_empty_stream(self):
         pkt = self.cu.parse_cls_from_stream(None, 0)
         self.assertTrue(pkt is None)
 
+    def test_unpacking_failed(self):
+        self.stream.write('a')
+        self.stream.seek(0)
+        with self.assertRaises(ParsingError):
+            self.cu.parse_cls_from_stream(
+                DummyPacketHeader,
+                DummyPacketHeader.header_size,
+            )
+
     def _test_parse_msg(self, payload=0):
-        msg_size = struct.calcsize(DummyPkt.fmt)
-        header = DummyMsgHeader(DummyPkt, msg_size=msg_size + payload)
-        packed = DummyPkt.pack_dummy()
+        msg_size = DummyMessage1.get_size()
+        size = msg_size + payload
+        header = DummyMsgHeader(size, 1)
+        model = DummyMessage1.get_dummy()
+        packed = model.pack()
         self.packed_to_stream(packed)
         msg = self.cu.parse_msg(header)
-        model = DummyPkt.get_dummy()
-        self.assertTrue(isinstance(msg, DummyPkt))
+        self.assertTrue(isinstance(msg, DummyMessage1))
         self.assertEqual(msg, model)
 
     def test_parse_msg(self):
@@ -102,20 +167,56 @@ class TestXDPChannelUnpacker(unittest.TestCase):
     def test_parse_msg_bigger_payload(self):
         self._test_parse_msg(100)
 
-    def test_parse_packet(self):
-        return
-        hdr = DummyPacketHeader(2)
-        #msg1 = DummyMsgHeader(DummyPkt,
-        stream = self.packed_to_stream(
-            packed_msg_hdr1,
-            packed_msg1,
-            packed_msg_hdr2,
-            packed_msg2,
-        )
-        self.cu.parse_packet(hdr, stream)
+    def test_advance_seekable(self):
+        stream = SeekableStream(True)
+        parser = self.cls(stream)
+        parser.advance(5)
+        self.assertEqual(stream.position, 5)
 
-    def test_parse_stream(self):
-        pass
+    def test_advance_nonseekable(self):
+        stream = SeekableStream(False)
+        parser = self.cls(stream)
+        parser.advance(5)
+        self.assertEqual(stream.position, 5)
+
+    def test_parse_packet(self):
+        hdr = DummyPacketHeader(3)
+
+        msg1_hdr = DummyMsgHeader(
+            DummyMessage1.get_size(),
+            1,
+        )
+        packed_msg1_hdr = msg1_hdr.pack()
+        msg1 = DummyMessage1.get_dummy()
+        packed_msg1 = msg1.pack()
+
+        msg2_hdr = DummyMsgHeader(10, 3)
+        packed_msg2_hdr = msg2_hdr.pack()
+        packed_msg2 = ' ' * 10
+
+        msg3_hdr = DummyMsgHeader(
+            DummyMessage1.get_size(),
+            2,
+        )
+        packed_msg3_hdr = msg3_hdr.pack()
+        msg3 = DummyMessage2.get_dummy()
+        packed_msg3 = msg3.pack()
+
+        self.packed_to_stream(
+            packed_msg1_hdr,
+            packed_msg1,
+            packed_msg2_hdr,
+            packed_msg2,
+            packed_msg3_hdr,
+            packed_msg3,
+        )
+
+        parsed = self.cu.parse_packet(hdr)
+        msgs = list(parsed)
+
+        self.assertEqual(len(msgs), 2)
+        self.assertEqual(msgs[0], msg1)
+        self.assertEqual(msgs[1], msg3)
 
 
 class TestFileXDPChannelUnpacker(unittest.TestCase):
