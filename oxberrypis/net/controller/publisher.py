@@ -11,7 +11,7 @@ class StockMessagesPublisher(object):
         self.context = context
 
         self.publisher = context.socket(zmq.PUB)
-        self.publisher.connect(uri)
+        self.publisher.bind(uri)
 
         self.channel = channel
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     context = zmq.Context()
 
-    uri = 'tcp://localhost:1234'
+    uri = 'tcp://*:1234'
 
     if len(sys.argv) != 3:
         exit("USAGE: {0} directory channel".format(sys.argv[0]))
