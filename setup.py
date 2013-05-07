@@ -52,7 +52,7 @@ setup(
     install_requires=install_requires,
     entry_points = {
         'console_scripts': [
-            'oxberrypis-parser = oxberrypis.parsing.parsers:main',
+            'oxberrypis-channel-parser = oxberrypis.scripts.parsers:channel_parser',
         ],
     },
 )

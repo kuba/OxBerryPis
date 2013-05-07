@@ -186,21 +186,3 @@ class FileXDPChannelUnpacker(XDPChannelUnpacker):
         """Factory for channel unpacker given ``directory`` and ``channel_id``."""
         channel_path = cls.get_channel_path(directory, channel_id)
         return cls(channel_path)
-
-def main():
-    import sys
-
-    if len(sys.argv) != 3:
-        exit("USAGE: {} directory channel".format(sys.argv[0]))
-
-    directory = sys.argv[1]
-    channel = sys.argv[2]
-
-    unpacker = FileXDPChannelUnpacker.get_channel_unpacker(directory, channel)
-
-    for (pkt_header, msg) in unpacker.parse():
-        pkt_time = pkt_header.get_datetime()
-        print pkt_time, msg
-
-if __name__ == '__main__':
-    main()
