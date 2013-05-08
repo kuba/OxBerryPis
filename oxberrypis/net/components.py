@@ -151,7 +151,6 @@ class SynchronizedSubscriber(object):
         self.subscriptions = subscriptions
         self.msg_handler = msg_handler
 
-    def setup(self):
         # First, connect our subscriber socket
         self.subscriber = self.context.socket(zmq.SUB)
         self.subscriber.connect(self.subscriber_uri)
@@ -162,6 +161,7 @@ class SynchronizedSubscriber(object):
         for subscription in self.subscriptions:
             self.subscriber.setsockopt(zmq.SUBSCRIBE, subscription)
 
+    def setup(self):
         data = self.subscriber.recv()
 
         # Second, synchronize with publisher
