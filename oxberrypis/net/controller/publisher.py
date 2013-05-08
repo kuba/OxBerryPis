@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     context = zmq.Context()
 
-    frontend_uri = 'tcp://127.0.0.1:2000'
+    frontend_uri = 'inproc://parsers'
     backend_uri = 'tcp://127.0.0.1:2001'
 
     proxy = PubSubProxy(context, frontend_uri, backend_uri)
