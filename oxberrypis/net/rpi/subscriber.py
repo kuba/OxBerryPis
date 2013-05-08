@@ -1,34 +1,12 @@
 """Network communcation happening at RaspberryPi."""
 import zmq
 
+from ..components import SynchronizedSubscriber
+
 from ..proto.stock_pb2 import StockMessage
 
 from ...orderbook.order import Order
 from ...orderbook.book import OrderBook
-
-
-class StockMessagesSubscriber(object):
-
-    def __init__(self, context, publisher_uri, orderbooks):
-        self.publisher_uri = publisher_uri
-        self.stocks = stocks
-
-        self.handler = StockMessagesToOrderbook(orderbooks)
-
-        self.subscriber = context.socket(zmq.SUB)
-        self.subscriber.connect(self.publisher_uri)
-
-        for stock in self.stocks:
-            stock_id = str(stock)
-            self.subscriber.setsockopt(zmq.SUBSCRIBE, stock_id)
-
-    def run(self):
-        while True:
-            symbol_index, data = self.subscriber.recv_multipart()
-            stock_msg = StockMessage()
-            stock_msg.ParseFromString(data)
-            print stock_msg
-            self.handler.handle_stock_message(stock_msg)
 
 
 class StockMessagesToOrderbook(object):
@@ -129,27 +107,53 @@ class StockMessagesToOrderbook(object):
         else:
             raise OxBerryPisExecption("Invalid Message Type")
 
+class StockMessagesSubscriber(object):
+
+    def __init__(self, context, publisher_uri, syncservice_uri,
+            handler_cls=StockMessagesToOrderbook):
+        stocks = xrange(1, 50000)
+
+        orderbooks = {}
+        for stock in stocks:
+            orderbooks[stock] = OrderBook()
+
+        self.handler = handler_cls(orderbooks)
+
+        subscriptions = map(str, stocks)
+
+        self.sub = SynchronizedSubscriber(
+            context,
+            publisher_uri,
+            syncservice_uri,
+            subscriptions,
+            self.handle_data,
+        )
+
+    def run(self):
+        self.sub.setup()
+        self.sub.recv_multipart()
+
+    def handle_data(self, data):
+        symbol_index, serialized_stock_msg = data
+        stock_msg = StockMessage()
+        stock_msg.ParseFromString(serialized_stock_msg)
+        print stock_msg
+        self.handler.handle_stock_message(stock_msg)
 
 if __name__ == '__main__':
     import sys
 
     if len(sys.argv) != 3:
-        exit("USAGE: {} ip port".format(sys.argv[0]))
+        exit("USAGE: {} publisher_uri syncservice_uri".format(sys.argv[0]))
 
-    ip = sys.argv[1]
-    port = sys.argv[2]
+    publisher_uri = sys.argv[1]
+    syncservice_uri = sys.argv[2]
 
     context = zmq.Context()
-    publisher_uri = 'tcp://{}:{}'.format(ip, port)
 
-    stocks = xrange(1, 50000)
-    orderbooks = {}
-    for stock in stocks:
-        orderbooks[stock] = OrderBook()
-
-    subscriber = StockMessagesSubscriber(
+    sub = StockMessagesSubscriber(
         context,
         publisher_uri,
-        orderbooks,
+        syncservice_uri,
     )
-    subscriber.run()
+    sub.run()

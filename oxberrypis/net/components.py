@@ -61,8 +61,8 @@ class SynchronizedPublisher(object):
     PING_MSG = 'PING'
     END_MSG = 'END'
 
-    def __init__(self, context, subscribers_expected,
-            publisher_uri, syncservice_uri):
+    def __init__(self, context, publisher_uri, syncservice_uri,
+            subscribers_expected=1):
         self.context = context
 
         self.subscribers_expected = subscribers_expected
@@ -72,7 +72,7 @@ class SynchronizedPublisher(object):
 
         # Socket to talk to clients
         self.publisher = self.context.socket(zmq.PUB)
-        self.publisher.bind(self.publisher_uri)
+        self.publisher.connect(self.publisher_uri)
 
         # Socket to receive signals
         self.syncservice = self.context.socket(zmq.REP)
@@ -144,16 +144,16 @@ class SynchronizedSubscriber(object):
     Based on http://zguide.zeromq.org/py:all#Node-Coordination.
 
     """
-    def __init__(self, context, subscriber_uri, syncclient_uri, subscriptions, msg_handler):
+    def __init__(self, context, publisher_uri, syncservice_uri, subscriptions, msg_handler):
         self.context = context
-        self.subscriber_uri = subscriber_uri
-        self.syncclient_uri = syncclient_uri
+        self.publisher_uri = publisher_uri
+        self.syncservice_uri = syncservice_uri
         self.subscriptions = subscriptions
         self.msg_handler = msg_handler
 
         # First, connect our subscriber socket
         self.subscriber = self.context.socket(zmq.SUB)
-        self.subscriber.connect(self.subscriber_uri)
+        self.subscriber.connect(self.publisher_uri)
 
         self.subscriber.setsockopt(zmq.SUBSCRIBE, SynchronizedPublisher.PING_MSG)
         self.subscriber.setsockopt(zmq.SUBSCRIBE, SynchronizedPublisher.END_MSG)
@@ -166,7 +166,7 @@ class SynchronizedSubscriber(object):
 
         # Second, synchronize with publisher
         self.syncclient = self.context.socket(zmq.REQ)
-        self.syncclient.connect(self.syncclient_uri)
+        self.syncclient.connect(self.syncservice_uri)
 
         # send a synchronization request
         self.syncclient.send('')
@@ -182,7 +182,7 @@ class SynchronizedSubscriber(object):
             data = self.subscriber.recv()
             if data == SynchronizedPublisher.END_MSG:
                 break
-            self.msg_handler.received(data)
+            self.msg_handler(data)
 
     def recv_multipart(self):
         """To be used with pub-sub message envelopes.
@@ -192,8 +192,7 @@ class SynchronizedSubscriber(object):
         """
         # Third, get our updates and report how many we got
         while True:
-            received = subscriber.recv_multipart()
-            if len(received) == 1 and received[0] == SynchronizedPublisher.END_MSG:
+            data = self.subscriber.recv_multipart()
+            if data[0] == SynchronizedPublisher.END_MSG:
                 break
-            data = received[1]
-            self.msg_handler.received(data)
+            self.msg_handler(data)
