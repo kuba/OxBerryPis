@@ -13,7 +13,7 @@ public class Stock {
 	
 	public Stock(String stockName, int denomPower) {
 		this.stockName = stockName;
-		this.denomPower = denomPower; //TODO: Find whether denomPower can be updated or is constant (I think updated)
+		this.denomPower = denomPower;
 		this.change = 0;
 		this.hasLastTradePrice=false;
 		this.hasTopBuyPrice=false;
