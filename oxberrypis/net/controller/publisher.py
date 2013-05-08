@@ -43,36 +43,54 @@ class StockMessagesPublisher(object):
         self.publisher.close()
 
 
-def worker_routine(context, uri, directory, channel):
+def single_channel_parser_routine(context, proxy_uri, directory, channel):
     publisher = StockMessagesPublisher(
         context,
-        uri,
+        proxy_uri,
         directory,
         channel
     )
     publisher.run()
 
+def proxy_routine(context, frontend_uri, backend_uri):
+    """Run a proxy"""
+    proxy = PubSubProxy(context, frontend_uri, backend_uri)
+    proxy.run()
 
 if __name__ == '__main__':
     import sys
 
+    if len(sys.argv) != 4:
+        exit("USAGE: {0} ip port directory".format(sys.argv[0]))
+
+    # Arguments
+    ip = sys.argv[1]
+    port = sys.argv[2]
+    directory = sys.argv[3]
+
     context = zmq.Context()
+    publishers_uri = 'inproc://publishers'
+    publisher_uri = 'tcp://{}:{}'.format(ip, port)
 
-    frontend_uri = 'inproc://parsers'
-    backend_uri = 'tcp://127.0.0.1:2001'
+    # Number of available channels
+    channels_num = 4
 
-    proxy = PubSubProxy(context, frontend_uri, backend_uri)
+    # Proxy thread
+    proxy_thread = threading.Thread(
+        target=proxy_routine,
+        args=(context, publishers_uri, publisher_uri,),
+    )
+    proxy_thread.daemon = True
+    proxy_thread.start()
 
-    if len(sys.argv) != 2:
-        exit("USAGE: {0} directory".format(sys.argv[0]))
-
-    directory = sys.argv[1]
-
-    for channel_id in xrange(1, 5):
+    # Stock messages publishers threads
+    for channel_id in xrange(1, channels_num + 1):
         thread = threading.Thread(
-            target=worker_routine,
-            args=(context, frontend_uri, directory, channel_id,)
+            target=single_channel_parser_routine,
+            args=(context, publishers_uri, directory, channel_id,)
         )
+        thread.daemon = True
         thread.start()
 
-    proxy.run()
+    while True:
+        pass

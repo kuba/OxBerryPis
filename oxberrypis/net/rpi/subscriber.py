@@ -131,17 +131,25 @@ class StockMessagesToOrderbook(object):
 
 
 if __name__ == '__main__':
-   context = zmq.Context()
-   publisher_uri = 'tcp://127.0.0.1:2001'
+    import sys
 
-   stocks = xrange(1, 50000)
-   orderbooks = {}
-   for stock in stocks:
-       orderbooks[stock] = OrderBook()
+    if len(sys.argv) != 3:
+        exit("USAGE: {} ip port".format(sys.argv[0]))
 
-   subscriber = StockMessagesSubscriber(
+    ip = sys.argv[1]
+    port = sys.argv[2]
+
+    context = zmq.Context()
+    publisher_uri = 'tcp://{}:{}'.format(ip, port)
+
+    stocks = xrange(1, 50000)
+    orderbooks = {}
+    for stock in stocks:
+        orderbooks[stock] = OrderBook()
+
+    subscriber = StockMessagesSubscriber(
         context,
         publisher_uri,
         orderbooks,
     )
-   subscriber.run()
+    subscriber.run()
