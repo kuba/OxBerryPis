@@ -19,10 +19,10 @@ public class NetworkPis {
 	Context context = ZMQ.context(1);
 	ZMQ.Socket receiver = context.socket(ZMQ.PULL);
 
-	private final String PARSER_ADDRESS = "tcp://parser:3143";
+	
 
-	public NetworkPis() {
-		receiver.bind("tcp://*:3142");
+	public NetworkPis(String bind_uri) {
+		receiver.bind(bind_uri);
 	}
 
 	/**
@@ -48,9 +48,9 @@ public class NetworkPis {
 	 * 
 	 * @return
 	 */
-	public SetupVisualisation getInit() {
+	public SetupVisualisation getInit(String parser_uri) {
 		ZMQ.Socket fromParser = context.socket(ZMQ.REQ);
-		fromParser.connect(PARSER_ADDRESS);
+		fromParser.connect(parser_uri);
 		fromParser.send("INIT");
 		try {
 			return SetupVisualisation.parseFrom(fromParser.recv(0));

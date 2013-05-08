@@ -1,13 +1,11 @@
 package oxberrypis;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 import oxberrypis.net.proto.vis_init.VisInit.SetupVisualisation;
@@ -44,10 +42,10 @@ public class MessageOrder {
 	/**
 	 * Create the class and initialise the network
 	 */
-	public MessageOrder() {
-		network = new NetworkPis();
+	public MessageOrder(String bind_uri,String parser_uri) {
+		network = new NetworkPis(bind_uri);
 		
-		init(network.getInit());
+		init(network.getInit(parser_uri));
 	}
 	
 	/**
