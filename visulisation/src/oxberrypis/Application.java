@@ -22,15 +22,16 @@ public class Application extends JFrame{
 		data = new HashMap<Integer,Stock>();
 		viewMap = new HashMap<Integer,StockView>();
 		JPanel panel = new JPanel();
-//		for (int i : messageOrder.getStockList()) {
-//			viewMap.put(i, new StockView(new Stock(messageOrder.getName(i))));
-//		}
-//		messageOrder = new MessageOrder();
-//		for(StockView s : viewMap.values()) {
-//		add(s);
-//	}
 		GridLayout grid = new GridLayout(0,10,40,25);
 		panel.setLayout(grid);
+//		messageOrder = new MessageOrder();
+//		for (int i : messageOrder.getStockList()) {
+//			viewMap.put(i, new StockView(new Stock(messageOrder.getName(i))));
+//			}
+//			messageOrder = new MessageOrder();
+//			for(StockView s : viewMap.values()) {
+//			add(s);
+//		}
 		for(int i = 0; i<100; i++) {
 			Stock s = new Stock("HSBC",4);
 			s.update(i*10, i*11, i+10);
