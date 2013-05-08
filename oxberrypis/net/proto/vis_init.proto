@@ -3,14 +3,10 @@ package oxberrypis.net.proto.setup;
 // should be sent by parser
 
 message SetupVisualisation {
-  required int32 denomPower = 1;
-  message SymbolDefn {
-    required int32 symbol_id =1;
-    required string symbol_name =2;
-    required int32 stream_id =3; //which file is this symbol from
-    repeated int32 pi_ids =4; // which pis have this symbol
-
+  message Mapping {
+    required int32 symbol_map_start =1;
+    required int32 symbol_map_end =2;
   }
-  repeated SymbolDefn symbol = 2;
+  repeated Mapping mappings = 1;
 }
 

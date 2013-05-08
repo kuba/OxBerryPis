@@ -12,6 +12,7 @@
 
 # Protocol Buffers
 *_pb2.py
+/visulisation/src/oxberrypis/net/proto/
 
 .coverage
 *.pdf
@@ -19,3 +20,6 @@
 # Java Class Files
 
 *.class
+
+
+
