@@ -47,24 +47,3 @@ class StockMessagesSubscriber(object):
         print stock_msg
         stock_id = self.stock_handler.handle_stock_message(stock_msg)
         #self.visual_handler.handle_send_visual(stock_id, channel_id, stock_msg)
-
-if __name__ == '__main__':
-    import sys
-
-    if len(sys.argv) != 4:
-        exit("USAGE: {} publisher_uri syncservice_uri visual_uri".format(sys.argv[0]))
-
-    publisher_uri = sys.argv[1]
-    syncservice_uri = sys.argv[2]
-    visual_uri = sys.argv[3]
-
-    context = zmq.Context()
-
-    sub = StockMessagesSubscriber(
-        context,
-        publisher_uri,
-        syncservice_uri,
-        visual_uri
-    )
-
-    sub.run()

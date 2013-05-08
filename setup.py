@@ -55,6 +55,8 @@ setup(
     entry_points = {
         'console_scripts': [
             'oxberrypis-channel-parser = oxberrypis.scripts.parsers:channel_parser',
+            'oxberrypis-publisher = oxberrypis.scripts.publisher:main',
+            'oxberrypis-subscriber = oxberrypis.scripts.subscriber:main',
         ],
     },
 )

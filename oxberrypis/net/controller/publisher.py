@@ -91,61 +91,60 @@ def proxy_routine(context, frontend_uri, backend_uri):
     proxy = PubSubProxy(context, frontend_uri, backend_uri)
     proxy.run()
 
-if __name__ == '__main__':
-    import sys
+class Publisher(object):
 
-    if len(sys.argv) != 5:
-        exit("USAGE: {0} controller_uri syncservice_uri subscribers_expected directory".format(sys.argv[0]))
+    def __init__(self, context, publishers_uri, controller_uri, syncservice_uri,
+            subscribers_expected, directory, channels_num):
+        self.context = context
+        self.publishers_uri = publishers_uri
+        self.controller_uri = controller_uri
+        self.syncservice_uri = syncservice_uri
+        self.subscribers_expected = subscribers_expected
+        self.directory = directory
+        self.channels_num = channels_num
 
-    # Arguments
-    controller_uri = sys.argv[1]
-    syncservice_uri = sys.argv[2]
-    subscribers_expected = int(sys.argv[3])
-    directory = sys.argv[4]
+    def run(self):
+        # Proxy thread
+        proxy_thread = threading.Thread(
+            target=proxy_routine,
+            args=(
+                self.context,
+                self.publishers_uri,
+                self.controller_uri,
+            ),
+        )
+        proxy_thread.daemon = True
+        proxy_thread.start()
 
-    context = zmq.Context()
-    publishers_uri = 'inproc://publishers'
+        pipe = zpipe(self.context)
 
-    # Number of available channels
-    channels_num = 4
+        # Publishers thread
+        publishers_thread = threading.Thread(
+            target=publishers_routine,
+            args=(
+                pipe[0],
+                self.context,
+                self.publishers_uri,
+                self.directory,
+                self.channels_num,
+            ),
+        )
+        publishers_thread.daemon = True
+        publishers_thread.start()
 
-    # Proxy thread
-    proxy_thread = threading.Thread(
-        target=proxy_routine,
-        args=(context, publishers_uri, controller_uri,),
-    )
-    proxy_thread.daemon = True
-    proxy_thread.start()
+        # Controller thread
+        controller_thread = threading.Thread(
+            target=controller_routine,
+            args=(
+                pipe[1],
+                self.context,
+                self.publishers_uri,
+                self.syncservice_uri,
+                self.subscribers_expected,
+            ),
+        )
+        controller_thread.daemon = True
+        controller_thread.start()
 
-    pipe = zpipe(context)
-
-    # Publishers thread
-    publishers_thread = threading.Thread(
-        target=publishers_routine,
-        args=(
-            pipe[0],
-            context,
-            publishers_uri,
-            directory,
-            channels_num,
-        ),
-    )
-    publishers_thread.daemon = True
-    publishers_thread.start()
-
-    # Controller thread
-    controller_thread = threading.Thread(
-        target=controller_routine,
-        args=(
-            pipe[1],
-            context,
-            publishers_uri,
-            syncservice_uri,
-            subscribers_expected,
-        ),
-    )
-    controller_thread.daemon = True
-    controller_thread.start()
-
-    while True:
-        pass
+        while True:
+            pass
