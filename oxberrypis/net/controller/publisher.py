@@ -1,4 +1,5 @@
 import zmq
+from ..zhelpers import zpipe
 import threading
 
 from ...parsing.parsers import FileXDPChannelUnpacker as Unpacker
@@ -52,6 +53,24 @@ def single_channel_parser_routine(context, proxy_uri, directory, channel):
     )
     publisher.run()
 
+def publishers_routine(pipe, context, publishers_uri, directory, channels_num):
+    # Wait for signal
+    pipe.recv()
+    print "Received signal!"
+
+    # Stock messages publishers threads
+    for channel_id in xrange(1, channels_num + 1):
+        thread = threading.Thread(
+            target=single_channel_parser_routine,
+            args=(context, publishers_uri, directory, channel_id,)
+        )
+        thread.daemon = True
+        thread.start()
+
+def controller_routine(pipe, context):
+    # Signal to publishers_routine
+    pipe.send('')
+
 def proxy_routine(context, frontend_uri, backend_uri):
     """Run a proxy"""
     proxy = PubSubProxy(context, frontend_uri, backend_uri)
@@ -83,14 +102,23 @@ if __name__ == '__main__':
     proxy_thread.daemon = True
     proxy_thread.start()
 
-    # Stock messages publishers threads
-    for channel_id in xrange(1, channels_num + 1):
-        thread = threading.Thread(
-            target=single_channel_parser_routine,
-            args=(context, publishers_uri, directory, channel_id,)
-        )
-        thread.daemon = True
-        thread.start()
+    pipe = zpipe(context)
+
+    # Publishers thread
+    publishers_thread = threading.Thread(
+        target=publishers_routine,
+        args=(pipe[0], context, publisher_uri, directory, channels_num,),
+    )
+    publishers_thread.daemon = True
+    publishers_thread.start()
+
+    # Controller thread
+    controller_thread = threading.Thread(
+        target=controller_routine,
+        args=(pipe[1], context,),
+    )
+    controller_thread.daemon = True
+    controller_thread.start()
 
     while True:
         pass
