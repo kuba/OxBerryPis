@@ -9,6 +9,8 @@ from ..proto.stock_pb2 import StockMessage
 from ...parsing.messages import OBAddOrderMsg
 from ...parsing.messages import OBModifyMsg
 from ...parsing.messages import OBDeleteMsg
+from ...parsing.messages import OBExecutionMsg
+from ...parsing.messages import TradeMsg
 
 
 class StockMessageFactory(object):
@@ -65,6 +67,30 @@ class StockMessageDeleteFactory(StockMessageFactory):
         field.side = msg.Side
 
 
+class StockMessageExecutionFactory(StockMessageFactory):
+    """Factory for execution order stock message."""
+    msg_type = StockMessage.EXECUTE
+    field_name = 'execution'
+
+    @classmethod
+    def process_field(cls, msg, field):
+        field.symbol_index = msg.SymbolIndex
+        field.order_id = msg.OrderID
+        field.price = msg.Price
+        field.volume = msg.Volume
+        field.reason_code = msg.ReasonCode
+
+
+class StockMessageTradeFactory(StockMessageFactory):
+    """Factory for trade stock message."""
+    msg_type = StockMessage.TRADE
+    field_name = 'trade'
+
+    @classmethod
+    def process_field(cls, msg, field):
+        field.symbol_index = msg.SymbolIndex
+
+
 class StockMessagesFactory(object):
     """Factory for stock messages."""
 
@@ -72,6 +98,8 @@ class StockMessagesFactory(object):
         OBAddOrderMsg: StockMessageAddFactory,
         OBModifyMsg: StockMessageModifyFactory,
         OBDeleteMsg: StockMessageDeleteFactory,
+        OBExecutionMsg: StockMessageExecutionFactory,
+        TradeMsg: StockMessageTradeFactory,
     }
 
     @classmethod

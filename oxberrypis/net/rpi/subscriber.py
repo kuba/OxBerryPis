@@ -144,7 +144,7 @@ class StockMessagesToOrderbook(object):
             limit_price = exec_msg.price
             num_shares = exec_msg.volume
 
-            orderbook = orderbooks[stock_id]
+            orderbook = self.orderbooks[stock_id]
             if exec_msg.reason_code == exec_msg.FILLED:
                 self.orderbook.remove_order(order_id)
             elif exec_msg.reason_code == exec_msg.PARTIAL:
