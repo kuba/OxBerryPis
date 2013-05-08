@@ -20,23 +20,26 @@ import java.io.IOException;
 
 public class MessageOrder {
 	private NetworkPis network;
+	
+	// maps per stock (may make a type and condense)
 	private Map<Integer, Integer> idToQueue;
 	private Map<Integer, Integer> idToRegion;
 	private Map<Integer, String> idToName;
-	private List<Queue<StockEvent>> queueList;
 	private Map<Integer, Integer> denomPowers;
 	private Map<Integer, Integer> lastSeqNum;
 
+	private List<Queue<StockEvent>> queueList = new ArrayList<Queue<StockEvent>>();
+	private List<Integer> regions;
+	private List<Integer> streams;
+	
 	private final String ARCAFILE = "";
 
 
 
 	public MessageOrder() {
 		network = new NetworkPis();
-		idToQueue = new HashMap<Integer, Integer>();
-		idToName = new HashMap<Integer, String>();
-		queueList = new ArrayList<Queue<StockEvent>>();
-		init();
+		
+		init(network.getInit());
 	}
 
 
@@ -54,13 +57,19 @@ public class MessageOrder {
 
 
 
-	private void init() {
+	private void init(SetupVisualisation message) {
 
-		SetupVisualisation message = network.getInit(); // Get the initialisation
-													// method from parser
+	
 
 		BufferedReader br = null;
+		
 		List<Integer> stocks = new ArrayList<Integer>();
+		
+		idToQueue = new HashMap<Integer, Integer>();
+		idToName = new HashMap<Integer, String>();
+		idToRegion = new HashMap<Integer, Integer>();
+		
+		
 		try {
 
 			String sCurrentLine;
@@ -107,7 +116,8 @@ public class MessageOrder {
 		int queueId = idToQueue.get(message.getStockId());
 
 		if (queueId == -1) {
-			// TODO :Find queue/add new queue 
+			queueId =findQueue(message);
+			idToQueue.put(message.getStockId(), queueId);
 		}
 
 		if (lastSeqNum.get(message.getStockId()) < message.getSeqNum()) {
@@ -116,11 +126,28 @@ public class MessageOrder {
 		}
 	}
 
+
+	private int  findQueue(StockEvent message) {
+		int streamId = message.getStreamId();
+		int region = idToRegion.get(message.getStockId());
+		for (int i =0; i < queueList.size(); i++) {
+			if (regions.get(i) == region && streams.get(i) == streamId) {
+				return i;
+			}
+		}
+		queueList.add( new LinkedList<StockEvent>());
+		regions.add(region);
+		streams.add(streamId);
+		return queueList.size() -1;
+		
+		
+	}
+
 	/**
 	 * Get the next message to process
 	 */
 	public StockEvent getMessage() {
-		while (anyEmptyQueue()) {
+		while (queuesReady()) {
 			addMessage(network.getMsg());
 		}
 
@@ -141,7 +168,11 @@ public class MessageOrder {
 	}
 
 
-	private boolean anyEmptyQueue() {
+	private boolean queuesReady() {
+		if (queueList.size() < 4) {
+			// make sure we have recieved a decent number of fifferent sources 
+			return false;
+		}
 		for (Queue<StockEvent> q : queueList) {
 			if (q.isEmpty())
 				return true;
