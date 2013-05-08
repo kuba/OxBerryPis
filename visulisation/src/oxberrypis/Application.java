@@ -1,5 +1,7 @@
 package oxberrypis;
 
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +24,21 @@ public class Application extends JFrame{
 			data.put(i, s);
 			viewMap.put(i, new StockView(s));
 		}
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		GridLayout grid = new GridLayout(4,10, 20, 20); //TODO: Fix these numbers
+		this.setLayout(grid);
+		for(StockView s : viewMap.values()) {
+			add(s);
+		}
+//		for(int i = 0; i< 60; i++) { A test for the layout
+//			Stock s = new Stock(i+"");
+//			s.update(i*10, i*11, i+10);
+//			viewMap.put(i, new StockView(s));
+//			this.add(viewMap.get(i));
+//		}
+		this.pack();
+		this.setVisible(true);
+		this.setPreferredSize(new Dimension(1024,768));
 	}
 	
 	public void newMessage() {

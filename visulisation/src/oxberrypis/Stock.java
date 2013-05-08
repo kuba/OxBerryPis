@@ -64,4 +64,16 @@ public class Stock {
 	public int getChange() {
 		return change;
 	}
+	
+	public boolean hasLastTradePrice() {
+		return hasLastTradePrice;
+	}
+	
+	public boolean hasTopBuyPrice() {
+		return hasTopBuyPrice;
+	}
+	
+	public boolean hasTopSellPrice() {
+		return hasTopSellPrice;
+	}
 }
