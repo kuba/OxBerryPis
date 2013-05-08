@@ -11,7 +11,6 @@ import java.util.Set;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 import oxberrypis.net.proto.setup.VisInit.SetupVisualisation;
-<<<<<<< HEAD
 import oxberrypis.net.proto.setup.VisInit.SetupVisualisation.Mapping;
 
 import java.io.BufferedReader;
