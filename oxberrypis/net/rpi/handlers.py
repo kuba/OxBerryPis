@@ -118,7 +118,17 @@ class ToVisualisation(object):
         """Makes the message to send to visualisation."""
         matching_engine = self.matching_engines[stock_id]
 
-        top_sell_price, top_buy_price = matching_engine.get_best_orders()
+        top_sell_order, top_buy_order = matching_engine.get_best_orders()
+
+        if top_buy_order is not None:
+            top_buy_price = top_buy_order.price
+        else:
+            top_buy_price = None
+
+        if top_sell_order is not None:
+            top_sell_price = top_sell_order.price
+        else:
+            top_sell_price = None
 
         if (stock_msg.type != StockMessage.TRADE and
             stock_id in self.last_top_buy and
@@ -136,13 +146,12 @@ class ToVisualisation(object):
         stock_event.timestamp_ns = stock_msg.packet_time_ns
         stock_event.channel_id = channel_id
 
-        if stock_msg.type == StockMessage.TRADE:
-            stock_event.last_trade_price = stock_msg.trade.price
-
         if top_buy_price is not None:
             stock_event.top_buy_price = top_buy_price
         if top_sell_price is not None:
             stock_event.top_sell_price = top_sell_price
+        if stock_msg.type == StockMessage.TRADE:
+            stock_event.last_trade_price = stock_msg.trade.price
 
         return stock_event
 
