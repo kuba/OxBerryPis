@@ -39,6 +39,7 @@ public class MessageOrder {
 	private final String ARCAFILE = "";
 
 
+	
 	/**
 	 * Create the class and initialise the network
 	 */

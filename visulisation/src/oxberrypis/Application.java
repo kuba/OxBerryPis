@@ -71,8 +71,8 @@ public class Application extends JFrame {
 					message.getTopSellPrice());
 	}
 
-	public void startReceivingMessages() {
-		SwingWorker<Void,Integer> a = new MessageWorker(data, messageOrder, viewMap);
+	public void startReceivingMessages(String bind_uri, String parser_uri) {
+		SwingWorker<Void, Integer> a = new MessageWorker(data, viewMap, bind_uri, parser_uri);
 		a.execute();
 	}
 

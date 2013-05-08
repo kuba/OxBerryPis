@@ -10,8 +10,9 @@ import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 class MessageWorker extends SwingWorker<Void, Integer> {
 
 	private Map<Integer, Stock> data;
-	private MessageOrder messageOrder;
 	private Map<Integer, StockView> viewMap;
+	private String bind_uri;
+	private String parser_uri;
 
 	/**
 	 * A worker that waits for messages and updates the controls
@@ -23,17 +24,19 @@ class MessageWorker extends SwingWorker<Void, Integer> {
 	 * @param viewMap
 	 *            controls to update on UI thread
 	 */
-	MessageWorker(Map<Integer, Stock> data, MessageOrder messageOrder,
-			Map<Integer, StockView> viewMap) {
+	MessageWorker(Map<Integer, Stock> data, Map<Integer, StockView> viewMap,
+			String bind_uri, String parser_uri) {
 		this.data = data;
-		this.messageOrder = messageOrder;
 		this.viewMap = viewMap;
+		this.bind_uri = bind_uri;
+		this.parser_uri = parser_uri;
 	}
 
 	@Override
 	public Void doInBackground() throws Exception {
+		MessageOrder messageOrder = new MessageOrder(bind_uri, parser_uri);
 		while (true) {
-			StockEvent message = this.messageOrder.getMessage();
+			StockEvent message = messageOrder.getMessage();
 			if (this.data.containsKey(message.getStockId())) {
 				if (message.hasTradePrice())
 					this.data.get(message.getStockId()).update(
