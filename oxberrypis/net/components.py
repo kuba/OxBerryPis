@@ -58,6 +58,9 @@ class SynchronizedPublisher(object):
 
 
     """
+    PING_MSG = 'PING'
+    END_MSG = 'END'
+
     def __init__(self, context, subscribers_expected,
             publisher_uri, syncservice_uri):
         self.context = context
@@ -90,7 +93,7 @@ class SynchronizedPublisher(object):
         subscribers that the publisher is up and waiting for them.
 
         """
-        self.publish('PING')
+        self.publish(self.PING_MSG)
 
     def handshake(self):
         """Perform handshake with subscriber if available.
@@ -126,7 +129,7 @@ class SynchronizedPublisher(object):
         self.publisher.send_mulipart([key, data])
 
     def close(self):
-        self.publish('END')
+        self.publish(self.END_MSG)
         self.publisher.close()
 
 
@@ -153,8 +156,8 @@ class SynchronizedSubscriber(object):
         self.subscriber = self.context.socket(zmq.SUB)
         self.subscriber.connect(self.subscriber_uri)
 
-        self.subscriber.setsockopt(zmq.SUBSCRIBE, 'PING')
-        self.subscriber.setsockopt(zmq.SUBSCRIBE, 'END')
+        self.subscriber.setsockopt(zmq.SUBSCRIBE, SynchronizedPublisher.PING_MSG)
+        self.subscriber.setsockopt(zmq.SUBSCRIBE, SynchronizedPublisher.END_MSG)
 
         for subscription in self.subscriptions:
             self.subscriber.setsockopt(zmq.SUBSCRIBE, subscription)
@@ -171,13 +174,13 @@ class SynchronizedSubscriber(object):
         # wait for synchronization reply
         self.syncclient.recv()
 
-        self.subscriber.setsockopt(zmq.UNSUBSCRIBE, 'PING')
+        self.subscriber.setsockopt(zmq.UNSUBSCRIBE, SynchronizedPublisher.PING_MSG)
 
     def recv(self):
         # Third, get our updates and report how many we got
         while True:
             data = self.subscriber.recv()
-            if data == 'END':
+            if data == SynchronizedPublisher.END_MSG:
                 break
             self.msg_handler.received(data)
 
@@ -190,7 +193,7 @@ class SynchronizedSubscriber(object):
         # Third, get our updates and report how many we got
         while True:
             received = subscriber.recv_multipart()
-            if len(received) == 1 and received[0] == 'END':
+            if len(received) == 1 and received[0] == SynchronizedPublisher.END_MSG:
                 break
             data = received[1]
             self.msg_handler.received(data)
