@@ -40,6 +40,7 @@ class StockMessagesSubscriber(object):
 
     def handle_data(self, data):
         symbol_index, channel_id, serialized_stock_msg = data
+        channel_id = int(channel_id)
 
         stock_msg = StockMessage()
         stock_msg.ParseFromString(serialized_stock_msg)
