@@ -11,115 +11,168 @@ import java.util.Set;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 import oxberrypis.net.proto.setup.VisInit.SetupVisualisation;
+import oxberrypis.net.proto.setup.VisInit.SetupVisualisation.Mapping;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 
 public class MessageOrder {
 	private NetworkPis network;
+	
+	// maps per stock (may make a type and condense)
 	private Map<Integer, Integer> idToQueue;
+	private Map<Integer, Integer> idToRegion;
 	private Map<Integer, String> idToName;
-	private List<Queue<StockEvent>> queueList;
-	private int denomPower;
+	private Map<Integer, Integer> denomPowers;
 	private Map<Integer, Integer> lastSeqNum;
+
+	private List<Queue<StockEvent>> queueList = new ArrayList<Queue<StockEvent>>();
+	private List<Integer> regions;
+	private List<Integer> streams;
+	
+	private final String ARCAFILE = "";
+
+
 
 	public MessageOrder() {
 		network = new NetworkPis();
-		idToQueue = new HashMap<Integer, Integer>();
-		idToName = new HashMap<Integer, String>();
-		queueList = new ArrayList<Queue<StockEvent>>();
-		init();
+		
+		init(network.getInit());
 	}
 
-	public int getDenomPower() {
-		return denomPower;
+
+	public int getDenomPower(int stockId) {
+		return denomPowers.get(stockId);
 	}
 
 	public String getName(int stockId) {
-		return idToName.get(new Integer(stockId));
-	}
-	
-	public Set<Integer> getStockList() {
-		return idToName.keySet();
+		return idToName.get(stockId);
 	}
 
-	private void init() {
-		SetupVisualisation m = network.getInit(); // Get the initialisation
-													// method from parser
-		denomPower = m.getDenomPower();
-		List<List<Integer>> pis = new ArrayList<List<Integer>>();
-		List<Integer> streamIds = new ArrayList<Integer>();
-		// Cheating Map<(List(Pi),Stream),Int> that is which pis go to which
-		// queue. These two must be same length, this way we we don't have to
-		// define extra types
-		// with hash and equals implementaions
-		for (SetupVisualisation.SymbolDefn definition : m.getSymbolList()) { // Iterating
-																				// over
-																				// stocks
-			int symbolId = definition.getSymbolId();
-			int streamId = definition.getStreamId();
-			idToName.put(symbolId, definition.getSymbolName()); // Map ids to
-																// names
-			boolean foundMatch = false;
-			List<Integer> pisOrder = definition.getPiIdsList();
-			Collections.sort(pisOrder); // Sort pi orders to get canonical
-										// representation
-			for (int i = 0; i < pis.size(); i++) { // Iterate over things in the
-													// "map"
-				boolean foundMismatch = false;
-				for (int j = 0; j < pis.get(i).size(); j++) {
-					if (pisOrder.get(j) != pis.get(i).get(j)) { // If the pis
-																// are
-																// different,
-																// break out
-						foundMismatch = true;
-						break;
-					}
-				}
-				if (streamId != streamIds.get(i))
-					foundMismatch = true; // If streams are different, ignore
-				if (!foundMismatch) {
-					foundMatch = true;
-					idToQueue.put(symbolId, i); // If they match, add it to the
-												// global map
-					lastSeqNum.put(symbolId, 0);
-				}
+	
+
+
+
+
+
+	private void init(SetupVisualisation message) {
+
+	
+
+		BufferedReader br = null;
+		
+		List<Integer> stocks = new ArrayList<Integer>();
+		
+		idToQueue = new HashMap<Integer, Integer>();
+		idToName = new HashMap<Integer, String>();
+		idToRegion = new HashMap<Integer, Integer>();
+		
+		
+		try {
+
+			String sCurrentLine;
+
+			br = new BufferedReader(new FileReader(ARCAFILE));
+
+			while ((sCurrentLine = br.readLine()) != null) {
+				String[] parts = sCurrentLine.split("\\|");
+				int sId = Integer.parseInt(parts[2]);
+				denomPowers.put(sId, Integer.parseInt(parts[7]));
+				idToName.put(sId, parts[0]);
+				idToQueue.put(sId, -1);
+				stocks.add(sId);
 			}
-			if (!foundMatch) { // Add a new set of pis and stockId
-				idToQueue.put(symbolId, pis.size());
-				pis.add(pisOrder);
-				streamIds.add(streamId);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)
+					br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
 			}
 		}
-		for (int i = 0; i < pis.size(); i++) { // Create all the queues
-			queueList.add(new LinkedList<StockEvent>());
+		
+		int i = 0;
+		List<Mapping> mappings = message.getMappingsList();
+		for (Mapping m : mappings) {
+			List<Integer> mappingStocks = stocks.subList(m.getSymbolMapStart(),m.getSymbolMapEnd());
+			for (int stock : mappingStocks) {
+				idToRegion.put(stock,i);
+			}
+			i++;
 		}
+		
+
+
 	}
 
 	private void addMessage(StockEvent message) { // Find the queue and add the
 													// message, update sequence
 													// number
 		int queueId = idToQueue.get(message.getStockId());
+
+		if (queueId == -1) {
+			queueId =findQueue(message);
+			idToQueue.put(message.getStockId(), queueId);
+		}
+
 		if (lastSeqNum.get(message.getStockId()) < message.getSeqNum()) {
 			queueList.get(queueId).add(message);
 			lastSeqNum.put(message.getStockId(), message.getSeqNum());
 		}
 	}
 
+
+	private int  findQueue(StockEvent message) {
+		int streamId = message.getStreamId();
+		int region = idToRegion.get(message.getStockId());
+		for (int i =0; i < queueList.size(); i++) {
+			if (regions.get(i) == region && streams.get(i) == streamId) {
+				return i;
+			}
+		}
+		queueList.add( new LinkedList<StockEvent>());
+		regions.add(region);
+		streams.add(streamId);
+		return queueList.size() -1;
+		
+		
+	}
+
 	/**
 	 * Get the next message to process
 	 */
 	public StockEvent getMessage() {
-		while (anyEmptyQueue()) {
+		while (queuesReady()) {
 			addMessage(network.getMsg());
 		}
-		int bestTime = queueList.get(0).peek().getTimestamp();
+
+		long bestTime = getTime(queueList.get(0).peek());
 		Queue<StockEvent> bestQueue = queueList.get(0);
 		for (Queue<StockEvent> q : queueList) {
-			if (q.peek().getTimestamp() < bestTime)
+			if (getTime(q.peek()) < bestTime)
+
 				bestQueue = q;
 		}
 		return bestQueue.remove();
 	}
 
-	private boolean anyEmptyQueue() {
+
+	private long getTime(StockEvent s) {
+		return ((long) (s.getTimestampS()) * 1000000000)
+				+ (long) s.getTimestampNs();
+	}
+
+
+	private boolean queuesReady() {
+		if (queueList.size() < 4) {
+			// make sure we have recieved a decent number of fifferent sources 
+			return false;
+		}
 		for (Queue<StockEvent> q : queueList) {
 			if (q.isEmpty())
 				return true;
