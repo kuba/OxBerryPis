@@ -43,7 +43,7 @@ class StockMessagesPublisher(object):
             stock_id = str(msg.SymbolIndex)
             serialized = stock_msg.SerializeToString()
             self.publisher.send_multipart(
-                [stock_id, serialized]
+                [stock_id, str(self.channel_id), serialized]
             )
 
         self.publisher.close()

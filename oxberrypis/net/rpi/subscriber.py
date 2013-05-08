@@ -39,10 +39,7 @@ class StockMessagesSubscriber(object):
         self.sub.recv_multipart()
 
     def handle_data(self, data):
-        symbol_index, serialized_stock_msg = data
-
-        # Using dummy channel_id for now
-        channel_id = 0
+        symbol_index, channel_id, serialized_stock_msg = data
 
         stock_msg = StockMessage()
         stock_msg.ParseFromString(serialized_stock_msg)
