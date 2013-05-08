@@ -128,7 +128,7 @@ public class MessageOrder {
 
 
 	private int  findQueue(StockEvent message) {
-		int streamId = message.getStreamId();
+		int streamId = message.getChannelId();
 		int region = idToRegion.get(message.getStockId());
 		for (int i =0; i < queueList.size(); i++) {
 			if (regions.get(i) == region && streams.get(i) == streamId) {

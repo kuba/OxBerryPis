@@ -128,12 +128,12 @@ message OBDelete {
 message OBExecution {
   optional fixed32 source_time_ns = 1; // SourceTimeNS
 
-  optional uint32 symbol_index = 2; // SymbolIndex
+  required uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
 
-  optional uint32 order_id = 4; // OrderID
-  optional uint32 price = 5; // Price
-  optional uint32 volume = 6; // Volume
+  required uint32 order_id = 4; // OrderID
+  required uint32 price = 5; // Price
+  required uint32 volume = 6; // Volume
 
   enum OrderIDGTCIndicator {
     DAY_ORDER = 0;
@@ -149,7 +149,7 @@ message OBExecution {
     PARTIAL = 7; // Partial Fill (Did not lose position)
   }
 
-  optional ReasonCode reason_code = 8; // ReasonCode
+  required ReasonCode reason_code = 8; // ReasonCode
 
   optional uint32 TradeID = 9;
 }
@@ -157,7 +157,7 @@ message OBExecution {
 message Trade {
   optional fixed32 source_time_ns = 1; // SourceTimeNS
 
-  optional uint32 symbol_index = 2; // SymbolIndex
+  required uint32 symbol_index = 2; // SymbolIndex
   optional uint32 symbol_seq_num = 3; // SymbolSeqNum
   optional uint32 trade_id = 4; // TradeID
   optional uint32 price = 5; // Price
