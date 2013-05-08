@@ -16,3 +16,10 @@
 
 .coverage
 *.pdf
+
+# Java Class Files
+
+*.class
+
+
+

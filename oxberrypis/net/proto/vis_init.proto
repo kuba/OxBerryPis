@@ -1,0 +1,12 @@
+package oxberrypis.net.proto.setup;
+// mesasage used by visualisation for setup
+// should be sent by parser
+
+message SetupVisualisation {
+  message Mapping {
+    required int32 symbol_map_start =1;
+    required int32 symbol_map_end =2;
+  }
+  repeated Mapping mappings = 1;
+}
+

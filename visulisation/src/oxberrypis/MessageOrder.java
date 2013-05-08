@@ -11,11 +11,13 @@ import java.util.Set;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 import oxberrypis.net.proto.setup.VisInit.SetupVisualisation;
+<<<<<<< HEAD
 import oxberrypis.net.proto.setup.VisInit.SetupVisualisation.Mapping;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
 
 public class MessageOrder {
 	private NetworkPis network;
@@ -28,6 +30,8 @@ public class MessageOrder {
 
 	private final String ARCAFILE = "";
 
+
+
 	public MessageOrder() {
 		network = new NetworkPis();
 		idToQueue = new HashMap<Integer, Integer>();
@@ -35,6 +39,7 @@ public class MessageOrder {
 		queueList = new ArrayList<Queue<StockEvent>>();
 		init();
 	}
+
 
 	public int getDenomPower(int stockId) {
 		return denomPowers.get(stockId);
@@ -44,11 +49,14 @@ public class MessageOrder {
 		return idToName.get(stockId);
 	}
 
-	public Set<Integer> getStockList() {
-		return idToName.keySet();
-	}
+	
+
+
+
+
 
 	private void init() {
+
 		SetupVisualisation message = network.getInit(); // Get the initialisation
 													// method from parser
 
@@ -98,9 +106,11 @@ public class MessageOrder {
 													// message, update sequence
 													// number
 		int queueId = idToQueue.get(message.getStockId());
+
 		if (queueId == -1) {
 			// TODO :Find queue/add new queue 
 		}
+
 		if (lastSeqNum.get(message.getStockId()) < message.getSeqNum()) {
 			queueList.get(queueId).add(message);
 			lastSeqNum.put(message.getStockId(), message.getSeqNum());
@@ -114,19 +124,23 @@ public class MessageOrder {
 		while (anyEmptyQueue()) {
 			addMessage(network.getMsg());
 		}
+
 		long bestTime = getTime(queueList.get(0).peek());
 		Queue<StockEvent> bestQueue = queueList.get(0);
 		for (Queue<StockEvent> q : queueList) {
 			if (getTime(q.peek()) < bestTime)
+
 				bestQueue = q;
 		}
 		return bestQueue.remove();
 	}
 
+
 	private long getTime(StockEvent s) {
 		return ((long) (s.getTimestampS()) * 1000000000)
 				+ (long) s.getTimestampNs();
 	}
+
 
 	private boolean anyEmptyQueue() {
 		for (Queue<StockEvent> q : queueList) {
