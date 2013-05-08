@@ -1,8 +1,11 @@
 import zmq
+import threading
 
 from ...parsing.parsers import FileXDPChannelUnpacker as Unpacker
 
 from .msgs_factories import StockMessagesFactory
+
+from ..components import PubSubProxy
 
 
 class StockMessagesPublisher(object):
@@ -20,7 +23,7 @@ class StockMessagesPublisher(object):
 
     def run(self):
         self.publisher = self.context.socket(zmq.PUB)
-        self.publisher.bind(self.uri)
+        self.publisher.connect(self.uri)
 
         for (pkt_hdr, msg) in self.unpacker.parse():
             stock_msg = self.factory.create(pkt_hdr, msg)
@@ -40,18 +43,36 @@ class StockMessagesPublisher(object):
         self.publisher.close()
 
 
+def worker_routine(context, uri, directory, channel):
+    publisher = StockMessagesPublisher(
+        context,
+        uri,
+        directory,
+        channel
+    )
+    publisher.run()
+
+
 if __name__ == '__main__':
     import sys
 
     context = zmq.Context()
 
-    uri = 'tcp://*:1234'
+    frontend_uri = 'tcp://127.0.0.1:2000'
+    backend_uri = 'tcp://127.0.0.1:2001'
 
-    if len(sys.argv) != 3:
-        exit("USAGE: {0} directory channel".format(sys.argv[0]))
+    proxy = PubSubProxy(context, frontend_uri, backend_uri)
+
+    if len(sys.argv) != 2:
+        exit("USAGE: {0} directory".format(sys.argv[0]))
 
     directory = sys.argv[1]
-    channel = int(sys.argv[2])
 
-    c = StockMessagesPublisher(context, uri, directory, channel)
-    c.run()
+    for channel_id in xrange(1, 5):
+        thread = threading.Thread(
+            target=worker_routine,
+            args=(context, frontend_uri, directory, channel_id,)
+        )
+        thread.start()
+
+    proxy.run()

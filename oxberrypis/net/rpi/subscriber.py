@@ -97,7 +97,7 @@ class StockMessagesToOrderbook(object):
 
 if __name__ == '__main__':
    context = zmq.Context()
-   publisher_uri = 'tcp://localhost:1234'
+   publisher_uri = 'tcp://127.0.0.1:2001'
 
    stocks = xrange(1, 50000)
    orderbooks = {}
