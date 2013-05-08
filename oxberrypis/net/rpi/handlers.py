@@ -113,6 +113,7 @@ class ToVisualisation(object):
 
         self.last_top_buy = {}
         self.last_top_sell = {}
+        self.seq_nums = {}
 
     def make_price_message(self, stock_msg, stock_id, channel_id):
         """Makes the message to send to visualisation."""
@@ -145,6 +146,14 @@ class ToVisualisation(object):
         stock_event.timestamp_s = stock_msg.packet_time
         stock_event.timestamp_ns = stock_msg.packet_time_ns
         stock_event.channel_id = channel_id
+
+        if (stock_id in seq_nums):
+            new_seq_num = seq_nums[stock_id] +1
+        else:
+            new_seq_num = 0
+
+        seq_nums[stock_id] = neq_seq_num
+        stock_event.seq_num = new_seq_num
 
         if top_buy_price is not None:
             stock_event.top_buy_price = top_buy_price
