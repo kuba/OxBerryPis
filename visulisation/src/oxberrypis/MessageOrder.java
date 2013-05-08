@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
+
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 import oxberrypis.net.proto.setup.VisInit.SetupVisualisation;
 
@@ -32,6 +34,10 @@ public class MessageOrder {
 
 	public String getName(int stockId) {
 		return idToName.get(new Integer(stockId));
+	}
+	
+	public Set<Integer> getStockList() {
+		return idToName.keySet();
 	}
 
 	private void init() {
