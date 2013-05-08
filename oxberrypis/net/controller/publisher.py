@@ -9,11 +9,7 @@ class StockMessagesPublisher(object):
 
     def __init__(self, context, uri, directory, channel):
         self.context = context
-
-        self.publisher = context.socket(zmq.PUB)
-        self.publisher.bind(uri)
-
-        self.channel = channel
+        self.uri = uri
 
         self.unpacker = Unpacker.get_channel_unpacker(
             directory,
@@ -23,6 +19,9 @@ class StockMessagesPublisher(object):
         self.factory = StockMessagesFactory()
 
     def run(self):
+        self.publisher = self.context.socket(zmq.PUB)
+        self.publisher.bind(self.uri)
+
         for (pkt_hdr, msg) in self.unpacker.parse():
             stock_msg = self.factory.create(pkt_hdr, msg)
 
