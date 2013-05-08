@@ -29,9 +29,9 @@ public class Application extends JFrame{
 //		for(StockView s : viewMap.values()) {
 //		add(s);
 //	}
-		GridLayout grid = new GridLayout(0,12,40,25);
+		GridLayout grid = new GridLayout(0,10,40,25);
 		panel.setLayout(grid);
-		for(int i = 0; i<82; i++) {
+		for(int i = 0; i<100; i++) {
 			Stock s = new Stock("HSBC",4);
 			s.update(i*10, i*11, i+10);
 			viewMap.put(i, new StockView(s));
@@ -47,8 +47,10 @@ public class Application extends JFrame{
 		setVisible(true);
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 	}
-	
-	public void newMessage() { // Puts stock into map if not already present, otherwise updates
+	/**
+	 * Gets message. Puts stock into map if not already present, otherwise updates
+	 */
+	public void newMessage() {
 		StockEvent message = messageOrder.getMessage();
 		int stockId = message.getStockId();
 		if(!data.containsKey(stockId)) {
@@ -60,6 +62,9 @@ public class Application extends JFrame{
 		else data.get(stockId).update(message.getTopBuyPrice(),message.getTopSellPrice());
 	}
 	
+	/**
+	 * Receives a message, ensuring threadsafe
+	 */
 	public void receiveMessage() {
 		SwingWorker<Integer,Void> a = new SwingWorker<Integer,Void>() {
 
