@@ -60,6 +60,8 @@ class StockMessagesToOrderbook(object):
             )
 
             self.orderbooks[stock_id].add_order(order)
+
+            return stock_id
         elif message.type == StockMessage.MODIFY:
             modify_msg = message.modify
 
@@ -81,6 +83,8 @@ class StockMessagesToOrderbook(object):
             )
 
             self.orderbooks[stock_id].update_order(order)
+
+            return stock_id
         elif message.type == StockMessage.DELETE:
             delete_msg = message.delete
 
@@ -93,6 +97,37 @@ class StockMessagesToOrderbook(object):
                 side = Order.SELL
 
             self.orderbooks[stock_id].remove_order(order_id)
+
+            return stock_id
+        elif message.type == StockMessage.EXECUTE:
+            exec_msg = message.execution
+
+            stock_id = exec_msg.symbol_index
+            order_id = exec_msg.order_id
+
+            limit_price = exec_msg.price
+            num_shares = exec_msg.volume
+
+            orderbook = orderbooks[stock_id]
+            if exec_msg.reason_code == exec_msg.FILLED:
+                self.orderbook.remove_order(order_id)
+            elif exec_msg.reason_code == exec_msg.PARTIAL:
+                self.orderbook.decrease_order_amount_by(
+                    order_id,
+                    num_shares,
+                )
+            else:
+                #  otherwise do nothing (this type of message may be useless)
+                pass
+
+            return stock_id
+        elif message.type == StockMessage.TRADE:
+            trade_msg = message.trade
+
+            stock_id = trade_msg.symbol_index
+            return stock_id
+        else:
+            raise OxBerryPisExecption("Invalid Message Type")
 
 
 if __name__ == '__main__':

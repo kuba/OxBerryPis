@@ -2,7 +2,8 @@ package oxberrypis.net.proto.rpi;
 
 message StockEvent {
   required int32 stock_id = 1;
-  required int32 timestamp = 2;
+  required fixed32 timestamp_ns = 2;
+  required fixed32 timestamp_s = 8
   required int32 pi_id = 3;
   required int32 seq_num = 4;
   optional int32 top_buy_price = 5;
