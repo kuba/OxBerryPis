@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    readme
+   parsing
 
 
 Indices and tables
