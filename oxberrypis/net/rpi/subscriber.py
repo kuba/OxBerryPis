@@ -20,7 +20,7 @@ class ToVisualisation(object):
         self.last_top_sell = {}
 
 
-    def make_price_message(self,message,stock_id,stream_id):
+    def make_price_message(self,message,stock_id,channel_id):
         """Makes the message to send to visualisation."""
         
         matching_engine = matching_engines[stock_id]
@@ -41,7 +41,7 @@ class ToVisualisation(object):
         event.stock_id = stock_id
         event.timestamp_s = message.timestamp_s
         event.timestamp_ns = message.timestamp_ns
-        event.stream_id = stream_id
+        event.channel_id = channel_id
         
         if message.type == StockMessage.TRADE:
             visual_msg.last_trade_price = message.trade.price
@@ -52,11 +52,11 @@ class ToVisualisation(object):
             event.top_buy_price = top_buy_price
         if top_sell_price is not None:
             top_sell_price = top_sell_price
-        return true,event
+        return event
         
     def handle_send_visual(self,message,stock_id):
         """Handle sending a single stock event to visualisation"""
-        visual_msg = self.make_price_message(message,stock_id,stream_id)
+        visual_msg = self.make_price_message(message,stock_id,channel_id)
         if (visual_msg is not None):
             self.to_visualisation.send(msg.serialize_to_string())
 
@@ -196,13 +196,13 @@ class StockMessagesSubscriber(object):
         symbol_index, serialized_stock_msg = data
        
         # Using dummy stream_id for now
-        stream_id = 0
+        channel_id = 0
         
         stock_msg = StockMessage()
         stock_msg.ParseFromString(serialized_stock_msg)
         print stock_msg
         stock_id = self.stock_handler.handle_stock_message(stock_msg)
-        self.visual_handler.send_to_visual(stock_msg,stock_id,stream_id)
+        self.visual_handler.send_to_visual(stock_msg,stock_id,channel_id)
 
 if __name__ == '__main__':
     import sys
