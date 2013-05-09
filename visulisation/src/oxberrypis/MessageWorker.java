@@ -1,13 +1,15 @@
 package oxberrypis;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.SwingWorker;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 
-class MessageWorker extends SwingWorker<Void, Integer> {
+class MessageWorker extends SwingWorker<Void, StockEvent> {
 
 	private Map<Integer, Stock> data;
 	private Map<Integer, StockView> viewMap;
@@ -37,6 +39,14 @@ class MessageWorker extends SwingWorker<Void, Integer> {
 		MessageOrder messageOrder = new MessageOrder(bind_uri, parser_uri);
 		while (true) {
 			StockEvent message = messageOrder.getMessage();
+			this.publish(message);
+		}
+	}
+
+	@Override
+	protected void process(List<StockEvent> stockEvents) {
+		Set<Integer> stockIds = new HashSet<Integer>();
+		for (StockEvent message : stockEvents) {
 			if (this.data.containsKey(message.getStockId())) {
 				if (message.hasTradePrice())
 					this.data.get(message.getStockId()).update(
@@ -49,12 +59,10 @@ class MessageWorker extends SwingWorker<Void, Integer> {
 			} else {
 				throw new Error("Unknown stock");
 			}
-			setProgress(message.getStockId());
-		}
-	}
+			stockIds.add(message.getStockId());
 
-	@Override
-	protected void process(List<Integer> stockIds) {
+		}
+		
 		for (int stockId : stockIds) {
 			this.viewMap.get(stockId).change();
 		}

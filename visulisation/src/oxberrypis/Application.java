@@ -72,7 +72,7 @@ public class Application extends JFrame {
 	}
 
 	public void startReceivingMessages(String bind_uri, String parser_uri) {
-		SwingWorker<Void, Integer> a = new MessageWorker(data, viewMap, bind_uri, parser_uri);
+		SwingWorker<Void, StockEvent> a = new MessageWorker(data, viewMap, bind_uri, parser_uri);
 		a.execute();
 	}
 
