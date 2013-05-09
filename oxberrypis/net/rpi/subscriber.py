@@ -46,4 +46,4 @@ class StockMessagesSubscriber(object):
         stock_msg.ParseFromString(serialized_stock_msg)
         print stock_msg
         stock_id = self.stock_handler.handle_stock_message(stock_msg)
-        #self.visual_handler.handle_send_visual(stock_id, channel_id, stock_msg)
+        self.visual_handler.handle_send_visual(stock_id, channel_id, stock_msg)
