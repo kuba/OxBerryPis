@@ -160,7 +160,7 @@ class ToVisualisation(object):
         if top_sell_price is not None:
             stock_event.top_sell_price = top_sell_price
         if stock_msg.type == StockMessage.TRADE:
-            stock_event.last_trade_price = stock_msg.trade.price
+            stock_event.trade_price = stock_msg.trade.price
 
         return stock_event
 
