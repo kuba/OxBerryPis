@@ -160,7 +160,7 @@ class ToVisualisation(object):
         if top_sell_price is not None:
             stock_event.top_sell_price = top_sell_price
         if stock_msg.type == StockMessage.TRADE:
-            stock_event.last_trade_price = stock_msg.trade.price
+            stock_event.trade_price = stock_msg.trade.price
 
         return stock_event
 
@@ -169,4 +169,4 @@ class ToVisualisation(object):
         stock_event = self.make_price_message(stock_msg, stock_id, channel_id)
         if stock_event is not None:
             serialized_stock_event = stock_event.SerializeToString()
-            self.to_visualisation.send(serialized_stock_event)
+            #self.to_visualisation.send(serialized_stock_event)
