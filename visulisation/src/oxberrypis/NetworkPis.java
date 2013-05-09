@@ -63,7 +63,7 @@ public class NetworkPis {
 				.newBuilder()
 				.addMappings(
 						SetupVisualisation.Mapping.newBuilder()
-								.setSymbolMapStart(0).setSymbolMapEnd(7790)
+								.setSymbolMapStart(0).setSymbolMapEnd(50000)
 								.build()).build();
 	}
 }

@@ -28,7 +28,7 @@ public class Application extends JFrame {
 		panel.setLayout(grid);
 //		messageOrder = new MessageOrder();
 //		for (int i : messageOrder.getStockList()) {
-//			viewMap.put(i, new StockView(new Stock(messageOrder.getName(i))));
+//			viewMap.put(i`, new StockView(new Stock(messageOrder.getName(i))));
 //			}
 //			messageOrder = new MessageOrder();
 //			for(StockView s : viewMap.values()) {
