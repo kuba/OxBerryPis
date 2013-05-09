@@ -34,18 +34,20 @@ public class Application extends JFrame {
 //			for(StockView s : viewMap.values()) {
 //			add(s);
 //		}
-		for(int i = 0; i<100; i++) {
-			Stock s = new Stock("HSBC",4);
-			s.update(i*10, i*11, i+10);
-			viewMap.put(i, new StockView(s));
-			panel.add(viewMap.get(i));
-		}
+//		for(int i = 0; i<100; i++) {
+//			Stock s = new Stock("HSBC",4);
+//			s.update(i*10, i*11, i+10);
+//			viewMap.put(i, new StockView(s));
+//			panel.add(viewMap.get(i));
+//		}
 		JScrollPane pane = new JScrollPane(panel,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		pane.setViewportView(panel);
 		pane.getVerticalScrollBar().setUnitIncrement(75);
 		add(pane);
+		// TODO: Work out where to put put real URIs;
+		startReceivingMessages("tcp://127.0.0.1:1236","",panel);
 		pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(1024, 768));
@@ -53,18 +55,12 @@ public class Application extends JFrame {
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 	}
 
-	public void newMessage() { // Puts stock into map if not already present,
-								// otherwise updates
-
-	
-	}
-
 	
 	/**
 	 * Receives a message, ensuring threadsafe
 	 */
-	public void startReceivingMessages(String bind_uri, String parser_uri) {
-		SwingWorker<Void, StockEvent> a = new MessageWorker(data, viewMap, bind_uri, parser_uri);
+	public void startReceivingMessages(String bind_uri, String parser_uri,JPanel addPanel) {
+		SwingWorker<Void, StockEvent> a = new MessageWorker(data, viewMap, bind_uri, parser_uri,addPanel);
 		a.execute();
 	}
 

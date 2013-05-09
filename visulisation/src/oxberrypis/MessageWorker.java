@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
@@ -15,7 +16,7 @@ class MessageWorker extends SwingWorker<Void, StockEvent> {
 	private Map<Integer, StockView> viewMap;
 	private String bind_uri;
 	private String parser_uri;
-
+	private JPanel addPanel;
 	/**
 	 * A worker that waits for messages and updates the controls
 	 * 
@@ -27,7 +28,7 @@ class MessageWorker extends SwingWorker<Void, StockEvent> {
 	 *            controls to update on UI thread
 	 */
 	MessageWorker(Map<Integer, Stock> data, Map<Integer, StockView> viewMap,
-			String bind_uri, String parser_uri) {
+			String bind_uri, String parser_uri,JPanel addPanel) {
 		this.data = data;
 		this.viewMap = viewMap;
 		this.bind_uri = bind_uri;
@@ -55,13 +56,11 @@ class MessageWorker extends SwingWorker<Void, StockEvent> {
 			for (StockEvent message : stockEvents) {
 				int stockId = message.getStockId();
 				if (!data.containsKey(stockId)) {
-					Stock s = new Stock(messageOrder.getName(stockId), 1); // TODO:
-																			// Change
-																			// 1
-																			// to
-																			// message.getDenomPower()
+					Stock s = new Stock(messageOrder.getName(stockId),messageOrder.getDenomPower(stockId) );;
 					data.put(stockId, s);
 					viewMap.put(stockId, new StockView(s));
+					addPanel.add(viewMap.get(stockId));
+					addPanel.invalidate();
 				}
 				if (message.hasTradePrice())
 					data.get(stockId)

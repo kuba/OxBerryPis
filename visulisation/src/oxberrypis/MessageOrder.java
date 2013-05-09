@@ -36,7 +36,7 @@ public class MessageOrder {
 	private List<Integer> regions;
 	private List<Integer> streams;
 	
-	private final String ARCAFILE = "";
+	private final String ARCAFILE = "../ARCASymbolMapping.txt";
 
 	private final String bind_uri;
 	private final String parser_uri;
@@ -127,9 +127,9 @@ public class MessageOrder {
 		try {
 
 			String sCurrentLine;
-
+			System.out.println( System.getProperty("user.dir"));
 			br = new BufferedReader(new FileReader(ARCAFILE));
-
+			
 			while ((sCurrentLine = br.readLine()) != null) {
 				String[] parts = sCurrentLine.split("\\|");
 				int sId = Integer.parseInt(parts[2]);
