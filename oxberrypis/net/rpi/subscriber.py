@@ -14,9 +14,13 @@ from .handlers import StockMessagesToOrderbook
 class StockMessagesSubscriber(object):
 
     def __init__(self, context, publisher_uri, syncservice_uri,visual_uri,
+                 range0_start,range0_end,
+                 range1_start,range1_end
                  stock_handler_cls=StockMessagesToOrderbook,
                  visual_handler_cls=ToVisualisation):
-        stocks = xrange(1, 50000)
+        stocks1 =  range(range0_start, range0_end) 
+        stocks2 = range(range1_start, range1_end)
+        stocks  = stocks1+ stocks2
 
         matching_engines = {}
         for stock in stocks:
@@ -52,7 +56,7 @@ if __name__ == '__main__':
     import sys
 
     if len(sys.argv) != 4:
-        exit("USAGE: {} publisher_uri syncservice_uri visual_uri".format(sys.argv[0]))
+        exit("USAGE: {} publisher_uri syncservice_uri visual_uri range0_start range0_end range1_start range1_end".format(sys.argv[0]))
 
     publisher_uri = sys.argv[1]
     syncservice_uri = sys.argv[2]
@@ -64,7 +68,12 @@ if __name__ == '__main__':
         context,
         publisher_uri,
         syncservice_uri,
-        visual_uri
+        visual_uri,
+        range0_start,
+        range0_end,
+        range1_start,
+        range1_end
+
     )
 
     sub.run()
