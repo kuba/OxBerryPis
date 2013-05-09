@@ -5,7 +5,7 @@ import org.zeromq.ZMQ.Context;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 import oxberrypis.net.proto.vis_init.VisInit.SetupVisualisation;
-import oxberrypis.net.proto.vis_init.VisInit;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
