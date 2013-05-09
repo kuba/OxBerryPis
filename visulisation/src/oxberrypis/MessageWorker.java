@@ -56,7 +56,7 @@ class MessageWorker extends SwingWorker<Void, StockEvent> {
 			for (StockEvent message : stockEvents) {
 				int stockId = message.getStockId();
 				if (!data.containsKey(stockId)) {
-					Stock s = new Stock(messageOrder.getName(stockId),messageOrder.getDenomPower(stockId) );;
+					Stock s = new Stock(messageOrder.getName(stockId),messageOrder.getDenomPower(stockId));;
 					data.put(stockId, s);
 					viewMap.put(stockId, new StockView(s));
 					addPanel.add(viewMap.get(stockId));

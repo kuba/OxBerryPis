@@ -30,11 +30,11 @@ public class StockView extends JPanel {
 		ftf = new JFormattedTextField[3];
 		borderPanels = new JPanel[ftf.length];
 		des = new String[ftf.length];
-	    des[0] = "Last Trade Price ($)";
-	    des[1] = "Average Trade Price ($)";
-	    des[2] = "Sell/Buy Difference ($)";
+	    des[0] = "Last Trade Price";
+	    des[1] = "Average Trade Price";
+	    des[2] = "Sell/Buy Difference";
 	    for (int i = 0; i<ftf.length; i++) {
-	    	ftf[i] = getRight(i);
+	    	ftf[i] = new JFormattedTextField(getRight(i));
 	    }
 	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    JLabel nameLabel = new JLabel(stock.getStockName());
@@ -50,11 +50,6 @@ public class StockView extends JPanel {
 	      add(borderPanel);
 	    }
 	    setOpaque(true);
-//	    java.util.Random k = new java.util.Random();
-//	    int p = k.nextInt(3);
-//	    if(p==0) setBackground(new Color(252,68,39));
-//	    else if(p==1) setBackground(new Color(239,222,72));
-//		else setBackground(new Color(85,220,64));
 	    setBackground(colorChoice());
 	    setPreferredSize(new Dimension(120,200));
 	}
@@ -74,10 +69,7 @@ public class StockView extends JPanel {
 	 */
 	public void change() {
 		for (int j = 0; j<ftf.length; j+=1) {
-			borderPanels[j].remove(ftf[j]);
-			ftf[j] = getRight(j);
-			ftf[j].setEditable(false);
-			borderPanels[j].add(ftf[j], java.awt.BorderLayout.CENTER);
+			ftf[j].setText(getRight(j));
 		}
 		setBackground(colorChoice());
 		repaint();
@@ -88,10 +80,10 @@ public class StockView extends JPanel {
 	 * @param j = 0, 1 or 2 for the three fields
 	 * @return a new field with the correct data
 	 */
-	public JFormattedTextField getRight(int j) {
-		double k = Math.pow(10,stock.getDenomPower()); //TODO: Is the getDenomPower from stock or not?
-		if(j==0) return new JFormattedTextField(stock.getLastTradePrice()/k);
-		else if(j==1) return new JFormattedTextField((stock.getTopBuyPrice()+stock.getTopSellPrice())/(2*k));
-		else return new JFormattedTextField((stock.getTopSellPrice()-stock.getTopBuyPrice())/k);
+	public String getRight(int j) {
+		double k = Math.pow(10,stock.getDenomPower());
+		if(j==0) return "$"+(stock.getLastTradePrice()/k);
+		else if(j==1) return "$"+((stock.getTopBuyPrice()+stock.getTopSellPrice())/(2*k));
+		else return "$"+((stock.getTopSellPrice()-stock.getTopBuyPrice())/k);
 	}
 }

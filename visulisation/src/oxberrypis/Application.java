@@ -15,7 +15,6 @@ import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 public class Application extends JFrame {
 	private static final long serialVersionUID = 1L;
 	Map<Integer, Stock> data;
-	MessageOrder messageOrder;
 	Map<Integer, StockView> viewMap;
 
 	public Application() {
@@ -26,20 +25,12 @@ public class Application extends JFrame {
 
 		GridLayout grid = new GridLayout(0,10,40,25);
 		panel.setLayout(grid);
-//		messageOrder = new MessageOrder();
-//		for (int i : messageOrder.getStockList()) {
-//			viewMap.put(i, new StockView(new Stock(messageOrder.getName(i))));
-//			}
-//			messageOrder = new MessageOrder();
-//			for(StockView s : viewMap.values()) {
-//			add(s);
-//		}
-//		for(int i = 0; i<100; i++) {
-//			Stock s = new Stock("HSBC",4);
-//			s.update(i*10, i*11, i+10);
-//			viewMap.put(i, new StockView(s));
-//			panel.add(viewMap.get(i));
-//		}
+		for(int i = 0; i<100; i++) {
+			Stock s = new Stock("HSBC",4);
+			s.update(i*10, i*11, i+10);
+			viewMap.put(i, new StockView(s));
+			panel.add(viewMap.get(i));
+		}
 		JScrollPane pane = new JScrollPane(panel,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -57,7 +48,7 @@ public class Application extends JFrame {
 
 	
 	/**
-	 * Receives a message, ensuring threadsafe
+	 * Start receiving messages in a separate thread, and updating the UI in the Swing thread
 	 */
 	public void startReceivingMessages(String bind_uri, String parser_uri,JPanel addPanel) {
 		SwingWorker<Void, StockEvent> a = new MessageWorker(data, viewMap, bind_uri, parser_uri,addPanel);
