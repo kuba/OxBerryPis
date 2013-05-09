@@ -14,12 +14,11 @@
 *_pb2.py
 /visulisation/src/oxberrypis/net/proto/
 
-.coverage
-*.pdf
-
 # Java Class Files
-
 *.class
 
+# Public SSH key copied to RaspberryPis.
+/img/id_rsa.pub
 
-
+.coverage
+*.pdf
