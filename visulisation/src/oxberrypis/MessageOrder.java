@@ -15,16 +15,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-
 /**
- * Returns the messages in roughply order
- * so the stocks stay in sync. Also set up other data to do with the stocks
+ * Returns the messages in roughply order so the stocks stay in sync. Also set
+ * up other data to do with the stocks
+ * 
  * @author alex
- *
+ * 
  */
 public class MessageOrder {
 	private NetworkPis network;
-	
+
 	// maps per stock (may make a type and condense)
 	private Map<Integer, Integer> idToQueue;
 	private Map<Integer, Integer> idToRegion;
@@ -38,20 +38,21 @@ public class MessageOrder {
 	
 	private final String ARCAFILE = "";
 
+	private final String bind_uri;
+	private final String parser_uri;
 
-	
 	/**
 	 * Create the class and initialise the network
 	 */
-	public MessageOrder(String bind_uri,String parser_uri) {
-		network = new NetworkPis(bind_uri);
-		
-		init(network.getInit(parser_uri));
+	public MessageOrder(String bind_uri, String parser_uri) {
+		this.bind_uri = bind_uri;
+		this.parser_uri = parser_uri;
+
 	}
-	
+
 	/**
-	 * Gets the log to base 10 of the demander for this
-	 * stockId
+	 * Gets the log to base 10 of the demander for this stockId
+	 * 
 	 * @param stockId
 	 * @return logarithm of the denominator
 	 */
@@ -61,6 +62,7 @@ public class MessageOrder {
 
 	/**
 	 * Gets the name of the stock
+	 * 
 	 * @param stockId
 	 * @return
 	 */
@@ -68,47 +70,59 @@ public class MessageOrder {
 		return idToName.get(stockId);
 	}
 
-	
-
-
-
+	boolean hasInit = false;
 
 	/**
-	 * initialise the class from the message
+	 * initialise the class. Must be done on same thread as 
+	 * recieves the message
+	 * 
 	 * @param message
 	 */
-	private void init(SetupVisualisation message) {
-
-		//create the maps
+	public synchronized void init() {
+		// create the maps
 		idToQueue = new HashMap<Integer, Integer>();
 		idToName = new HashMap<Integer, String>();
 		idToRegion = new HashMap<Integer, Integer>();
-		
 		List<Integer> stocks = readArcaStocksFile();
 		
-		int i = 0;
+		network = new NetworkPis(bind_uri);
+		SetupVisualisation message = network.getInit(parser_uri);
 		List<Mapping> mappings = message.getMappingsList();
 		// set up the mappings to pis
+
+		int i = 0;
 		for (Mapping m : mappings) {
-			List<Integer> mappingStocks = stocks.subList(m.getSymbolMapStart(),m.getSymbolMapEnd());
+			List<Integer> mappingStocks = stocks.subList(m.getSymbolMapStart(),
+					m.getSymbolMapEnd());
 			for (int stock : mappingStocks) {
-				idToRegion.put(stock,i);
+				idToRegion.put(stock, i);
 			}
 			i++;
 		}
-		
-
-
+		hasInit = true;
+		notify();
 	}
 
 	/**
-	 * Read the ARCA tocks file, setting up all the maps and
-	 * returning the list of all stockIds
+	 * Waits for initialisation
+	 * @throws InterruptedException
+	 */
+	public synchronized void waitInit() throws InterruptedException {
+		while (!hasInit) {
+			wait();
+		}
+	}
+
+	/**
+	 * Read the ARCA tocks file, setting up all the maps and returning the list
+	 * of all stockIds
+	 * 
 	 * @return
 	 */
 	private List<Integer> readArcaStocksFile() {
 		List<Integer> stocks = new ArrayList<Integer>();
-		// Taken from http://www.mkyong.com/java/how-to-read-file-from-java-bufferedreader-example/
+		// Taken from
+		// http://www.mkyong.com/java/how-to-read-file-from-java-bufferedreader-example/
 		BufferedReader br = null;
 		try {
 
@@ -144,7 +158,7 @@ public class MessageOrder {
 		int queueId = idToQueue.get(message.getStockId());
 
 		if (queueId == -1) {
-			queueId =findQueue(message);
+			queueId = findQueue(message);
 			idToQueue.put(message.getStockId(), queueId);
 		}
 
@@ -154,21 +168,19 @@ public class MessageOrder {
 		}
 	}
 
-
-	private int  findQueue(StockEvent message) {
+	private int findQueue(StockEvent message) {
 		int streamId = message.getChannelId();
 		int region = idToRegion.get(message.getStockId());
-		for (int i =0; i < queueList.size(); i++) {
+		for (int i = 0; i < queueList.size(); i++) {
 			if (regions.get(i) == region && streams.get(i) == streamId) {
 				return i;
 			}
 		}
-		queueList.add( new LinkedList<StockEvent>());
+		queueList.add(new LinkedList<StockEvent>());
 		regions.add(region);
 		streams.add(streamId);
-		return queueList.size() -1;
-		
-		
+		return queueList.size() - 1;
+
 	}
 
 	/**
@@ -189,16 +201,14 @@ public class MessageOrder {
 		return bestQueue.remove();
 	}
 
-
 	private long getTime(StockEvent s) {
 		return ((long) (s.getTimestampS()) * 1000000000)
 				+ (long) s.getTimestampNs();
 	}
 
-
 	private boolean queuesReady() {
 		if (queueList.size() < 4) {
-			// make sure we have recieved a decent number of fifferent sources 
+			// make sure we have recieved a decent number of fifferent sources
 			return false;
 		}
 		for (Queue<StockEvent> q : queueList) {

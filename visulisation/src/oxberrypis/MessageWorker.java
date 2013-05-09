@@ -34,9 +34,11 @@ class MessageWorker extends SwingWorker<Void, StockEvent> {
 		this.parser_uri = parser_uri;
 	}
 
+	MessageOrder messageOrder = new MessageOrder(bind_uri, parser_uri);
+
 	@Override
 	public Void doInBackground() throws Exception {
-		MessageOrder messageOrder = new MessageOrder(bind_uri, parser_uri);
+		messageOrder.init();
 		while (true) {
 			StockEvent message = messageOrder.getMessage();
 			this.publish(message);
@@ -45,26 +47,37 @@ class MessageWorker extends SwingWorker<Void, StockEvent> {
 
 	@Override
 	protected void process(List<StockEvent> stockEvents) {
-		Set<Integer> stockIds = new HashSet<Integer>();
-		for (StockEvent message : stockEvents) {
-			if (this.data.containsKey(message.getStockId())) {
-				if (message.hasTradePrice())
-					this.data.get(message.getStockId()).update(
-							message.getTradePrice(), message.getTopBuyPrice(),
-							message.getTopSellPrice());
-				else
-					this.data.get(message.getStockId())
-							.update(message.getTopBuyPrice(),
-									message.getTopSellPrice());
-			} else {
-				throw new Error("Unknown stock");
-			}
-			stockIds.add(message.getStockId());
 
-		}
-		
-		for (int stockId : stockIds) {
-			this.viewMap.get(stockId).change();
+		try {
+			messageOrder.waitInit();
+
+			Set<Integer> stockIds = new HashSet<Integer>();
+			for (StockEvent message : stockEvents) {
+				int stockId = message.getStockId();
+				if (!data.containsKey(stockId)) {
+					Stock s = new Stock(messageOrder.getName(stockId), 1); // TODO:
+																			// Change
+																			// 1
+																			// to
+																			// message.getDenomPower()
+					data.put(stockId, s);
+					viewMap.put(stockId, new StockView(s));
+				}
+				if (message.hasTradePrice())
+					data.get(stockId)
+							.update(message.getTradePrice(),
+									message.getTopBuyPrice(),
+									message.getTopSellPrice());
+				else
+					data.get(stockId).update(message.getTopBuyPrice(),
+							message.getTopSellPrice());
+			}
+
+			for (int stockId : stockIds) {
+				this.viewMap.get(stockId).change();
+			}
+		} catch (InterruptedException ignore) {
+			// exit if we are cancelles
 		}
 
 	}

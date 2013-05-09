@@ -1,5 +1,7 @@
 package oxberrypis;
-
+/**
+ * A single Stock, containing name, last trade price, top buy/sell prices
+ */
 public class Stock {
 	private String stockName;
 	private int last_Trade_Price;
@@ -13,13 +15,18 @@ public class Stock {
 	
 	public Stock(String stockName, int denomPower) {
 		this.stockName = stockName;
-		this.denomPower = denomPower; //TODO: Find whether denomPower can be updated or is constant (I think updated)
+		this.denomPower = denomPower;
 		this.change = 0;
 		this.hasLastTradePrice=false;
 		this.hasTopBuyPrice=false;
 		this.hasTopSellPrice=false;
 	}
 	
+	/**
+	 * Update if either of these are given in a message
+	 * @param top_Buy_Price
+	 * @param top_Sell_Price
+	 */
 	public void update(Integer top_Buy_Price, Integer top_Sell_Price) { 
 		if(top_Buy_Price!=null) {
 			this.top_Buy_Price = top_Buy_Price;
@@ -37,6 +44,12 @@ public class Stock {
 		}
 	}
 	
+	/**
+	 * Update if last trade price is given
+	 * @param last_Trade_Price
+	 * @param top_Buy_Price
+	 * @param top_Sell_Price
+	 */
 	public void update(int last_Trade_Price, Integer top_Buy_Price, Integer top_Sell_Price) {
 		if(!hasLastTradePrice || this.last_Trade_Price==last_Trade_Price) change = 0;
 		else if(this.last_Trade_Price<last_Trade_Price) change = 1; 
