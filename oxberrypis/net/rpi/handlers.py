@@ -169,4 +169,4 @@ class ToVisualisation(object):
         stock_event = self.make_price_message(stock_msg, stock_id, channel_id)
         if stock_event is not None:
             serialized_stock_event = stock_event.SerializeToString()
-            #self.to_visualisation.send(serialized_stock_event)
+            self.to_visualisation.send(serialized_stock_event)
