@@ -92,9 +92,11 @@ public class MessageOrder {
 
 		int i = 0;
 		for (Mapping m : mappings) {
-			List<Integer> mappingStocks = stocks.subList(m.getSymbolMapStart(),
-					m.getSymbolMapEnd());
-			for (int stock : mappingStocks) {
+			int symbolMapEnd = m.getSymbolMapEnd();
+			int symbolMapStart = m.getSymbolMapStart();
+			for (int stock : stocks) {
+		
+				if (stock < symbolMapEnd && stock >= symbolMapStart) 
 				idToRegion.put(stock, i);
 			}
 			i++;
@@ -114,7 +116,7 @@ public class MessageOrder {
 	}
 
 	/**
-	 * Read the ARCA tocks file, setting up all the maps and returning the list
+	 * Read the ARCA stocks file, setting up all the maps and returning the list
 	 * of all stockIds
 	 * 
 	 * @return
