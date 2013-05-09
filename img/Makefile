@@ -51,15 +51,25 @@ mount:
 	sudo mount -o bind /sys mnt/sys
 
 	sudo cp /usr/bin/qemu-arm-static mnt/usr/bin/
+	sudo mv mnt/etc/ld.so.preload ld.so.preload.bak
 
 umount:
+	sudo mv ld.so.preload.bak mnt/etc/ld.so.preload
+
 	sudo rm mnt/usr/bin/qemu-arm-static
 	sudo umount -l mnt
 	rm -rf mnt
 	sha1sum oxberrypis-$(IMAGE_NAME).img > oxberrypis-$(IMAGE_NAME).img.sha1
 
 static-ssh-update:
-	sudo cp interfaces mnt/etc/network/
+	#sudo cp interfaces mnt/etc/network/
+
+	sudo mkdir -p mnt/home/pi/.ssh
+	sudo cp id_rsa.pub mnt/home/pi/.ssh/authorized_keys
+	sudo chmod 600 mnt/home/pi/.ssh/authorized_keys
+
+	sudo rm -rf mnt/home/pi/OxBerryPis
+	sudo git clone .. mnt/home/pi/OxBerryPis
 
 	# Following is a hack caused by New College
 	# network setup, which blocks DNS requests
@@ -68,19 +78,24 @@ static-ssh-update:
 	sudo mv mnt/etc/resolv.conf resolv.conf.bak
 	sudo cp /etc/resolv.conf mnt/etc/resolv.conf
 
-	sudo mv mnt/etc/ld.so.preload ld.so.preload.bak
-
 	# Enable SSH
 	sudo chroot mnt update-rc.d ssh enable
 
 	# Update and upgrade packages
 	sudo chroot mnt apt-get update
 	sudo chroot mnt apt-get -y upgrade
+	sudo chroot mnt apt-get -y install git python-setuptools python-virtualenv python-dev build-essential libtool autoconf automake uuid uuid-dev
+	sudo chroot mnt apt-get clean
+	sudo chroot mnt virtualenv /home/pi/venv
+	
+	sudo chroot mnt /home/pi/venv/bin/pip install pyzmq --install-option="--zmq=bundled"
 
-	sudo mv ld.so.preload.bak mnt/etc/ld.so.preload
+	sudo chroot mnt bash -c "cd /home/pi/OxBerryPis && /home/pi/venv/bin/python setup.py develop"
 
 	# Restore original resolv configuration
 	sudo mv resolv.conf.bak mnt/etc/resolv.conf
+
+	sudo chown -R 1000:1000 mnt/home/pi
 
 clean:
 	rm $(IMAGE_NAME).zip
