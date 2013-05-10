@@ -1,0 +1,1738 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="network.inkscape.svg"
+   inkscape:version="0.48.3.1 r9886"
+   version="1.1"
+   id="svg2"
+   height="1052.3622047"
+   width="744.09448819">
+  <title
+     id="title3209">OxBerryPis Network</title>
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutM"
+       style="overflow:visible">
+      <path
+         id="path8361"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.4)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutL"
+       style="overflow:visible">
+      <path
+         id="path8358"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.8)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Mend"
+       style="overflow:visible;">
+      <path
+         id="path8243"
+         style="fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.6) rotate(180) translate(0,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Lend"
+       style="overflow:visible;">
+      <path
+         id="path8237"
+         style="fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(1.1) rotate(180) translate(1,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path8219"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutL-2"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path8358-6"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.8,0.8)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.5"
+     inkscape:cx="231.47445"
+     inkscape:cy="433.36307"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:snap-grids="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1600"
+     inkscape:window-height="846"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>OxBerryPis Network</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Jakub Warmuz</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 186.57159,383.54103 0,83.48891 c 6.89358,-1e-5 13.78715,-6e-5 20.68073,-1e-4 0.84868,-10e-6 1.53191,-0.68323 1.53191,-1.53191 l 0,-80.42509 c 0,-0.84868 -0.68323,-1.53191 -1.53191,-1.53191 -6.89358,2e-5 -13.78715,10e-5 -20.68073,10e-5 z"
+       id="rect4073-1-8-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:11.48929977px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="413.58932"
+       y="-194.08751"
+       id="text5062"
+       sodipodi:linespacing="125%"
+       transform="matrix(0,1,-1,0,0,0)"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5064"
+         x="413.58932"
+         y="-194.08751">PAIR</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:11.48929977px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="116.1958"
+       y="429.16306"
+       id="text5199"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5201"
+         x="116.1958"
+         y="429.16306">Controller</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4073-8-3"
+       width="83.488907"
+       height="83.488907"
+       x="103.08267"
+       y="383.54095"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:49.78696823px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="73.438354"
+       y="407.0957"
+       id="text3011-1-6"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3013-4-4"
+         x="73.438354"
+         y="407.0957"
+         style="font-size:11.48929977px">REQ</tspan></text>
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999982;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 62.870115,383.54059 c -0.848676,0 -1.531907,0.68323 -1.531907,1.53191 l 0,40.21282 c 14.462815,3e-5 29.335193,0 41.744452,0 l 0,-41.74446 c -13.404179,-7e-5 -26.808362,-1.7e-4 -40.212545,-2.7e-4 z"
+       id="rect5245"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cscccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:49.78696823px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="73.438354"
+       y="448.84064"
+       id="text3011-1-6-8"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3013-4-4-1"
+         x="73.438354"
+         y="448.84064"
+         style="font-size:11.48929977px">REQ</tspan></text>
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999982;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 62.87012,467.03027 c -0.848677,1e-5 -1.531907,-0.68323 -1.531907,-1.5319 l 0,-40.21282 c 14.462815,-4e-5 29.335193,0 41.744457,0 l 0,41.74445 c -13.404184,7e-5 -26.808367,1.8e-4 -40.21255,2.7e-4 z"
+       id="rect5245-0"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cscccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:45.86168289px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="291.76764"
+       y="761.17932"
+       id="text2985"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2987"
+         x="291.76764"
+         y="761.17932"
+         style="font-size:10.35277939px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono">RaspberryPi</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="302.80545"
+       y="741.65588"
+       id="text3007"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3009"
+         x="302.80545"
+         y="741.65588"
+         style="font-size:10.35277939px">SUB</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="265.08163"
+       y="740.86389"
+       id="text3011"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3013"
+         x="265.08163"
+         y="740.86389"
+         style="font-size:10.35277939px">REQ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="281.29584"
+       y="781.68658"
+       id="text3051"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3053"
+         x="281.29584"
+         y="781.68658"
+         style="font-size:10.35277939px">PUSH</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4073"
+       width="75.230186"
+       height="20.015366"
+       x="254.17845"
+       y="748.45404"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 255.55881,728.43878 36.23482,0 c -2e-5,6.21167 -6e-5,13.80372 -9e-5,20.01538 -12.07825,0 -25.53677,0 -37.61501,0 -2e-5,-6.21167 -6e-5,-12.42334 -9e-5,-18.635 -1e-5,-0.76473 0.61564,-1.38038 1.38037,-1.38038 z"
+       id="rect4111"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1px;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       d="m 254.17853,768.46953 75.23019,0 c -1e-5,6.21167 -6e-5,12.42333 -9e-5,18.635 -1e-5,0.76472 -0.61565,1.38037 -1.38037,1.38037 l -72.46945,0 c -0.76473,0 -1.38037,-0.61565 -1.38037,-1.38037 1e-5,-6.21167 9e-5,-12.42333 9e-5,-18.635 z"
+       id="rect4073-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 328.02826,728.43878 -36.23481,0 c 10e-6,6.21167 5e-5,13.80372 9e-5,20.01538 12.07824,0 25.53676,0 37.615,0 2e-5,-6.21167 6e-5,-12.42334 9e-5,-18.635 10e-6,-0.76473 -0.61564,-1.38038 -1.38037,-1.38038 z"
+       id="rect4111-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:45.86168289px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="380.14279"
+       y="761.17932"
+       id="text2985-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2987-0"
+         x="380.14279"
+         y="761.17932"
+         style="font-size:10.35277939px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono">RaspberryPi</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="391.18057"
+       y="741.65588"
+       id="text3007-5"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3009-9"
+         x="391.18057"
+         y="741.65588"
+         style="font-size:10.35277939px">SUB</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="353.45676"
+       y="740.86389"
+       id="text3011-9"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3013-5"
+         x="353.45676"
+         y="740.86389"
+         style="font-size:10.35277939px">REQ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="369.67096"
+       y="781.68665"
+       id="text3051-0"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3053-5"
+         x="369.67096"
+         y="781.68665"
+         style="font-size:10.35277939px">PUSH</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4073-7"
+       width="75.230186"
+       height="20.015366"
+       x="342.55359"
+       y="748.45404"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 343.93394,728.43878 36.23482,0 c -2e-5,6.21167 -6e-5,13.80372 -9e-5,20.01538 -12.07825,0 -25.53677,0 -37.61501,0 -10e-6,-6.21167 -6e-5,-12.42334 -9e-5,-18.63501 -10e-6,-0.76472 0.61564,-1.38037 1.38037,-1.38037 z"
+       id="rect4111-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 342.55366,768.46953 75.23019,0 c -10e-6,6.21167 -6e-5,12.42333 -9e-5,18.635 -10e-6,0.76472 -0.61565,1.38037 -1.38037,1.38037 l -72.46945,0 c -0.76473,0 -1.38037,-0.61565 -1.38037,-1.38037 1e-5,-6.21167 9e-5,-12.42333 9e-5,-18.635 z"
+       id="rect4073-1-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 416.40339,728.43878 -36.23481,0 c 10e-6,6.21167 5e-5,13.80372 9e-5,20.01538 12.07824,0 25.53676,0 37.61501,0 10e-6,-6.21167 5e-5,-12.42334 9e-5,-18.63501 0,-0.76472 -0.61565,-1.38037 -1.38038,-1.38037 z"
+       id="rect4111-6-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:45.86168289px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="468.51791"
+       y="761.17932"
+       id="text2985-29"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2987-9"
+         x="468.51791"
+         y="761.17932"
+         style="font-size:10.35277939px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono">RaspberryPi</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="479.55569"
+       y="741.65588"
+       id="text3007-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3009-4"
+         x="479.55569"
+         y="741.65588"
+         style="font-size:10.35277939px">SUB</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="441.83188"
+       y="740.86389"
+       id="text3011-90"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3013-8"
+         x="441.83188"
+         y="740.86389"
+         style="font-size:10.35277939px">REQ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="458.04608"
+       y="781.68665"
+       id="text3051-3"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3053-1"
+         x="458.04608"
+         y="781.68665"
+         style="font-size:10.35277939px">PUSH</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4073-12"
+       width="75.230186"
+       height="20.015366"
+       x="430.92868"
+       y="748.45404"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 432.30906,728.43878 36.23482,0 c -2e-5,6.21167 -6e-5,13.80372 -9e-5,20.01538 -12.07825,0 -25.53677,0 -37.61501,0 -1e-5,-6.21167 -6e-5,-12.42334 -9e-5,-18.63501 -1e-5,-0.76472 0.61564,-1.38037 1.38037,-1.38037 z"
+       id="rect4111-66"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 430.92878,768.46953 75.23019,0 c -1e-5,6.21167 -6e-5,12.42333 -9e-5,18.635 -1e-5,0.76472 -0.61565,1.38037 -1.38037,1.38037 l -72.46945,0 c -0.76473,0 -1.38037,-0.61565 -1.38037,-1.38037 10e-6,-6.21167 9e-5,-12.42333 9e-5,-18.635 z"
+       id="rect4073-1-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 504.77851,728.43878 -36.23481,0 c 10e-6,6.21167 5e-5,13.80372 9e-5,20.01538 12.07824,0 25.53676,0 37.61501,0 1e-5,-6.21167 5e-5,-12.42334 9e-5,-18.63501 0,-0.76472 -0.61565,-1.38037 -1.38038,-1.38037 z"
+       id="rect4111-6-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:45.86168289px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="556.89301"
+       y="761.17932"
+       id="text2985-3"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2987-2"
+         x="556.89301"
+         y="761.17932"
+         style="font-size:10.35277939px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono">RaspberryPi</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="567.93079"
+       y="741.65588"
+       id="text3007-4"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3009-93"
+         x="567.93079"
+         y="741.65588"
+         style="font-size:10.35277939px">SUB</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="530.20697"
+       y="740.86389"
+       id="text3011-5"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3013-6"
+         x="530.20697"
+         y="740.86389"
+         style="font-size:10.35277939px">REQ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="546.4212"
+       y="781.68665"
+       id="text3051-31"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3053-3"
+         x="546.4212"
+         y="781.68665"
+         style="font-size:10.35277939px">PUSH</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4073-74"
+       width="75.230186"
+       height="20.015366"
+       x="519.30383"
+       y="748.45404"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 520.68419,728.43878 36.23482,0 c -2e-5,6.21167 -6e-5,13.80372 -9e-5,20.01538 -12.07825,0 -25.53677,0 -37.61501,0 -10e-6,-6.21167 -6e-5,-12.42334 -9e-5,-18.63501 -10e-6,-0.76472 0.61564,-1.38037 1.38037,-1.38037 z"
+       id="rect4111-67"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 519.30391,768.46953 75.23019,0 c -10e-6,6.21167 -6e-5,12.42333 -9e-5,18.635 -10e-6,0.76472 -0.61565,1.38037 -1.38037,1.38037 l -72.46945,0 c -0.76473,0 -1.38037,-0.61565 -1.38037,-1.38037 10e-6,-6.21167 9e-5,-12.42333 9e-5,-18.635 z"
+       id="rect4073-1-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 593.15364,728.43878 -36.23481,0 c 1e-5,6.21167 5e-5,13.80372 9e-5,20.01538 12.07824,0 25.53676,0 37.61501,0 10e-6,-6.21167 5e-5,-12.42334 9e-5,-18.63501 0,-0.76472 -0.61565,-1.38037 -1.38038,-1.38037 z"
+       id="rect4111-6-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:45.86168289px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="645.26813"
+       y="761.17932"
+       id="text2985-1"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2987-28"
+         x="645.26813"
+         y="761.17932"
+         style="font-size:10.35277939px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono">RaspberryPi</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="656.30591"
+       y="741.65588"
+       id="text3007-3"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3009-0"
+         x="656.30591"
+         y="741.65588"
+         style="font-size:10.35277939px">SUB</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="618.58215"
+       y="740.86389"
+       id="text3011-1"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3013-4"
+         x="618.58215"
+         y="740.86389"
+         style="font-size:10.35277939px">REQ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:44.86204147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="634.79633"
+       y="781.68658"
+       id="text3051-36"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3053-31"
+         x="634.79633"
+         y="781.68658"
+         style="font-size:10.35277939px">PUSH</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4073-8"
+       width="75.230186"
+       height="20.015366"
+       x="607.67896"
+       y="748.45404"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 609.05933,728.43878 36.23481,0 c -10e-6,6.21167 -5e-5,13.80372 -9e-5,20.01538 -12.07824,0 -25.53676,0 -37.615,0 -2e-5,-6.21167 -6e-5,-12.42334 -9e-5,-18.635 -10e-6,-0.76473 0.61564,-1.38038 1.38037,-1.38038 z"
+       id="rect4111-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 607.67905,768.46953 75.23019,0 c -10e-6,6.21167 -6e-5,12.42333 -9e-5,18.635 -10e-6,0.76472 -0.61565,1.38037 -1.38038,1.38037 l -72.46944,0 c -0.76473,0 -1.38037,-0.61565 -1.38037,-1.38037 1e-5,-6.21167 9e-5,-12.42333 9e-5,-18.635 z"
+       id="rect4073-1-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 681.52878,728.43878 -36.23482,0 c 2e-5,6.21167 6e-5,13.80372 9e-5,20.01538 12.07825,0 25.53677,0 37.61501,0 2e-5,-6.21167 6e-5,-12.42334 9e-5,-18.635 1e-5,-0.76473 -0.61564,-1.38038 -1.38037,-1.38038 z"
+       id="rect4111-6-36"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:66.44836426px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="468.50632"
+       y="931.39154"
+       id="text2985-1-3"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         x="468.50632"
+         y="931.39154"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         id="tspan6219">Visualisation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:65px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="495.54626"
+       y="903.04425"
+       id="text3007-3-5"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3009-0-6"
+         x="495.54626"
+         y="903.04425"
+         style="font-size:15px;text-align:center;text-anchor:middle">PULL</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:65px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="429.84134"
+       y="901.95673"
+       id="text3011-1-1"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3013-4-6"
+         x="429.84134"
+         y="901.95673"
+         style="font-size:15px">REQ</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4073-8-0"
+       width="108.99999"
+       height="28.999989"
+       x="414.04385"
+       y="912.95404"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 416.04384,883.95424 52.50013,0 c -2e-5,9 -8e-5,20.00001 -1.3e-4,29.00001 -17.5,0 -36.99987,-10e-6 -54.49987,-10e-6 -2e-5,-9 -8e-5,-18 -1.3e-4,-27 -10e-6,-1.108 0.892,-2 2,-2 z"
+       id="rect4111-2-5"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 521.04384,883.95424 -52.50013,0 c 2e-5,9 8e-5,20.00001 1.3e-4,29.00001 17.5,0 36.99987,-10e-6 54.49987,-10e-6 2e-5,-9 8e-5,-18 1.3e-4,-27 10e-6,-1.108 -0.892,-2 -2,-2 z"
+       id="rect4111-6-36-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:11.48929977px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="413.58932"
+       y="-261.8493"
+       id="text4914"
+       sodipodi:linespacing="125%"
+       transform="matrix(0,1,-1,0,0,0)"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4916"
+         x="413.58932"
+         y="-261.8493">PAIR</tspan></text>
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 276.54608,467.02985 0,-83.48892 c -6.89358,10e-6 -13.78716,7e-5 -20.68074,10e-5 -0.84868,1e-5 -1.53191,0.68324 -1.53191,1.53191 l 0,80.4251 c 0,0.84868 0.68323,1.53191 1.53191,1.53191 6.89358,-2e-5 13.78716,-10e-5 20.68074,-10e-5 z"
+       id="rect4073-1-8-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g4440"
+       transform="matrix(0.76595333,0,0,0.76595333,166.75827,76.882233)"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <text
+         xml:space="preserve"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         x="177.37"
+         y="445.46219"
+         id="text4356"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4358"
+           x="177.37"
+           y="445.46219">ChannelParser</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         x="214.56999"
+         y="473.95218"
+         id="text4360"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4362"
+           x="214.56999"
+           y="473.95218">PUB</tspan></text>
+      <rect
+         y="425.86218"
+         x="171.5"
+         height="28.999989"
+         width="108.99999"
+         id="rect4073-3"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.30557752;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         sodipodi:nodetypes="cccsscc"
+         inkscape:connector-curvature="0"
+         id="rect4073-1-4"
+         d="m 171.50006,454.86219 109,0 c -2e-5,9 -9e-5,17.99999 -1.4e-4,26.99999 -10e-6,1.108 -0.892,2 -2,2 l -104.99999,0 c -1.108,0 -2,-0.892 -2,-2 2e-5,-9 1.3e-4,-17.99999 1.3e-4,-26.99999 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.30557752;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <g
+       transform="matrix(0.76595333,0,0,0.76595333,259.94925,76.882233)"
+       id="g4440-5"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <text
+         xml:space="preserve"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         x="177.37"
+         y="445.46219"
+         id="text4356-1"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4358-1"
+           x="177.37"
+           y="445.46219">ChannelParser</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         x="214.56999"
+         y="473.95218"
+         id="text4360-3"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4362-9"
+           x="214.56999"
+           y="473.95218">PUB</tspan></text>
+      <rect
+         y="425.86218"
+         x="171.5"
+         height="28.999989"
+         width="108.99999"
+         id="rect4073-3-0"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.30557752;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         sodipodi:nodetypes="cccsscc"
+         inkscape:connector-curvature="0"
+         id="rect4073-1-4-4"
+         d="m 171.50006,454.86219 109,0 c -2e-5,9 -9e-5,17.99999 -1.4e-4,26.99999 -10e-6,1.108 -0.892,2 -2,2 l -104.99999,0 c -1.108,0 -2,-0.892 -2,-2 2e-5,-9 1.3e-4,-17.99999 1.3e-4,-26.99999 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.30557752;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <g
+       transform="matrix(0.76595333,0,0,0.76595333,353.14023,76.882233)"
+       id="g4440-1"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <text
+         xml:space="preserve"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         x="177.37"
+         y="445.46219"
+         id="text4356-8"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4358-7"
+           x="177.37"
+           y="445.46219">ChannelParser</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         x="214.56999"
+         y="473.95218"
+         id="text4360-32"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4362-2"
+           x="214.56999"
+           y="473.95218">PUB</tspan></text>
+      <rect
+         y="425.86218"
+         x="171.5"
+         height="28.999989"
+         width="108.99999"
+         id="rect4073-3-9"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.30557752;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         sodipodi:nodetypes="cccsscc"
+         inkscape:connector-curvature="0"
+         id="rect4073-1-4-0"
+         d="m 171.50006,454.86219 109,0 c -2e-5,9 -9e-5,17.99999 -1.4e-4,26.99999 -10e-6,1.108 -0.892,2 -2,2 l -104.99999,0 c -1.108,0 -2,-0.892 -2,-2 2e-5,-9 1.3e-4,-17.99999 1.3e-4,-26.99999 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.30557752;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <g
+       transform="matrix(0.76595333,0,0,0.76595333,446.33123,76.882233)"
+       id="g4440-7"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <text
+         xml:space="preserve"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         x="177.37"
+         y="445.46219"
+         id="text4356-2"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4358-8"
+           x="177.37"
+           y="445.46219">ChannelParser</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+         x="214.56999"
+         y="473.95218"
+         id="text4360-9"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4362-0"
+           x="214.56999"
+           y="473.95218">PUB</tspan></text>
+      <rect
+         y="425.86218"
+         x="171.5"
+         height="28.999989"
+         width="108.99999"
+         id="rect4073-3-3"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.30557752;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         sodipodi:nodetypes="cccsscc"
+         inkscape:connector-curvature="0"
+         id="rect4073-1-4-8"
+         d="m 171.50006,454.86219 109,0 c -2e-5,9 -9e-5,17.99999 -1.4e-4,26.99999 -10e-6,1.108 -0.892,2 -2,2 l -104.99999,0 c -1.108,0 -2,-0.892 -2,-2 2e-5,-9 1.3e-4,-17.99999 1.3e-4,-26.99999 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.30557752;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <path
+       sodipodi:nodetypes="csssscc"
+       inkscape:connector-curvature="0"
+       id="rect4954"
+       d="m 276.54583,383.54098 404.67652,0 c 0.84868,0 1.53191,0.68323 1.53191,1.53191 l 0,80.4251 c 0,0.84867 -0.68323,1.5319 -1.53191,1.5319 l -404.67652,0 c -4e-5,-29.00376 0,-58.63654 0,-83.48891 z"
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:66.44836426px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="468.50629"
+       y="570.30847"
+       id="text2985-1-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2987-28-0"
+         x="468.50629"
+         y="570.30847"
+         style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono">Publisher</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:65px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="468.72388"
+       y="600.02118"
+       id="text3051-36-9"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3053-31-3"
+         x="468.72388"
+         y="600.02118"
+         style="font-size:15px;text-align:center;text-anchor:middle">XPUB</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4073-8-4"
+       width="108.99999"
+       height="28.999989"
+       x="414.04382"
+       y="551.87097"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 414.04394,580.87117 109,0 c -2e-5,9 -9e-5,17.99999 -1.4e-4,26.99999 -1e-5,1.108 -0.892,2 -2,2 l -104.99999,0 c -1.108,0 -2,-0.892 -2,-2 2e-5,-9 1.3e-4,-17.99999 1.3e-4,-26.99999 z"
+       id="rect4073-1-8-31"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1.00001144;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 414.04388,551.87131 109.00001,0 c -2e-5,-9 -9e-5,-17.99999 -1.4e-4,-26.99999 -1e-5,-1.108 -0.892,-2 -2,-2 l -105,0 c -1.108,0 -2,0.892 -2,2 2e-5,9 1.3e-4,17.99999 1.3e-4,26.99999 z"
+       id="rect4073-1-8-31-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccsscc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:65px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="468.72382"
+       y="542.0213"
+       id="text3051-36-9-3"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3053-31-3-3"
+         x="468.72382"
+         y="542.0213"
+         style="font-size:15px;text-align:center;text-anchor:middle">XSUB</tspan></text>
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:7.9999999, 0.99999999;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect6234"
+       width="671.65466"
+       height="287.07822"
+       x="36.218899"
+       y="353.16678"
+       rx="2"
+       ry="2"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 218.94212,189.73379 -52.50001,0 c 2e-5,9.06346 8e-5,20.14106 1.2e-4,29.20453 17.49997,0 36.9998,-1e-5 54.49975,-1e-5 3e-5,-9.06348 9e-5,-18.12695 1.3e-4,-27.19042 2e-5,-1.11582 -0.89199,-2.0141 -1.99999,-2.0141 z"
+       id="rect4111-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 218.94212,306.14263 -52.50001,0 c 2e-5,-9.06346 8e-5,-20.14106 1.2e-4,-29.20453 17.49997,0 36.99979,10e-6 54.49975,10e-6 3e-5,9.06348 9e-5,18.12695 1.3e-4,27.19042 2e-5,1.11582 -0.89199,2.0141 -1.99999,2.0141 z"
+       id="rect4111-7-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="sccccs"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect7078"
+       width="54.5"
+       height="29"
+       x="-220.94211"
+       y="247.93831"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect7078-1"
+       width="54.5"
+       height="29"
+       x="-220.94211"
+       y="218.93832"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect7104"
+       width="130.22318"
+       height="116.409"
+       x="-166.44208"
+       y="189.7337"
+       transform="scale(-1,1)"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="86.21801"
+       y="252.5882"
+       id="text7098"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan7100"
+         x="86.21801"
+         y="252.5882">NYSE</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 274.10715,291.54037 65.8153,-1.9e-4"
+       id="path7477"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g7201-1"
+       transform="matrix(0.8333334,0,0,0.8333334,-8.01428,207.72109)"
+       style="fill:none"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         sodipodi:nodetypes="cccccc"
+         inkscape:connector-curvature="0"
+         id="rect7124-7"
+         d="m 318.44492,86.083122 16.51881,0 3.6933,5.199189 0,23.800809 -20.21211,0 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.19999957;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <g
+         transform="translate(-0.016325,-0.274424)"
+         id="g7192-1"
+         style="fill:none">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,92.92378 13.54212,0"
+           id="path7137-57"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,95.568339 13.54212,0"
+           id="path7137-5-9"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,98.212947 13.54212,0"
+           id="path7137-8-0"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,106.14674 13.54212,0"
+           id="path7137-4-5"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,108.79131 13.54212,0"
+           id="path7137-3-0"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,103.50216 13.54212,0"
+           id="path7137-34-8"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,100.85754 13.54212,0"
+           id="path7137-86-5"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 274.65608,263.31193 158.38464,2.5e-4"
+       id="path7477-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g7201-2"
+       transform="matrix(0.8333334,0,0,0.8333334,-8.01428,178.61903)"
+       style="fill:none"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         sodipodi:nodetypes="cccccc"
+         inkscape:connector-curvature="0"
+         id="rect7124-77"
+         d="m 318.44492,86.083122 16.51881,0 3.6933,5.199189 0,23.800809 -20.21211,0 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.19999957;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <g
+         transform="translate(-0.016325,-0.274424)"
+         id="g7192-6"
+         style="fill:none">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,92.92378 13.54212,0"
+           id="path7137-2"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,95.568339 13.54212,0"
+           id="path7137-5-2"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,98.212947 13.54212,0"
+           id="path7137-8-3"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,106.14674 13.54212,0"
+           id="path7137-4-0"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,108.79131 13.54212,0"
+           id="path7137-3-8"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,103.50216 13.54212,0"
+           id="path7137-34-4"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,100.85754 13.54212,0"
+           id="path7137-86-7"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 274.65608,233.43833 251.55904,-1.5e-4"
+       id="path7477-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g7201-7"
+       transform="matrix(0.8333334,0,0,0.8333334,-8.01428,149.61905)"
+       style="fill:none"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         sodipodi:nodetypes="cccccc"
+         inkscape:connector-curvature="0"
+         id="rect7124-75"
+         d="m 318.44492,86.083122 16.51881,0 3.6933,5.199189 0,23.800809 -20.21211,0 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.19999957;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <g
+         transform="translate(-0.016325,-0.274424)"
+         id="g7192-4"
+         style="fill:none">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,92.92378 13.54212,0"
+           id="path7137-9"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,95.568339 13.54212,0"
+           id="path7137-5-1"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,98.212947 13.54212,0"
+           id="path7137-8-2"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,106.14674 13.54212,0"
+           id="path7137-4-6"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,108.79131 13.54212,0"
+           id="path7137-3-1"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,103.50216 13.54212,0"
+           id="path7137-34-2"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,100.85754 13.54212,0"
+           id="path7137-86-8"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 274.15608,204.33605 345.27074,1.3e-4"
+       id="path7477-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g7201"
+       transform="matrix(0.8333334,0,0,0.8333334,-8.01428,120.51678)"
+       style="fill:none"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         sodipodi:nodetypes="cccccc"
+         inkscape:connector-curvature="0"
+         id="rect7124"
+         d="m 318.44492,86.083122 16.51881,0 3.6933,5.199189 0,23.800809 -20.21211,0 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:1.19999957;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <g
+         transform="translate(-0.016325,-0.274424)"
+         id="g7192"
+         style="fill:none">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,92.92378 13.54212,0"
+           id="path7137"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,95.568339 13.54212,0"
+           id="path7137-5"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,98.212947 13.54212,0"
+           id="path7137-8"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,106.14674 13.54212,0"
+           id="path7137-4"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,108.79131 13.54212,0"
+           id="path7137-3"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,103.50216 13.54212,0"
+           id="path7137-34"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.19999993px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 321.79624,100.85754 13.54212,0"
+           id="path7137-86"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#TriangleOutL)"
+       d="m 339.86372,291.04018 0,106.25662"
+       id="path7555"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutL)"
+       d="m 433.0547,262.81218 c 0,45.78658 0,32.26116 0,134.50374"
+       id="path7555-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutL)"
+       d="m 526.24568,232.93818 0.004,164.26957"
+       id="path7555-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#TriangleOutL)"
+       d="m 619.43668,203.83618 0,193.31647"
+       id="path7555-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.99999988, 3.99999976;stroke-dashoffset:0"
+       d="m 36.220764,331.23983 671.654966,0"
+       id="path8190"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutL)"
+       d="m 209.00503,425.28543 39.89726,0"
+       id="path8210"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutL)"
+       d="m 414.00503,898.64054 -366.000001,0 c 0,-164.95833 0,-329.91666 0,-494.87499 l 8.375,0"
+       id="path11504"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutL)"
+       d="m 607.56387,738.14054 -6.72806,0 0,74.5 -518.830774,0 0,-340.74999"
+       id="path11696"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:15px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="371.37952"
+       y="115.18817"
+       id="text13597"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan13599"
+         x="371.37952"
+         y="115.18817"
+         style="font-size:30px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:Ubuntu;-inkscape-font-specification:Ubuntu">OxBerryPis Network</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:none"
+       d="m 519.25137,738.14054 -6.72806,0 0,74.5"
+       id="path11696-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:none"
+       d="m 430.93887,738.14054 -6.72806,0 0,74.5"
+       id="path11696-8-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:none"
+       d="m 342.50137,738.14054 -6.72806,0 0,74.5"
+       id="path11696-8-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:none"
+       d="m 254.12637,738.14054 -6.72806,0 0,74.5"
+       id="path11696-8-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       id="path14425-6-8-8-7"
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 645.2941,787.90425 0,52.3259 m -88.37514,-52.3259 0,52.3259 m -88.37513,-52.3259 0,52.3259 m -176.75025,-52.3259 0,52.3259 354.00329,0 m -265.62816,-52.3259 0,52.3259 m -88.37513,-52.3259 0,52.3259"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#TriangleOutL-2)"
+       d="m 495.79378,840.11501 0,38.61223"
+       id="path14521"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;marker-end:url(#TriangleOutL-2);visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 664.0292,676.04661 0,46.58473"
+       id="path15184"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;marker-end:url(#TriangleOutL-2);visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 575.65406,676.54662 0,46.81894"
+       id="path15182"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;marker-end:url(#TriangleOutL-2);visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 487.27893,676.29662 0,46.59265"
+       id="path15180"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 310.52868,728.48852 0,-52.3259 354.00329,0"
+       id="path15178"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;marker-end:url(#TriangleOutL-2);visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 398.90381,675.79662 0,47.05098"
+       id="path15176"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;marker-end:url(#TriangleOutL-2);visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 310.52868,677.54662 0,45.22505"
+       id="path14425-6-8-8-7-7"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 468.54388,609.86218 0,66"
+       id="path15172"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 339.86372,447.86218 -0.28726,41 280.34338,0"
+       id="path16530"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 433.0547,447.86218 0,41"
+       id="path16530-1"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 526.24568,447.86218 0,41"
+       id="path16530-1-9"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 619.43668,447.86218 0,41"
+       id="path16530-1-9-9"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutL-2)"
+       d="m 468.54382,489.11218 0,28"
+       id="path16586"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.24098587px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="193.76604"
+       y="207.478"
+       id="text16780"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan16782"
+         x="193.76604"
+         y="207.478"
+         style="text-align:center;text-anchor:middle">Channel 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.24098587px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="193.73369"
+       y="236.58026"
+       id="text16780-6"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan16782-9"
+         x="193.73369"
+         y="236.58026"
+         style="text-align:center;text-anchor:middle">Channel 2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.24098587px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="193.74756"
+       y="265.58023"
+       id="text16780-68"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         x="193.74756"
+         y="265.58023"
+         style="text-align:center;text-anchor:middle"
+         id="tspan16893">Channel 3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.24098587px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="193.63666"
+       y="294.68231"
+       id="text16780-9"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan16782-6"
+         x="193.63666"
+         y="294.68231"
+         style="text-align:center;text-anchor:middle">Channel 4</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 257.10715,294.05937 -36.1847,0"
+       id="path7477-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 257.10715,262.4383 -36.1847,0"
+       id="path7477-8-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 257.10715,233.43832 -36.1847,0"
+       id="path7477-8-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 257.10715,204.33605 -36.1847,0"
+       id="path7477-8-24"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.99999994;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.99999988, 3.99999976;stroke-dashoffset:0"
+       d="m 36.219751,861.95593 671.654979,0"
+       id="path8190-7"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+</svg>
