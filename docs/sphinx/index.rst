@@ -13,6 +13,7 @@ Contents:
 
    readme
    reports
+   parsing
 
 
 Indices and tables

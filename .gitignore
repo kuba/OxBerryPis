@@ -12,3 +12,6 @@
 
 .coverage
 *.pdf
+
+# Public SSH key copied to RaspberryPis.
+/img/id_rsa.pub
