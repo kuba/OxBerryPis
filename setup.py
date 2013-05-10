@@ -1,5 +1,8 @@
 import os
+
 from setuptools import setup
+from setuptools import find_packages
+
 
 version = '0.1'
 
@@ -46,7 +49,7 @@ setup(
     author_email='oxberrypis@googlegroups.com',
     url='https://github.com/kuba/oxberrypis',
     license='',
-    packages=['oxberrypis'],
+    packages=find_packages(exclude=['tests*',]),
     include_package_data=True,
     zip_safe=False,
     install_requires=install_requires,
