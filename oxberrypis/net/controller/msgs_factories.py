@@ -1,6 +1,6 @@
 """Factories for stock messages.
 
-These factories take messages from :py:module:`oxberrypis.parsing.messages`
+These factories take messages from :py:mod:`oxberrypis.parsing.messages`
 and turn them into instances of :py:class:`.proto.stock_pb2.StockMessage`.
 
 """

@@ -162,6 +162,7 @@ class SynchronizedSubscriber(object):
             self.subscriber.setsockopt(zmq.SUBSCRIBE, subscription)
 
     def setup(self):
+        # Wait for dummy data from the SychronizedPublisher
         data = self.subscriber.recv()
 
         # Second, synchronize with publisher

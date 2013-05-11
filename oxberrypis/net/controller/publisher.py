@@ -1,150 +1,68 @@
-import zmq
-from ..zhelpers import zpipe
+"""Network components responsible for publishing stock messages."""
 import threading
 
-from ...parsing.parsers import FileXDPChannelUnpacker as Unpacker
-
-from .msgs_factories import StockMessagesFactory
+from .channel import ChannelPublisherThread
 
 from ..components import PubSubProxy
-from ..components import SynchronizedPublisher
 
 
-class StockMessagesPublisher(object):
+class ProxyThread(threading.Thread):
+    """Pub-sub proxy thread.
 
-    def __init__(self, context, uri, directory, channel_id):
-        self.context = context
-        self.uri = uri
+    :param context: ZMQ context.
+    :param frontend_uri: ZMQ URI proxy listens to.
+    :param backend_uri: ZMQ URI proxy rebpublishes to.
+    :param name: Name of the thread; useful for debugging.
 
-        self.channel_id = channel_id
+    """
+    def __init__(self, context, frontend_uri, backend_uri, name="Proxy"):
+        super(ProxyThread, self).__init__(name=name)
 
-        self.unpacker = Unpacker.get_channel_unpacker(
-            directory,
-            channel_id,
+        self.proxy = PubSubProxy(
+            context,
+            frontend_uri,
+            backend_uri,
         )
 
-        self.factory = StockMessagesFactory()
-
     def run(self):
-        self.publisher = self.context.socket(zmq.PUB)
-        self.publisher.connect(self.uri)
+        """Run the proxy."""
+        self.proxy.run()
 
-        for (pkt_hdr, msg) in self.unpacker.parse():
-            stock_msg = self.factory.create(pkt_hdr, msg)
 
-            # Ignore messages with no handler in the factory
-            if stock_msg is None:
-                continue
+class ChannelPublishersThread(threading.Thread):
+    """Channel publishers thread.
 
-            # Ignore messages without symbol index
-            if not hasattr(msg, 'SymbolIndex'):
-                continue
+    :param context: ZMQ context.
+    :param init_pipe: Pipe used to sync with the :py:class:`Initializer`.
+    :param proxy_uri: Destination channel publishers publish to.
+    :param directory: Directory when channel files are found.
+    :param channels_num: Number of channels to process. Parsing will
+                         start with channel 1.
+    :param name: Name of the thread; useful for debugging.
 
-            stock_id = str(msg.SymbolIndex)
-            serialized = stock_msg.SerializeToString()
-            self.publisher.send_multipart(
-                [stock_id, str(self.channel_id), serialized]
+    """
+    def __init__(self, context, init_pipe, proxy_uri, directory,
+            channels_num, name="ChannelPublishers"):
+        super(ChannelPublishersThread, self).__init__(name=name)
+
+        self.init_pipe = init_pipe
+
+        self.cp_threads = []
+        for channel_id in xrange(1, channels_num + 1):
+            cp_thread = ChannelPublisherThread(
+                context,
+                proxy_uri,
+                directory,
+                channel_id,
             )
+            cp_thread.daemon = True
 
-        self.publisher.close()
-
-
-def single_channel_parser_routine(context, proxy_uri, directory, channel):
-    publisher = StockMessagesPublisher(
-        context,
-        proxy_uri,
-        directory,
-        channel
-    )
-    publisher.run()
-
-def publishers_routine(pipe, context, publishers_uri, directory, channels_num):
-    # Wait for signal
-    pipe.recv()
-    print "Received signal!"
-
-    # Stock messages publishers threads
-    for channel_id in xrange(1, channels_num + 1):
-        thread = threading.Thread(
-            target=single_channel_parser_routine,
-            args=(context, publishers_uri, directory, channel_id,)
-        )
-        thread.daemon = True
-        thread.start()
-
-def controller_routine(pipe, context, publishers_uri, syncservice_uri,
-        subscribers_expected):
-    publisher = SynchronizedPublisher(
-        context,
-        publishers_uri,
-        syncservice_uri,
-        subscribers_expected,
-    )
-    publisher.setup()
-    print '!!!'
-
-    # Signal to publishers_routine
-    pipe.send('')
-
-def proxy_routine(context, frontend_uri, backend_uri):
-    """Run a proxy"""
-    proxy = PubSubProxy(context, frontend_uri, backend_uri)
-    proxy.run()
-
-class Publisher(object):
-
-    def __init__(self, context, publishers_uri, controller_uri, syncservice_uri,
-            subscribers_expected, directory, channels_num):
-        self.context = context
-        self.publishers_uri = publishers_uri
-        self.controller_uri = controller_uri
-        self.syncservice_uri = syncservice_uri
-        self.subscribers_expected = subscribers_expected
-        self.directory = directory
-        self.channels_num = channels_num
+            self.cp_threads.append(cp_thread)
 
     def run(self):
-        # Proxy thread
-        proxy_thread = threading.Thread(
-            target=proxy_routine,
-            args=(
-                self.context,
-                self.publishers_uri,
-                self.controller_uri,
-            ),
-        )
-        proxy_thread.daemon = True
-        proxy_thread.start()
+        """Run the channel publishers thread."""
+        # Wait for signal from initializer
+        self.init_pipe.recv()
 
-        pipe = zpipe(self.context)
-
-        # Publishers thread
-        publishers_thread = threading.Thread(
-            target=publishers_routine,
-            args=(
-                pipe[0],
-                self.context,
-                self.publishers_uri,
-                self.directory,
-                self.channels_num,
-            ),
-        )
-        publishers_thread.daemon = True
-        publishers_thread.start()
-
-        # Controller thread
-        controller_thread = threading.Thread(
-            target=controller_routine,
-            args=(
-                pipe[1],
-                self.context,
-                self.publishers_uri,
-                self.syncservice_uri,
-                self.subscribers_expected,
-            ),
-        )
-        controller_thread.daemon = True
-        controller_thread.start()
-
-        while True:
-            pass
+        for cp_thread in self.cp_threads:
+            cp_thread.start()

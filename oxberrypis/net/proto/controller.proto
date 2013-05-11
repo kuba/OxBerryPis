@@ -1,0 +1,22 @@
+// Packets from the controller
+package oxberrypis.net.proto.controller;
+
+// Message used by visualisation for setup
+message SetupVisualisation {
+  message SymbolMapping {
+    required string symbol = 1;
+    required int symbol_index = 2;
+    required int price_scale_code = 3;
+  }
+
+  message SymbolRange {
+    repeated SymbolMapping mappings = 1;
+  }
+
+  repeated SymbolRange ranges = 1;
+}
+
+// Message used by RaspberryPi for setup
+message SetupRPi {
+  repeated int32 symbol_indexes = 1;
+}
