@@ -5,8 +5,8 @@ package oxberrypis.net.proto.controller;
 message SetupVisualisation {
   message SymbolMapping {
     required string symbol = 1;
-    required int symbol_index = 2;
-    required int price_scale_code = 3;
+    required uint32 symbol_index = 2;
+    required uint32 price_scale_code = 3;
   }
 
   message SymbolRange {
@@ -18,5 +18,5 @@ message SetupVisualisation {
 
 // Message used by RaspberryPi for setup
 message SetupRPi {
-  repeated int32 symbol_indexes = 1;
+  repeated uint32 symbol_indexes = 1;
 }
