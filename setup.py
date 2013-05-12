@@ -60,6 +60,7 @@ setup(
             'oxberrypis-channel-parser = oxberrypis.scripts.parsers:channel_parser',
             'oxberrypis-controller = oxberrypis.scripts.controller:main',
             'oxberrypis-rpi = oxberrypis.scripts.rpi:main',
+            'oxberrypis-vis-test = oxberrypis.scripts.vis_test:main',
         ],
     },
 )

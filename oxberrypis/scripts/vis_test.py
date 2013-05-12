@@ -1,4 +1,6 @@
 """Dummy visualiser."""
+import sys
+
 import zmq
 
 from oxberrypis.net.proto.controller_pb2 import SetupVisualisation
@@ -6,10 +8,13 @@ from oxberrypis.net.proto.rpi_pb2 import StockEvent
 
 
 def main():
-    context = zmq.Context()
+    if len(sys.argv) != 3:
+        exit("USAGE: {} vissync_uri visual_uri".format(sys.argv[0]))
 
-    vissync_uri = 'tcp://127.0.0.1:1234'
-    visual_uri = 'tcp://*:1237'
+    vissync_uri = sys.argv[1]
+    visual_uri = sys.argv[2]
+
+    context = zmq.Context()
 
     vissync = context.socket(zmq.REQ)
     vissync.connect(vissync_uri)
@@ -27,12 +32,10 @@ def main():
     print setup_vis
 
     while True:
-        break
         data = visual.recv()
         stock_event = StockEvent()
         stock_event.ParseFromString(data)
         print stock_event
-
 
 if __name__ == '__main__':
     main()
