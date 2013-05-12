@@ -13,6 +13,7 @@ Contents:
 
    readme
    parsing
+   orderbook
 
 
 Indices and tables
