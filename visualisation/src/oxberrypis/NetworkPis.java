@@ -39,6 +39,7 @@ public class NetworkPis {
 															// fast
 
 		}
+		
 
 	}
 
@@ -48,7 +49,6 @@ public class NetworkPis {
 	 * @return
 	 */
 	public SetupVisualisation getInit(String parser_uri) {
-
 		ZMQ.Socket fromParser = context.socket(ZMQ.REQ);
 		fromParser.connect(parser_uri);
 		fromParser.send("");

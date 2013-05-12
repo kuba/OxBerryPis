@@ -25,12 +25,23 @@ public class Application extends JFrame {
 
 		GridLayout grid = new GridLayout(0,10,40,25);
 		panel.setLayout(grid);
-		for(int i = 0; i<100; i++) {
-			Stock s = new Stock("HSBC",4);
-			s.update(i*10, i*11, i+10);
-			viewMap.put(i, new StockView(s));
-			panel.add(viewMap.get(i));
-		}
+		
+//		messageOrder = new MessageOrder();
+//		for (int i : messageOrder.getStockList()) {
+//			viewMap.put(i`, new StockView(new Stock(messageOrder.getName(i))));
+//			}
+//			messageOrder = new MessageOrder();
+//			for(StockView s : viewMap.values()) {
+//			add(s);
+//		}
+
+//		for(int i = 0; i<100; i++) {
+//			Stock s = new Stock("HSBC",4);
+//			s.update(i*10, i*11, i+10);
+//			viewMap.put(i, new StockView(s));
+//			panel.add(viewMap.get(i));
+//		}
+		
 		JScrollPane pane = new JScrollPane(panel,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
