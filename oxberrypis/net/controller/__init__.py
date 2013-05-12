@@ -33,10 +33,12 @@ class Controller(object):
     :param channels_num: Number of channels to be processed.
     :type channels_num: integer
 
+    :param mapping: symbol index mapping
+
     """
     def __init__(self, context, vissync_uri, rpisync_uri,
             pub_uri, subscribers_expected,
-            directory, channels_num):
+            directory, channels_num, mapping):
         # Proxy thread
         proxy_uri = 'inproc://channel-publishers'
         self.proxy_thread = ProxyThread(
@@ -57,6 +59,7 @@ class Controller(object):
             proxy_uri,
             pipe[0],
             subscribers_expected,
+            mapping,
         )
         self.initializer_thread.daemon = True
 

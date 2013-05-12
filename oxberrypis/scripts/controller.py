@@ -1,8 +1,22 @@
 """Main script to be run on the controller computer."""
 import sys
+import os.path
+
 import zmq
+
 from ..net.controller import Controller
 
+from ..parsing.symbols import parse_symbol_mapping_file
+from ..parsing.symbols import SYMBOL_MAPPING_FILENAME
+
+
+def get_mapping(directory):
+    path = os.path.join(directory, SYMBOL_MAPPING_FILENAME)
+    with open(path, 'r') as symbol_mapping_file:
+        mapping_gen = parse_symbol_mapping_file(symbol_mapping_file)
+        mapping = list(mapping_gen)
+
+    return mapping
 
 def main():
     """Run main controller."""
@@ -21,6 +35,8 @@ def main():
     # Number of available channels
     channels_num = 4
 
+    mapping = get_mapping(directory)
+
     controller = Controller(
         context,
         vissync_uri,
@@ -29,6 +45,7 @@ def main():
         subscribers_expected,
         directory,
         channels_num,
+        mapping,
     )
     controller.run()
 

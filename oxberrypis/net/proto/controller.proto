@@ -10,13 +10,13 @@ message SetupVisualisation {
   }
 
   message SymbolRange {
-    repeated SymbolMapping mappings = 1;
+    repeated SymbolMapping mapping = 1;
   }
 
-  repeated SymbolRange ranges = 1;
+  repeated SymbolRange range = 1;
 }
 
 // Message used by RaspberryPi for setup
 message SetupRPi {
-  repeated uint32 symbol_indexes = 1;
+  repeated uint32 symbol_index = 1;
 }
