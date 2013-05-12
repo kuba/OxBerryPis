@@ -77,11 +77,14 @@ class ChannelPublisher(object):
 
     def run(self):
         """Run the publisher."""
-        for (stock_id, stock_msg) in self.generator.generate_stock_msgs():
+        for (symbol_index, stock_msg) in self.generator.generate_stock_msgs():
             serialized = stock_msg.SerializeToString()
 
+            # 2^32 (max SymbolIndex) is 10-digit number
+            prefix = str(symbol_index).zfill(10)
+
             self.publisher.send_multipart(
-                [str(stock_id), str(self.channel_id), serialized]
+                [prefix, str(self.channel_id), serialized]
             )
 
         self.publisher.close()

@@ -25,7 +25,6 @@ def main():
     # Sync with Initializer
     vissync.send('')
     setup_vis_parsed = vissync.recv()
-    vissync.send('')
 
     setup_vis = SetupVisualisation()
     setup_vis.ParseFromString(setup_vis_parsed)

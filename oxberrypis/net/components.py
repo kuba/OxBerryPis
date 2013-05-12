@@ -64,13 +64,15 @@ class SynchronizedPublisher(object):
     :param publisher_uri: ZMQ URI the publisher binds to.
     :param syncservice_uri: ZMQ URI for publisher's syncing service REP socket.
     :param subscribers_expected: Number of expected subscribers.
+    :param sync_reply: Synchronization reply function.
+    :type sync_reply: function accepting sub_id and returning sync reply message.
 
     """
     PING_MSG = 'PING'
     END_MSG = 'END'
 
     def __init__(self, context, publisher_uri, syncservice_uri,
-            subscribers_expected=1):
+            subscribers_expected=1, sync_reply=None):
         self.context = context
 
         self.subscribers_expected = subscribers_expected
@@ -89,13 +91,15 @@ class SynchronizedPublisher(object):
         self.syncservice = self.context.socket(zmq.REP)
         self.syncservice.bind(self.syncservice_uri)
 
+        self.sync_reply = sync_reply or (lambda id: '')
+
     def sync(self):
         """Synchronize with subscribers."""
         # Get synchronization from subscribers
         subscribers = 0
         while subscribers < self.subscribers_expected:
             self.ping()
-            if self.handshake():
+            if self.handshake(subscribers):
                 subscribers += 1
 
     def ping(self):
@@ -109,11 +113,13 @@ class SynchronizedPublisher(object):
         """
         self.publish(self.PING_MSG)
 
-    def handshake(self):
+    def handshake(self, sub_id):
         """Perform handshake with subscriber if available.
 
         This function checks for subscribers synchronization
         on the REP socket.
+
+        :param sub_id: Subscriber-to-be id.
 
         """
         # Sleep one second, to give time to the subscribers to connect.
@@ -126,7 +132,8 @@ class SynchronizedPublisher(object):
             return False
 
         # send synchronization reply
-        self.syncservice.send('')
+        reply = self.sync_reply(sub_id)
+        self.syncservice.send(reply)
 
         return True
 
@@ -155,31 +162,43 @@ class SynchronizedPublisher(object):
 class SynchronizedSubscriber(object):
     """Synchronized subscriber.
 
-    .. seealso:: Check :py:class:`SynchronizedPublisher` for implementation details.
+    .. seealso:: Check :py:class:`SynchronizedPublisher` for
+                 implementation details.
 
     :param context: ZMQ context.
     :param publisher_uri: ZMQ URI of the publisher.
     :param syncservice_uri: ZMQ URI of the publisher's REP socket for syncing.
     :param subscriptions: A list of prefixes to subscribe to.
     :param msg_handler: Function for handling of subscribed data.
+    :param sync_reply_handler: Function for handling synchronization reply.
 
     """
-    def __init__(self, context, publisher_uri, syncservice_uri, subscriptions, msg_handler):
+    def __init__(self, context, publisher_uri, syncservice_uri,
+            subscriptions, msg_handler, sync_reply_handler=None):
         self.context = context
         self.publisher_uri = publisher_uri
         self.syncservice_uri = syncservice_uri
         self.subscriptions = subscriptions
         self.msg_handler = msg_handler
+        self.sync_reply_handler = sync_reply_handler or (lambda _: None)
 
         # First, connect our subscriber socket
         self.subscriber = self.context.socket(zmq.SUB)
         self.subscriber.connect(self.publisher_uri)
 
-        self.subscriber.setsockopt(zmq.SUBSCRIBE, SynchronizedPublisher.PING_MSG)
-        self.subscriber.setsockopt(zmq.SUBSCRIBE, SynchronizedPublisher.END_MSG)
+        self.subscribe(SynchronizedPublisher.PING_MSG)
+        self.subscribe(SynchronizedPublisher.END_MSG)
 
         for subscription in self.subscriptions:
-            self.subscriber.setsockopt(zmq.SUBSCRIBE, subscription)
+            self.subscribe(subscription)
+
+    def subscribe(self, subscription):
+        """Subscribe to ``subscription``."""
+        self.subscriber.setsockopt(zmq.SUBSCRIBE, subscription)
+
+    def unsubscribe(self, subscription):
+        """Unsubscribe from ``subscription``."""
+        self.subscriber.setsockopt(zmq.UNSUBSCRIBE, subscription)
 
     def sync(self):
         """Synchronize with the publisher."""
@@ -194,9 +213,10 @@ class SynchronizedSubscriber(object):
         self.syncclient.send('')
 
         # wait for synchronization reply
-        self.syncclient.recv()
+        sync_reply = self.syncclient.recv()
+        self.sync_reply_handler(sync_reply)
 
-        self.subscriber.setsockopt(zmq.UNSUBSCRIBE, SynchronizedPublisher.PING_MSG)
+        self.unsubscribe(SynchronizedPublisher.PING_MSG)
 
     def recv(self):
         """Receive messages and proccess them using :attr:`msg_handler`

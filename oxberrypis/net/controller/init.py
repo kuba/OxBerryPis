@@ -20,14 +20,12 @@ class Initializer(object):
     #. Once visualisation connects, send back ranges of symbol indexes
        which will be distributed over the RapsberryPis.
 
-    #. Wait for acknowledgement from the visualisation.
-
     #. Wait for given number (:attr:`subscribers_expected`) of
        RaspberryPis.
 
     #. For every RaspberryPi connected send back range of symbol
        indexes. Each range is sent to two different RaspberryPis
-       to allow high availability. Wait for acknowledgement.
+       to allow high availability.
 
     #. Once all RaspberryPis are connected hand over to the
        :py:class:`.ChannelPublishersThread`.
@@ -53,6 +51,7 @@ class Initializer(object):
 
         self.to_publishers_pipe = to_publishers_pipe
 
+        self.subscribers_expected = subscribers_expected
         self.ranges = list(chunks(mapping, subscribers_expected))
 
         self.syncpub = SynchronizedPublisher(
@@ -60,7 +59,29 @@ class Initializer(object):
             proxy_uri,
             rpisync_uri,
             subscribers_expected,
+            self.create_setup_rpi_msg_serialized,
         )
+
+    def create_setup_rpi_msg(self, pi_id):
+        """Create :py:class:`SetupRPi` message."""
+        assert pi_id >= 0 and pi_id < self.subscribers_expected
+
+        count = len(self.ranges)
+        range1 = self.ranges[pi_id]
+        range2 = self.ranges[pi_id + 1 % count]
+
+        setup_rpi = SetupRPi()
+
+        for mapping in range1 + range2:
+            symbol_index = mapping[1]
+            setup_rpi.symbol_index.append(symbol_index)
+
+        return setup_rpi
+
+    def create_setup_rpi_msg_serialized(self, pi_id):
+        """Create serialized :py:class:`SetupRPi` message."""
+        setup_rpi = self.create_setup_rpi_msg(pi_id)
+        return setup_rpi.SerializeToString()
 
     def create_setup_visualisation_msg(self):
         """Create SetupVisualisation message."""
@@ -84,8 +105,6 @@ class Initializer(object):
         # Wait for signal from visualisation
         self.vissync.recv()
         self.vissync.send(setup_vis_serialized)
-        # Wait for acknowledgement
-        self.vissync.recv()
 
         # Wait for RPis
         self.syncpub.sync()
