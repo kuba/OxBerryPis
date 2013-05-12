@@ -88,7 +88,7 @@ class Initializer(object):
         self.vissync.recv()
 
         # Wait for RPis
-        self.syncpub.setup()
+        self.syncpub.sync()
 
         # Signal to ChannelPublishersThread
         self.to_publishers_pipe.send('')

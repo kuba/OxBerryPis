@@ -35,7 +35,7 @@ class StockMessagesSubscriber(object):
         )
 
     def run(self):
-        self.sub.setup()
+        self.sub.sync()
         self.sub.recv_multipart()
 
     def handle_data(self, data):

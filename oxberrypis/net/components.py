@@ -1,3 +1,4 @@
+"""Reusable network components."""
 import zmq
 import time
 
@@ -35,27 +36,34 @@ class PubSubProxy(object):
 class SynchronizedPublisher(object):
     """Synchronized publisher.
 
-    Based on http://zguide.zeromq.org/py:all#Node-Coordination
+    This publisher and :py:class:`SynchronizedSubscriber` are generally
+    based on http://zguide.zeromq.org/py:all#Node-Coordination. However
+    docs notes that:
 
-    We can't assume that the SUB connect will be finished by the time
-    the REQ/REP dialog is complete. There are no guarantees that
-    outbound connects will finish in any order whatsoever, if you're
-    using any transport except inproc. So, the example does a brute
-    force sleep of one second between subscribing, and sending the
-    REQ/REP synchronization.
+      We can't assume that the SUB connect will be finished by the time
+      the REQ/REP dialog is complete. There are no guarantees that
+      outbound connects will finish in any order whatsoever, if you're
+      using any transport except inproc. So, the example does a brute
+      force sleep of one second between subscribing, and sending the
+      REQ/REP synchronization.
 
-    A more robust model could be:
+      A more robust model could be:
 
-    * Publisher opens PUB socket and starts sending "Hello"
-      messages (not data).
-    * Subscribers connect SUB socket and when they receive a
-      Hello message they tell the publisher via a REQ/REP
-      socket pair.
-    * When the publisher has had all the necessary
-      confirmations, it starts to send real data.
+      * Publisher opens PUB socket and starts sending "Hello"
+        messages (not data).
+      * Subscribers connect SUB socket and when they receive a
+        Hello message they tell the publisher via a REQ/REP
+        socket pair.
+      * When the publisher has had all the necessary
+        confirmations, it starts to send real data.
 
-    http://thisthread.blogspot.co.uk/2012/03/pub-sub-coordination-by-req-rep.html
+    Therefore we implement above mentioned "more robust model", basin on
+    http://thisthread.blogspot.co.uk/2012/03/pub-sub-coordination-by-req-rep.html.
 
+    :param context: ZMQ context.
+    :param publisher_uri: ZMQ URI the publisher binds to.
+    :param syncservice_uri: ZMQ URI for publisher's syncing service REP socket.
+    :param subscribers_expected: Number of expected subscribers.
 
     """
     PING_MSG = 'PING'
@@ -72,13 +80,17 @@ class SynchronizedPublisher(object):
 
         # Socket to talk to clients
         self.publisher = self.context.socket(zmq.PUB)
+        # Normally, we should bind, but in OxBerryPis
+        # we connect to the pub-sub proxy
+        #self.publisher.bind(self.publisher_uri)
         self.publisher.connect(self.publisher_uri)
 
         # Socket to receive signals
         self.syncservice = self.context.socket(zmq.REP)
         self.syncservice.bind(self.syncservice_uri)
 
-    def setup(self):
+    def sync(self):
+        """Synchronize with subscribers."""
         # Get synchronization from subscribers
         subscribers = 0
         while subscribers < self.subscribers_expected:
@@ -91,6 +103,8 @@ class SynchronizedPublisher(object):
 
         A "ping" message is sent on the PUB socket to show the
         subscribers that the publisher is up and waiting for them.
+
+        Sends :attr:`PING_MSG`.
 
         """
         self.publish(self.PING_MSG)
@@ -129,19 +143,25 @@ class SynchronizedPublisher(object):
         self.publisher.send_mulipart([key, data])
 
     def close(self):
+        """Announce end of publisher stream and close internal sockets.
+
+        Sends :attr:`END_MSG`.
+
+        """
         self.publish(self.END_MSG)
         self.publisher.close()
-
-
-class DummyMsgHandler(object):
-    def received(sellf, msg):
-        print msg
 
 
 class SynchronizedSubscriber(object):
     """Synchronized subscriber.
 
-    Based on http://zguide.zeromq.org/py:all#Node-Coordination.
+    .. seealso:: Check :py:class:`SynchronizedPublisher` for implementation details.
+
+    :param context: ZMQ context.
+    :param publisher_uri: ZMQ URI of the publisher.
+    :param syncservice_uri: ZMQ URI of the publisher's REP socket for syncing.
+    :param subscriptions: A list of prefixes to subscribe to.
+    :param msg_handler: Function for handling of subscribed data.
 
     """
     def __init__(self, context, publisher_uri, syncservice_uri, subscriptions, msg_handler):
@@ -161,7 +181,8 @@ class SynchronizedSubscriber(object):
         for subscription in self.subscriptions:
             self.subscriber.setsockopt(zmq.SUBSCRIBE, subscription)
 
-    def setup(self):
+    def sync(self):
+        """Synchronize with the publisher."""
         # Wait for dummy data from the SychronizedPublisher
         data = self.subscriber.recv()
 
@@ -178,7 +199,12 @@ class SynchronizedSubscriber(object):
         self.subscriber.setsockopt(zmq.UNSUBSCRIBE, SynchronizedPublisher.PING_MSG)
 
     def recv(self):
-        # Third, get our updates and report how many we got
+        """Receive messages and proccess them using :attr:`msg_handler`
+        in a loop.
+
+        Stops when :py:attr:`SynchronizedPublisher.END_MSG` is received.
+
+        """
         while True:
             data = self.subscriber.recv()
             if data == SynchronizedPublisher.END_MSG:
@@ -186,9 +212,13 @@ class SynchronizedSubscriber(object):
             self.msg_handler(data)
 
     def recv_multipart(self):
-        """To be used with pub-sub message envelopes.
+        """Receive mulitpart messages and process them using
+        :attr:`msg_handler` in a loop.
 
-        Based on http://zguide.zeromq.org/py:all#Pub-Sub-Message-Envelopes
+        Stops when :py:attr:`SynchronizedPublisher.END_MSG` is received.
+
+        To be used with pub-sub message envelopes; based on
+        http://zguide.zeromq.org/py:all#Pub-Sub-Message-Envelopes
 
         """
         # Third, get our updates and report how many we got
@@ -197,3 +227,8 @@ class SynchronizedSubscriber(object):
             if data[0] == SynchronizedPublisher.END_MSG:
                 break
             self.msg_handler(data)
+
+    def close(self):
+        """Close internal sockets."""
+        self.syncclient.close()
+        self.subscriber.close()

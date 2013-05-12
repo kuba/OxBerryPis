@@ -40,3 +40,10 @@ Messages factories
 
 .. automodule:: oxberrypis.net.controller.msgs_factories
    :members:
+
+
+Components
+----------
+
+.. automodule:: oxberrypis.net.components
+   :members:
