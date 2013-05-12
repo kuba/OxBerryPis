@@ -11,7 +11,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 /**
  * Class around ZMQ
  * 
- * The constructer creates the context
+ * The constructor creates the context
  * 
  * @author alex
  * 

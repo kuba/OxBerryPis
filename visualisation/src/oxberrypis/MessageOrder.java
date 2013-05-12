@@ -13,7 +13,7 @@ import oxberrypis.net.proto.controller.Controller.SetupVisualisation.SymbolMappi
 import oxberrypis.net.proto.controller.Controller.SetupVisualisation.SymbolRange;
 
 /**
- * Returns the messages in roughply order so the stocks stay in sync. Also set
+ * Returns the messages in roughly order so the stocks stay in sync. Also set
  * up other data to do with the stocks
  * 
  * @author alex
@@ -165,7 +165,7 @@ public class MessageOrder {
 
 	private boolean queuesReady() {
 		if (queueList.size() < 4) {
-			// make sure we have recieved a decent number of fifferent sources
+			// make sure we have received a decent number of different sources
 			return false;
 		}
 		for (Queue<StockEvent> q : queueList) {
