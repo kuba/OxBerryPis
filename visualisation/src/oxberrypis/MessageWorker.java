@@ -1,83 +1,105 @@
 package oxberrypis;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
+import org.zeromq.ZMQ;
+
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 
+/**
+ * A worker that waits for stock events and updates the controls.
+ *
+ */
 class MessageWorker extends SwingWorker<Void, StockEvent> {
 
 	private Map<Integer, Stock> data;
 	private Map<Integer, StockView> viewMap;
-	private String bind_uri;
-	private String parser_uri;
-	private JPanel addPanel;
+	
+	private JPanel stocksPanel;
+	
+	private NetworkPis network;
+	private StockDataProvider stockDataProvider;
+	
 	/**
-	 * A worker that waits for messages and updates the controls
+	 * Create the worker.
 	 * 
+	 * @param context		ZMQ context.
+	 * @param initSyncURI	ZMQ URI for synchronisation with the Initializer.
+	 * @param fromRPisURI	ZMQ URI RaspberryPis connect to.
 	 * @param data
-	 *            the data to update
-	 * @param messageOrder
-	 *            message provider
 	 * @param viewMap
-	 *            controls to update on UI thread
+	 * @param stocksPanel	Panel
 	 */
-	MessageWorker(Map<Integer, Stock> data, Map<Integer, StockView> viewMap,
-			String bind_uri, String parser_uri,JPanel addPanel) {
+	MessageWorker(ZMQ.Context context,
+			String initSyncURI,
+			String fromRPisURI,
+			Map<Integer, Stock> data,
+			Map<Integer, StockView> viewMap,
+			JPanel stocksPanel) {
 		this.data = data;
 		this.viewMap = viewMap;
-		this.bind_uri = bind_uri;
-		this.parser_uri = parser_uri;
-	}
 
-	MessageOrder messageOrder = new MessageOrder(bind_uri, parser_uri);
+		network = new NetworkPis(context, initSyncURI, fromRPisURI);
+		
+		this.stocksPanel = stocksPanel;
+	}
 
 	@Override
 	public Void doInBackground() throws Exception {
-		messageOrder.init();
-		while (true) {
-			StockEvent message = messageOrder.getMessage();
-			this.publish(message);
+		//stockDataProvider = new OrderedStockEvents(
+		stockDataProvider = new UnorderedStockEvents(
+			network
+		);
+		
+		while (!isCancelled()) {
+			StockEvent stockEvent = stockDataProvider.getNextStockEvent();
+			publish(stockEvent);
 		}
+		
+		return null;
 	}
 
 	@Override
 	protected void process(List<StockEvent> stockEvents) {
+		for (StockEvent stockEvent : stockEvents) {
+			int stockId = stockEvent.getStockId();
 
-		try {
-			messageOrder.waitInit();
+			if (!data.containsKey(stockId)) {
+				Stock stock = new Stock(
+					stockDataProvider.getName(stockId),
+					stockDataProvider.getDenomPower(stockId)
+				);
+				data.put(stockId, stock);
 
-			Set<Integer> stockIds = new HashSet<Integer>();
-			for (StockEvent message : stockEvents) {
-				int stockId = message.getStockId();
-				if (!data.containsKey(stockId)) {
-					Stock s = new Stock(messageOrder.getName(stockId),messageOrder.getDenomPower(stockId));;
-					data.put(stockId, s);
-					viewMap.put(stockId, new StockView(s));
-					addPanel.add(viewMap.get(stockId));
-					addPanel.invalidate();
-				}
-				if (message.hasTradePrice())
-					data.get(stockId)
-							.update(message.getTradePrice(),
-									message.getTopBuyPrice(),
-									message.getTopSellPrice());
-				else
-					data.get(stockId).update(message.getTopBuyPrice(),
-							message.getTopSellPrice());
+				StockView stockView = new StockView(stock);	
+				viewMap.put(stockId, stockView);
+				
+				stocksPanel.add(stockView);
+				stocksPanel.repaint();
+				stocksPanel.invalidate();
+				stocksPanel.repaint();
 			}
+	
+			Stock stock = data.get(stockId);
+			StockView stockView = viewMap.get(stockId);
 
-			for (int stockId : stockIds) {
-				this.viewMap.get(stockId).change();
-			}
-		} catch (InterruptedException ignore) {
-			// exit if we are cancelles
+			if (stockEvent.hasTradePrice())
+				stock.update(
+					stockEvent.getTradePrice(),
+					stockEvent.getTopBuyPrice(),
+					stockEvent.getTopSellPrice()
+				);
+			else
+				stock.update(
+					stockEvent.getTopBuyPrice(),
+					stockEvent.getTopSellPrice()
+				);
+
+			stockView.change();
 		}
-
 	}
 }

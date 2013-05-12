@@ -10,64 +10,93 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
 
+import org.zeromq.ZMQ;
+
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
+
 
 public class Application extends JFrame {
 	private static final long serialVersionUID = 1L;
-	Map<Integer, Stock> data;
-	Map<Integer, StockView> viewMap;
+	
+	public static final String TITLE = "OxBerryPis";
 
-	public Application() {
-		this.setTitle("Oxberry Pis");
-		data = new HashMap<Integer, Stock>();
-		viewMap = new HashMap<Integer, StockView>();
-		JPanel panel = new JPanel();
+	private SwingWorker<Void, StockEvent> messageWorker;
 
-		GridLayout grid = new GridLayout(0,10,40,25);
-		panel.setLayout(grid);
+	public Application(ZMQ.Context context,
+			String initSyncURI,
+			String fromRPisURI) {
+		JPanel stocksPanel = createStocksPanel();
+		
+		Map<Integer, Stock> data = new HashMap<Integer, Stock>();
+		Map<Integer, StockView> viewMap = new HashMap<Integer, StockView>();
+
+		messageWorker = new MessageWorker(
+			context,
+			initSyncURI,
+			fromRPisURI,
+			data,
+			viewMap,
+			stocksPanel
+		);
 		
 //		messageOrder = new MessageOrder();
 //		for (int i : messageOrder.getStockList()) {
-//			viewMap.put(i`, new StockView(new Stock(messageOrder.getName(i))));
+//			viewMap.put(i, new StockView(new Stock(messageOrder.getName(i))));
 //			}
 //			messageOrder = new MessageOrder();
 //			for(StockView s : viewMap.values()) {
 //			add(s);
 //		}
-
-//		for(int i = 0; i<100; i++) {
-//			Stock s = new Stock("HSBC",4);
-//			s.update(i*10, i*11, i+10);
-//			viewMap.put(i, new StockView(s));
-//			panel.add(viewMap.get(i));
-//		}
 		
+		createUI(stocksPanel);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	private JPanel createStocksPanel() {
+		// Stocks panel and its layout
+		JPanel panel = new JPanel();
+		GridLayout grid = new GridLayout(0,10,40,25);
+		panel.setLayout(grid);
+		return panel;
+	}
+	
+	private void createUI(JPanel panel) {
+		setTitle(TITLE);
+		
+		// Main scrollable pane
 		JScrollPane pane = new JScrollPane(panel,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		pane.setViewportView(panel);
 		pane.getVerticalScrollBar().setUnitIncrement(75);
 		add(pane);
-		// TODO: Work out where to put put real URIs;
-		startReceivingMessages("tcp://127.0.0.1:1236","",panel);
-		pack();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		setPreferredSize(new Dimension(1024, 768));
 		setVisible(true);
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		
+		pack();
 	}
 
-	
 	/**
-	 * Start receiving messages in a separate thread, and updating the UI in the Swing thread
+	 * Start receiving messages in a separate thread, and updating the
+	 * UI in the Swing thread.
+	 * 
 	 */
-	public void startReceivingMessages(String bind_uri, String parser_uri,JPanel addPanel) {
-		SwingWorker<Void, StockEvent> a = new MessageWorker(data, viewMap, bind_uri, parser_uri,addPanel);
-		a.execute();
+	private void startReceivingMessages() {
+		messageWorker.execute();
+	}
+	
+	public void run() {
+		startReceivingMessages();
 	}
 
 	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		Application a = new Application();
+		ZMQ.Context context = ZMQ.context(1);
+		String initSyncURI = "tcp://127.0.0.1:1234";
+		String fromRPisURI = "tcp://127.0.0.1:1237";
+		
+		Application app = new Application(context, initSyncURI, fromRPisURI);
+		app.run();
 	}
 }

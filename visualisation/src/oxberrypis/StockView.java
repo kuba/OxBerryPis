@@ -9,21 +9,34 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import oxberrypis.Stock.Change;
+
 /**
- * The cell of a stock in the visualisation, showing name, last trade price, average trade price, sell/buy difference
- * and coloured according to change in trade price
+ * The cell of a stock in the visualisation, showing name, last trade
+ * price, average trade price, sell/buy difference and coloured
+ * according to change in trade price.
+ * 
  */
 public class StockView extends JPanel {
 	private static final long serialVersionUID = 1L;
+	
 	private Stock stock;
+	
 	private JFormattedTextField[] ftf;
 	private String[] des;
 	private JPanel[] borderPanels;
 	
+	private static final Color RED = new Color(252,68,39);
+	private static final Color GREEN = new Color(85,220,64);
+	private static final Color YELLOW = new Color(239,222,72);
+	
 	/**
-	 * Creates a panel describing the stock's last trade price, average trade price, sell/buy difference, and presents 
-	 * it with a changing colour according to the change in last trade price
+	 * Creates a panel describing the stock's last trade price, average
+	 * trade price, sell/buy difference, and presents  it with a
+	 * changing colour according to the change in last trade price
+	 * 
 	 * @param stock
+	 * 
 	 */
 	public StockView(Stock stock) {
 		this.stock = stock;
@@ -59,9 +72,12 @@ public class StockView extends JPanel {
 	 * @return Red, green or yellow appropriately
 	 */
 	public Color colorChoice() {
-		if(stock.getChange()==-1) return new Color(252,68,39);
-		if(stock.getChange()==0) return new Color(239,222,72);
-		else return new Color(85,220,64);
+		if(stock.getChange() == Change.DOWN)
+			return RED;
+		if(stock.getChange() == Change.NO_CHANGE)
+			return YELLOW;
+		else
+			return GREEN;
 	}
 	
 	/**
@@ -76,14 +92,19 @@ public class StockView extends JPanel {
 	}
 	
 	/**
-	 * Return the jth field value
+	 * Return the jth field value.
+	 * 
 	 * @param j = 0, 1 or 2 for the three fields
 	 * @return a new field with the correct data
 	 */
 	public String getRight(int j) {
 		double k = Math.pow(10,stock.getDenomPower());
-		if(j==0) return "$"+(stock.getLastTradePrice()/k);
-		else if(j==1) return "$"+((stock.getTopBuyPrice()+stock.getTopSellPrice())/(2*k));
-		else return "$"+((stock.getTopSellPrice()-stock.getTopBuyPrice())/k);
+		
+		if (j==0)
+			return "$"+(stock.getLastTradePrice()/k);
+		else if(j==1)
+			return "$"+((stock.getTopBuyPrice()+stock.getTopSellPrice())/(2*k));
+		else
+			return "$"+((stock.getTopSellPrice()-stock.getTopBuyPrice())/k);
 	}
 }

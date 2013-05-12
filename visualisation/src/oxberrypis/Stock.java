@@ -1,62 +1,85 @@
 package oxberrypis;
+
 /**
- * A single Stock, containing name, last trade price, top buy/sell prices
+ * A single Stock.
+ * 
+ * Contains name, last trade price, top buy/sell prices.
+ * 
  */
 public class Stock {
 	private String stockName;
-	private int last_Trade_Price;
-	private int top_Buy_Price;
-	private int top_Sell_Price;
+	
+	private int lastTradePrice;
+	private int topBuyPrice;
+	private int topSellPrice;
+	
 	private int denomPower;
+	
 	private boolean hasLastTradePrice;
 	private boolean hasTopBuyPrice;
 	private boolean hasTopSellPrice;
-	private int change; // -1 means down, 0 no change, 1 up
+	
+	public enum Change {
+		UP,
+		DOWN,
+		NO_CHANGE,
+	}
+	
+	private Change change;
 	
 	public Stock(String stockName, int denomPower) {
 		this.stockName = stockName;
 		this.denomPower = denomPower;
-		this.change = 0;
-		this.hasLastTradePrice=false;
-		this.hasTopBuyPrice=false;
-		this.hasTopSellPrice=false;
+		this.change = Change.NO_CHANGE;
+		
+		this.hasLastTradePrice = false;
+		this.hasTopBuyPrice = false;
+		this.hasTopSellPrice = false;
 	}
 	
 	/**
-	 * Update if either of these are given in a message
-	 * @param top_Buy_Price
-	 * @param top_Sell_Price
+	 * Update if either of these are given in a message.
+	 * 
+	 * @param newTopBuyPrice
+	 * @param newTopSellPrice
 	 */
-	public void update(Integer top_Buy_Price, Integer top_Sell_Price) { 
-		if(top_Buy_Price!=null) {
-			this.top_Buy_Price = top_Buy_Price;
-			this.hasTopBuyPrice = true;
+	public void update(Integer newTopBuyPrice, Integer newTopSellPrice) { 
+		if (newTopBuyPrice != null) {
+			topBuyPrice = newTopBuyPrice;
+			hasTopBuyPrice = true;
 		}
 		else {
-			this.hasTopBuyPrice = false;
+			hasTopBuyPrice = false;
 		}
-		if(top_Sell_Price!=null) {
-			this.top_Sell_Price = top_Sell_Price;
-			this.hasTopSellPrice = true;
+		
+		if (newTopSellPrice != null) {
+			topSellPrice = newTopSellPrice;
+			hasTopSellPrice = true;
 		}
 		else {
-			this.hasTopSellPrice = false;
+			hasTopSellPrice = false;
 		}
 	}
 	
 	/**
-	 * Update if last trade price is given
-	 * @param last_Trade_Price
-	 * @param top_Buy_Price
-	 * @param top_Sell_Price
+	 * Update if last trade price is given.
+	 * 
+	 * @param newLastTradePrice
+	 * @param newTopBuyPrice
+	 * @param newTopSellPrice
 	 */
-	public void update(int last_Trade_Price, Integer top_Buy_Price, Integer top_Sell_Price) {
-		if(!hasLastTradePrice || this.last_Trade_Price==last_Trade_Price) change = 0;
-		else if(this.last_Trade_Price<last_Trade_Price) change = 1; 
-		else change = 1;
-		this.last_Trade_Price = last_Trade_Price;
-		this.hasLastTradePrice = true;
-		update(top_Buy_Price, top_Sell_Price);
+	public void update(int newLastTradePrice, Integer newTopBuyPrice, Integer newTopSellPrice) {
+		if (!hasLastTradePrice || lastTradePrice == newLastTradePrice)
+			change = Change.NO_CHANGE;
+		else if (lastTradePrice < newLastTradePrice)
+			change = Change.UP;
+		else
+			change = Change.DOWN;
+		
+		lastTradePrice = newLastTradePrice;
+		hasLastTradePrice = true;
+		
+		update(newTopBuyPrice, newTopSellPrice);
 	}
 	
 	public String getStockName() {
@@ -64,18 +87,18 @@ public class Stock {
 	}
 	
 	public int getLastTradePrice() {
-		return last_Trade_Price;
+		return lastTradePrice;
 	}
 	
 	public int getTopBuyPrice() {
-		return top_Buy_Price;
+		return topBuyPrice;
 	}
 	
 	public int getTopSellPrice() {
-		return top_Sell_Price;
+		return topSellPrice;
 	}
 	
-	public int getChange() {
+	public Change getChange() {
 		return change;
 	}
 	

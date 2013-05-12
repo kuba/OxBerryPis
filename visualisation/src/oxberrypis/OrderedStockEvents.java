@@ -13,36 +13,32 @@ import oxberrypis.net.proto.controller.Controller.SetupVisualisation.SymbolMappi
 import oxberrypis.net.proto.controller.Controller.SetupVisualisation.SymbolRange;
 
 /**
- * Returns the messages in roughly order so the stocks stay in sync. Also set
- * up other data to do with the stocks
+ * Stock data provider with ordered stock events.
+ * 
+ * Returns the messages in roughly order so the stocks stay in sync.
  * 
  * @author alex
  * 
  */
-public class MessageOrder {
-	private NetworkPis network;
+public class OrderedStockEvents implements StockDataProvider {
+	private final NetworkPis network;
 
 	// maps per stock (may make a type and condense)
 	private Map<Integer, Integer> idToQueue;
-	private Map<Integer, Integer> idToRegion;
+	private Map<Integer, Integer> idToRange;
 	private Map<Integer, String> idToName;
 	private Map<Integer, Integer> denomPowers;
 	private Map<Integer, Integer> lastSeqNum;
 
 	private List<Queue<StockEvent>> queueList = new ArrayList<Queue<StockEvent>>();
-	private List<Integer> regions;
-	private List<Integer> streams;
-
-	private final String bind_uri;
-	private final String parser_uri;
+	private List<Integer> ranges = new ArrayList<Integer>();
+	private List<Integer> channels = new ArrayList<Integer>();
 
 	/**
 	 * Create the class and initialise the network
 	 */
-	public MessageOrder(String bind_uri, String parser_uri) {
-		this.bind_uri = bind_uri;
-		this.parser_uri = parser_uri;
-
+	public OrderedStockEvents(NetworkPis network) {
+		this.network = network;
 	}
 
 	/**
@@ -69,7 +65,7 @@ public class MessageOrder {
 
 	/**
 	 * initialise the class. Must be done on same thread as 
-	 * recieves the message
+	 * receives the message
 	 * 
 	 * @param message
 	 */
@@ -77,25 +73,32 @@ public class MessageOrder {
 		// create the maps
 		idToQueue = new HashMap<Integer, Integer>();
 		idToName = new HashMap<Integer, String>();
-		idToRegion = new HashMap<Integer, Integer>();
+		idToRange = new HashMap<Integer, Integer>();
+		denomPowers = new HashMap<Integer, Integer>();
+		lastSeqNum = new HashMap<Integer, Integer>();
 		
-		network = new NetworkPis(bind_uri);
-		SetupVisualisation message = network.getInit(parser_uri);
-		List<SymbolRange> ranges = message.getRangeList();
 		// set up the mappings to pis
-
-		int i = 0;
-		for (SymbolRange range : ranges) {
-			for (SymbolMapping mapping : range.getMappingList()) {
+		SetupVisualisation setupVisualisation = network.getInit();
+		List<SymbolRange> ranges = setupVisualisation.getRangeList();
+		
+		int current_range_id = 0;
+		for (SymbolRange range: ranges) {
+			List<SymbolMapping> mappings = range.getMappingList();
+			
+			for (SymbolMapping mapping: mappings) {
 				int symbolIndex = mapping.getSymbolIndex();
-				idToRegion.put(symbolIndex, i);
+				idToRange.put(symbolIndex, current_range_id);
 				denomPowers.put(symbolIndex, mapping.getPriceScaleCode());
 				idToName.put(symbolIndex, mapping.getSymbol());
 				idToQueue.put(symbolIndex, -1);
+				lastSeqNum.put(symbolIndex, -1);
 			}
-			i++;
+			
+			current_range_id++;
 		}
+		
 		hasInit = true;
+		
 		notify();
 	}
 
@@ -104,50 +107,55 @@ public class MessageOrder {
 	 * @throws InterruptedException
 	 */
 	public synchronized void waitInit() throws InterruptedException {
-		while (!hasInit) {
+		while (!hasInit)
 			wait();
-		}
 	}
 
-	private void addMessage(StockEvent message) { // Find the queue and add the
-													// message, update sequence
-													// number
-		int queueId = idToQueue.get(message.getStockId());
+	/**
+	 *  Find the queue and add the message, update sequence number
+	 *  
+	 * @param message
+	 */
+	private void addMessage(StockEvent message) {
+		int stockId = message.getStockId();
+		int queueId = idToQueue.get(stockId);
 
 		if (queueId == -1) {
 			queueId = findQueue(message);
-			idToQueue.put(message.getStockId(), queueId);
+			idToQueue.put(stockId, queueId);
 		}
-
-		if (lastSeqNum.get(message.getStockId()) < message.getSeqNum()) {
+		
+		int seqNum = message.getSeqNum();
+		if (lastSeqNum.get(stockId) < seqNum) {
 			queueList.get(queueId).add(message);
-			lastSeqNum.put(message.getStockId(), message.getSeqNum());
+			lastSeqNum.put(stockId, seqNum);
 		}
 	}
 
 	private int findQueue(StockEvent message) {
-		int streamId = message.getChannelId();
-		int region = idToRegion.get(message.getStockId());
+		int channelId = message.getChannelId();
+		int range = idToRange.get(message.getStockId());
+		
 		for (int i = 0; i < queueList.size(); i++) {
-			if (regions.get(i) == region && streams.get(i) == streamId) {
+			if (ranges.get(i) == range && channels.get(i) == channelId) {
 				return i;
 			}
 		}
+		
 		queueList.add(new LinkedList<StockEvent>());
-		regions.add(region);
-		streams.add(streamId);
+		ranges.add(range);
+		channels.add(channelId);
 		return queueList.size() - 1;
-
 	}
 
 	/**
 	 * Get the next message to process
 	 */
-	public StockEvent getMessage() {
-		while (queuesReady()) {
-			addMessage(network.getMsg());
+	public StockEvent getNextStockEvent() {
+		while (!queuesReady()) {
+			addMessage(network.getNextStockEvent());
 		}
-
+		
 		long bestTime = getTime(queueList.get(0).peek());
 		Queue<StockEvent> bestQueue = queueList.get(0);
 		for (Queue<StockEvent> q : queueList) {
@@ -168,10 +176,14 @@ public class MessageOrder {
 			// make sure we have received a decent number of different sources
 			return false;
 		}
+		
 		for (Queue<StockEvent> q : queueList) {
-			if (q.isEmpty())
-				return true;
+			// TODO: breaks when one channel finishes; add timeouts
+			if (q.isEmpty()) {
+				return false;
+			}
 		}
-		return false;
+		
+		return true;
 	}
 }

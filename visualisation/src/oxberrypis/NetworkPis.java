@@ -1,7 +1,6 @@
 package oxberrypis;
 
 import org.zeromq.ZMQ;
-import org.zeromq.ZMQ.Context;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
 import oxberrypis.net.proto.controller.Controller.SetupVisualisation;
@@ -9,53 +8,63 @@ import oxberrypis.net.proto.controller.Controller.SetupVisualisation;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- * Class around ZMQ
+ * Class around ZMQ.
  * 
- * The constructor creates the context
+ * The constructor creates the context.
  * 
  * @author alex
  * 
  */
 public class NetworkPis {
-	Context context = ZMQ.context(1);
-	ZMQ.Socket receiver = context.socket(ZMQ.PULL);
+	private ZMQ.Socket initSync;
+	private ZMQ.Socket fromRPis;
 
-	public NetworkPis(String bind_uri) {
-		receiver.bind(bind_uri);
+	public NetworkPis(ZMQ.Context context, String initSyncURI, String fromRPisURI) {
+		initSync = context.socket(ZMQ.REQ);
+		initSync.connect(initSyncURI);
+		
+		fromRPis = context.socket(ZMQ.PULL);
+		fromRPis.bind(fromRPisURI);
 	}
 
 	/**
-	 * Get the next raw message from the pis;
+	 * Get the next raw message from the RPis.
 	 * 
 	 * @return
 	 */
-	public StockEvent getMsg() {
+	public StockEvent getNextStockEvent() {
+		StockEvent stockEvent;
+		
+		byte[] data = fromRPis.recv(0);
+		
 		try {
-			StockEvent t = StockEvent.parseFrom(receiver.recv(0));
-			return t;
+			stockEvent = StockEvent.parseFrom(data);
 		} catch (InvalidProtocolBufferException e) {
-			throw new Error("Invalid Message Recieved"); // this should never
-															// happen so fail
-															// fast
-
+			// this should never happen so fail fast
+			throw new Error("Invalid Message Recieved");
 		}
 		
-
+		return stockEvent;
 	}
 
 	/**
-	 * Get the initialisation message from the parser
+	 * Get the initialisation message from the Initializer.
 	 * 
 	 * @return
 	 */
-	public SetupVisualisation getInit(String parser_uri) {
-		ZMQ.Socket fromParser = context.socket(ZMQ.REQ);
-		fromParser.connect(parser_uri);
-		fromParser.send("");
+	public SetupVisualisation getInit() {
+		SetupVisualisation setupVisualisation;
+		
+		initSync.send("");
+		byte[] reply = initSync.recv(0);
+		
 		try {
-			return SetupVisualisation.parseFrom(fromParser.recv(0));
+			setupVisualisation = SetupVisualisation.parseFrom(reply);
 		} catch (InvalidProtocolBufferException e) {
+			// this should never happen so fail fast
 			throw new Error("Invalid Message Recieved");
-		} // this should never happen; fail fast
+		}
+		
+		return setupVisualisation;
 	}
 }
