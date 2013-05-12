@@ -14,6 +14,7 @@ Contents:
    readme
    net
    parsing
+   orderbook
 
 
 Indices and tables
