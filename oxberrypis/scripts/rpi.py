@@ -17,9 +17,9 @@ def main():
 
     sub = StockMessagesSubscriber(
         context,
-        pub_uri,
         rpisync_uri,
-        visual_uri
+        pub_uri,
+        visual_uri,
     )
 
     sub.run()

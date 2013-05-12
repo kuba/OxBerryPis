@@ -42,6 +42,27 @@ Messages factories
    :members:
 
 
+RaspberryPi
+-----------
+
+.. automodule:: oxberrypis.net.rpi
+   :members:
+
+
+Subscriber
+^^^^^^^^^^
+
+.. automodule:: oxberrypis.net.rpi.subscriber
+   :members:
+
+
+Handlers
+^^^^^^^^
+
+.. automodule:: oxberrypis.net.rpi.handlers
+   :members:
+
+
 Components
 ----------
 
