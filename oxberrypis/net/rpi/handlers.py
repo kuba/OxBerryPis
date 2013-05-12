@@ -1,4 +1,4 @@
-"""Handlers for stock messages."""
+"""Handlers for stock data."""
 import zmq
 
 from ...orderbook.order import Order
@@ -7,16 +7,30 @@ from ..proto.stock_pb2 import StockMessage
 from ..proto.rpi_pb2 import StockEvent
 
 
-class StockMessagesToOrderbook(object):
-    """Stock messages handler."""
+class PrintingHandler(object):
+    """Simple printing handler.
 
+    Prints stock message to the console on arrival.
+
+    """
+    def handle_stock_data(self, symbol_index, channel_id, stock_msg):
+        print stock_msg
+
+
+class UpdateMatchingEngines(object):
+    """Stock messages handler for updating matching engines.
+
+    :param matching_engines: Mapping ``stock_index`` -> ``matching_engine``.
+    :type matching_engines: list of :py:class:`.MatchingEngine`
+
+    """
     def __init__(self, matching_engines):
         self.matching_engines = matching_engines
 
-    def handle_stock_message(self, message):
-        """Update appropriate order book based on a stock ``message``."""
-        if message.type == StockMessage.ADD:
-            add_msg = message.add
+    def handle_stock_data(self, symbol_index, channel_id, stock_msg):
+        """Update appropriate matching_engine based on ``stock_msg``."""
+        if stock_msg.type == StockMessage.ADD:
+            add_msg = stock_msg.add
 
             stock_id = add_msg.symbol_index
             order_id = add_msg.order_id
@@ -36,8 +50,8 @@ class StockMessagesToOrderbook(object):
             )
 
             return stock_id
-        elif message.type == StockMessage.MODIFY:
-            modify_msg = message.modify
+        elif stock_msg.type == StockMessage.MODIFY:
+            modify_msg = stock_msg.modify
 
             stock_id = modify_msg.symbol_index
             order_id = modify_msg.order_id
@@ -57,8 +71,8 @@ class StockMessagesToOrderbook(object):
             )
 
             return stock_id
-        elif message.type == StockMessage.DELETE:
-            delete_msg = message.delete
+        elif stock_msg.type == StockMessage.DELETE:
+            delete_msg = stock_msg.delete
 
             stock_id = delete_msg.symbol_index
             order_id = delete_msg.order_id
@@ -71,8 +85,8 @@ class StockMessagesToOrderbook(object):
             self.matching_engines[stock_id].remove_order(order_id)
 
             return stock_id
-        elif message.type == StockMessage.EXECUTE:
-            exec_msg = message.execution
+        elif stock_msg.type == StockMessage.EXECUTE:
+            exec_msg = stock_msg.execution
 
             stock_id = exec_msg.symbol_index
             order_id = exec_msg.order_id
@@ -93,8 +107,8 @@ class StockMessagesToOrderbook(object):
                 pass
 
             return stock_id
-        elif message.type == StockMessage.TRADE:
-            trade_msg = message.trade
+        elif stock_msg.type == StockMessage.TRADE:
+            trade_msg = stock_msg.trade
 
             stock_id = trade_msg.symbol_index
             return stock_id
@@ -103,13 +117,19 @@ class StockMessagesToOrderbook(object):
 
 
 class ToVisualisation(object):
-    """Send stock messages to visualisation"""
+    """Stock messages handler that Sends stock evnets to visualisation.
 
-    def __init__(self, matching_engines, visualisation_uri, context):
+    :param matching_engines: Mapping ``stock_index`` -> ``matching_engine``.
+    :type matching_engines: list of :py:class:`.MatchingEngine`
+    :param context: ZMQ context.
+    :param visual_uri: ZMQ URI visualisation binds to.
+
+    """
+    def __init__(self, matching_engines, context, visual_uri):
         self.matching_engines = matching_engines
 
         self.to_visualisation = context.socket(zmq.PUSH)
-        self.to_visualisation.connect(visualisation_uri)
+        self.to_visualisation.connect(visual_uri)
 
         self.last_top_buy = {}
         self.last_top_sell = {}
@@ -164,7 +184,7 @@ class ToVisualisation(object):
 
         return stock_event
 
-    def handle_send_visual(self, stock_id, channel_id, stock_msg):
+    def handle_stock_data(self, stock_id, channel_id, stock_msg):
         """Handle sending a single stock event to visualisation"""
         stock_event = self.make_price_message(stock_msg, stock_id, channel_id)
         if stock_event is not None:

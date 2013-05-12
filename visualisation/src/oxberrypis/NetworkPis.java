@@ -4,7 +4,7 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
-import oxberrypis.net.proto.vis_init.VisInit.SetupVisualisation;
+import oxberrypis.net.proto.controller.Controller.SetupVisualisation;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -49,21 +49,13 @@ public class NetworkPis {
 	 */
 	public SetupVisualisation getInit(String parser_uri) {
 
-//		ZMQ.Socket fromParser = context.socket(ZMQ.REQ);
-//		fromParser.connect(parser_uri);
-//		fromParser.send("INIT");
-//		try {
-//			return SetupVisualisation.parseFrom(fromParser.recv(0));
-//		} catch (InvalidProtocolBufferException e) {
-//			throw new Error("Invalid Message Recieved");
-//		} // this should never happen fail fast }
-
-		// dummy data
-		return SetupVisualisation
-				.newBuilder()
-				.addMappings(
-						SetupVisualisation.Mapping.newBuilder()
-								.setSymbolMapStart(0).setSymbolMapEnd(7790)
-								.build()).build();
+		ZMQ.Socket fromParser = context.socket(ZMQ.REQ);
+		fromParser.connect(parser_uri);
+		fromParser.send("");
+		try {
+			return SetupVisualisation.parseFrom(fromParser.recv(0));
+		} catch (InvalidProtocolBufferException e) {
+			throw new Error("Invalid Message Recieved");
+		} // this should never happen; fail fast
 	}
 }

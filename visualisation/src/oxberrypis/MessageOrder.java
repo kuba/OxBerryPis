@@ -8,12 +8,9 @@ import java.util.Map;
 import java.util.Queue;
 
 import oxberrypis.net.proto.rpi.Rpi.StockEvent;
-import oxberrypis.net.proto.vis_init.VisInit.SetupVisualisation;
-import oxberrypis.net.proto.vis_init.VisInit.SetupVisualisation.Mapping;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import oxberrypis.net.proto.controller.Controller.SetupVisualisation;
+import oxberrypis.net.proto.controller.Controller.SetupVisualisation.SymbolMapping;
+import oxberrypis.net.proto.controller.Controller.SetupVisualisation.SymbolRange;
 
 /**
  * Returns the messages in roughply order so the stocks stay in sync. Also set
@@ -35,8 +32,6 @@ public class MessageOrder {
 	private List<Queue<StockEvent>> queueList = new ArrayList<Queue<StockEvent>>();
 	private List<Integer> regions;
 	private List<Integer> streams;
-	
-	private final String ARCAFILE = "../ARCASymbolMapping.txt";
 
 	private final String bind_uri;
 	private final String parser_uri;
@@ -83,19 +78,20 @@ public class MessageOrder {
 		idToQueue = new HashMap<Integer, Integer>();
 		idToName = new HashMap<Integer, String>();
 		idToRegion = new HashMap<Integer, Integer>();
-		List<Integer> stocks = readArcaStocksFile();
 		
 		network = new NetworkPis(bind_uri);
 		SetupVisualisation message = network.getInit(parser_uri);
-		List<Mapping> mappings = message.getMappingsList();
+		List<SymbolRange> ranges = message.getRangeList();
 		// set up the mappings to pis
 
 		int i = 0;
-		for (Mapping m : mappings) {
-			List<Integer> mappingStocks = stocks.subList(m.getSymbolMapStart(),
-					m.getSymbolMapEnd());
-			for (int stock : mappingStocks) {
-				idToRegion.put(stock, i);
+		for (SymbolRange range : ranges) {
+			for (SymbolMapping mapping : range.getMappingList()) {
+				int symbolIndex = mapping.getSymbolIndex();
+				idToRegion.put(symbolIndex, i);
+				denomPowers.put(symbolIndex, mapping.getPriceScaleCode());
+				idToName.put(symbolIndex, mapping.getSymbol());
+				idToQueue.put(symbolIndex, -1);
 			}
 			i++;
 		}
@@ -111,45 +107,6 @@ public class MessageOrder {
 		while (!hasInit) {
 			wait();
 		}
-	}
-
-	/**
-	 * Read the ARCA tocks file, setting up all the maps and returning the list
-	 * of all stockIds
-	 * 
-	 * @return
-	 */
-	private List<Integer> readArcaStocksFile() {
-		List<Integer> stocks = new ArrayList<Integer>();
-		// Taken from
-		// http://www.mkyong.com/java/how-to-read-file-from-java-bufferedreader-example/
-		BufferedReader br = null;
-		try {
-
-			String sCurrentLine;
-			System.out.println( System.getProperty("user.dir"));
-			br = new BufferedReader(new FileReader(ARCAFILE));
-			
-			while ((sCurrentLine = br.readLine()) != null) {
-				String[] parts = sCurrentLine.split("\\|");
-				int sId = Integer.parseInt(parts[2]);
-				denomPowers.put(sId, Integer.parseInt(parts[7]));
-				idToName.put(sId, parts[0]);
-				idToQueue.put(sId, -1);
-				stocks.add(sId);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null)
-					br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		return stocks;
 	}
 
 	private void addMessage(StockEvent message) { // Find the queue and add the
