@@ -27,18 +27,14 @@ class XDPChannelUnpacker(object):
     own header classes by setting :py:attr:`pkt_hdr_cls` and
     :py:attr:`msg_header_cls` to appropriate values.
 
+    :param stream: Readable stream which feeds the parser.
+    :param pkt_hdr_cls: Packet header class. Defaults to
+                        :py:class:`.headers.PacketHeader`.
+    :param msg_hdr_cls: Message header class. Defaults to
+                        :py:class:`.headers.MessageHeader`.
+
     """
-
     def __init__(self, stream, pkt_hdr_cls=None, msg_hdr_cls=None):
-        """Initialise the parser with a stream.
-
-        :param stream: Readable stream which feeds the parser.
-        :param pkt_hdr_cls: Packet header class. Defaults to
-                            :py:class:`.headers.PacketHeader`.
-        :param msg_hdr_cls: Message header class. Defaults to
-                            :py:class:`.headers.MessageHeader`.
-
-        """
         if not stream.readable():
             raise ParsingError("The stream is not readable")
 
