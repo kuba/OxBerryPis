@@ -41,7 +41,7 @@ patterns have been used for the networking:
 
 * **Request-reply** for synchronization between:
 
-  * visualisation and the initializer
+  * visualisation and the initializer,
 
   * RaspberryPis and the initializer (synchronized publisher).
 
@@ -65,13 +65,16 @@ The system outline
    :alt: Network diagram.
 
 
-#. Controller starts and spawns 3 different threads: the
-   :py:class:`network initializer
-   <oxberrypis.net.controller.init.InitializerThread>`,
-   :py:class:`channels publishers master thread
-   <oxberrypis.net.controller.publisher.ChannelPublishersThread>` and
-   :py:class:`publisher-subscriber proxy thread
-   <oxberrypis.net.controller.publisher.ProxyThread>`.
+#. Controller starts and spawns 3 different threads:
+   
+   * the :py:class:`network initializer
+     <oxberrypis.net.controller.init.InitializerThread>`,
+   
+   * :py:class:`channels publishers master thread
+     <oxberrypis.net.controller.publisher.ChannelPublishersThread>`
+   
+   * and :py:class:`publisher-subscriber proxy thread
+     <oxberrypis.net.controller.publisher.ProxyThread>`.
 
 #. The initializer parses stock's symbol indexes to symbol names and
    price scale code (power of denominator) mapping and splits this
@@ -118,7 +121,7 @@ The system outline
 
 Note that this design allows scaling of both:
 
-* number of channel parsers in case channels number increases/decreases.
+* number of channel parsers in case channels number increases/decreases;
 
 * number of RaspberryPis.
 
