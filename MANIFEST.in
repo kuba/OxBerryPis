@@ -1,2 +1,4 @@
 include *.rst
+recursive-include oxberrypis *.proto
+recursive-exclude oxberrypis *_pb2.py
 recursive-include docs *.rst

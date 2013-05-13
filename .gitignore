@@ -10,8 +10,15 @@
 # Documentation
 /docs/sphinx/_build
 
-.coverage
-*.pdf
+# Protocol Buffers
+*_pb2.py
+/visualisation/src/oxberrypis/net/proto/
+
+# Java Class Files
+*.class
 
 # Public SSH key copied to RaspberryPis.
 /img/id_rsa.pub
+
+.coverage
+*.pdf

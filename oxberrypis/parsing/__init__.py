@@ -1,6 +1,4 @@
-#
-"""
-Parsing of the NYSE Arca Feed data.
+"""Parsing of the NYSE Arca Feed data.
 
 NYSE supplies 4 different channel feeds (http://www.nyxdata.com/page/1084):
 
@@ -12,6 +10,5 @@ NYSE supplies 4 different channel feeds (http://www.nyxdata.com/page/1084):
   this feed will benefit customers by reducing the overall delivery
   latency with this product. These channel configurations will help our
   publishers achieve the very lowest latency possible.
-
 
 """

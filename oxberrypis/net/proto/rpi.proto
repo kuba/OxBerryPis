@@ -1,0 +1,13 @@
+// Packets from RaspberryPis
+package oxberrypis.net.proto.rpi;
+
+message StockEvent {
+  required int32 stock_id = 1; 
+  required fixed32 timestamp_ns = 2;
+  required fixed32 timestamp_s = 8;
+  required int32 channel_id = 3;
+  required int32 seq_num = 4;
+  optional int32 top_buy_price = 5;
+  optional int32 top_sell_price = 6;
+  optional int32 trade_price = 7;
+}

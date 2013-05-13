@@ -13,7 +13,10 @@ Contents:
 
    readme
    report
+   net
    parsing
+   orderbook
+   visual
 
 
 Indices and tables

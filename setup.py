@@ -1,5 +1,8 @@
 import os
+
 from setuptools import setup
+from setuptools import find_packages
+
 
 version = '0.1'
 
@@ -7,6 +10,8 @@ version = '0.1'
 install_requires = [
     'nose',
     'coverage',
+    'protobuf',
+    'pyzmq',
 ]
 
 
@@ -46,13 +51,16 @@ setup(
     author_email='oxberrypis@googlegroups.com',
     url='https://github.com/kuba/oxberrypis',
     license='',
-    packages=['oxberrypis'],
+    packages=find_packages(exclude=['tests*',]),
     include_package_data=True,
     zip_safe=False,
     install_requires=install_requires,
     entry_points = {
         'console_scripts': [
             'oxberrypis-channel-parser = oxberrypis.scripts.parsers:channel_parser',
+            'oxberrypis-controller = oxberrypis.scripts.controller:main',
+            'oxberrypis-rpi = oxberrypis.scripts.rpi:main',
+            'oxberrypis-vis-test = oxberrypis.scripts.vis_test:main',
         ],
     },
 )
