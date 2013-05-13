@@ -79,9 +79,7 @@ class MessageWorker extends SwingWorker<Void, StockEvent> {
 				viewMap.put(stockId, stockView);
 				
 				stocksPanel.add(stockView);
-				stocksPanel.repaint();
-				stocksPanel.invalidate();
-				stocksPanel.repaint();
+				stocksPanel.revalidate();
 			}
 	
 			Stock stock = data.get(stockId);
