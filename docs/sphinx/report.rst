@@ -19,6 +19,8 @@ The following technologies have been used:
 * Custom image of `Raspbian <http://www.raspberrypi.org/downloads>`_ as
   the Operating System for RaspberryPis.
 
+* `Sphinx <http://sphinx-doc.org/>`_ for documentation generation.
+
 
 Network
 -------
