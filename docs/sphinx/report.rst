@@ -1,8 +1,69 @@
 Group report
 ============
 
+The system
+----------
+
 .. image:: ../network.png
    :alt: Network diagram.
+
+
+#. Controller starts and spawns 3 different threads: the
+   :py:class:`network initializer
+   <oxberrypis.net.controller.init.InitializerThread>`,
+   :py:class:`channels publishers master thread
+   <oxberrypis.net.controller.publisher.ChannelPublishersThread>` and
+   :py:class:`publisher-subscriber proxy thread
+   <oxberrypis.net.controller.publisher.ProxyThread>`.
+
+#. The initializer parses stock's symbol indexes to symbol names and
+   price scale code (power of denominator) mapping and splits this
+   mapping into several ranges. Number of ranges is determined from the
+   number of RaspberryPis which publisher expects to connect.
+
+#. The initializer waits for visualisation to issue a synchronization
+   request on the ``REQ`` socket and replies on the ``REP`` socket with
+   ranges of symbol indexes. Visualisation uses this data to display
+   symbol names instead of symbol indexes and also to order data sent
+   from RaspberryPis.
+
+#. The initializer starts :py:class:`synchronized publisher
+   <oxberrypis.net.components.SynchronizedPublisher>` which waits for
+   expected number of RaspberryPis to connect. Dummy data (ping) is
+   published to the network through the proxy.
+
+#. When RaspberryPi is turned on it starts to listen on the ``SUB``
+   socket and once data arrives it sends symbol range request on the
+   ``REQ`` socket. The initializer replies on the ``REP`` socket.  Each
+   RaspberryPi is assigned two different ranges to allow high
+   availability of the entire system (ranges overlap between
+   RaspberryPis). RaspberryPi subscribes to given range.
+
+#. Once all RaspberryPis are connected, synchronized publisher dies and
+   the initializer hands over to the master synchronized publishers
+   thread over the ``PAIR`` socket.
+
+#. Master synchronized publisher thread spawns 4 threads, one for each
+   channel from NYSE. Each thread parses the channel file and publishes
+   the data through the proxy. Data is encapsulated in special envelopes
+   containing stock index and channel id to allow:
+
+   * subscriber prefix matching on RaspberryPis
+
+   * easier ordering in the visualisation
+
+#. RaspberryPis process the data in their order books and send the
+   results over the ``PUSH`` socket.
+
+#. Visualisation listens for stock event messages incoming on the
+   ``PULL`` socket and updates its UI respectively.
+
+
+Note that this design allows scaling of both:
+
+* number of channel parsers in case channels number increases/decreases.
+
+* number of RaspberryPis.
 
 
 Network
