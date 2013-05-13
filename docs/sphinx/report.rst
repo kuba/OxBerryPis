@@ -1,6 +1,23 @@
 Group report
 ============
 
+The following technologies have been used:
+
+* `Python <http://python.org>`_ as the main programming language.
+
+* `Java <http://www.oracle.com/technetwork/java/index.html>`_ for the
+  visualisation.
+
+* `Github <https://github.com/>`_ for revision control and source code
+  management.
+
+* `ØMQ <http://www.zeromq.org/>`_ for the networking.
+
+* `Protocol Buffers <https://developers.google.com/protocol-buffers/>`_
+  for network data serialization.
+
+* Custom image of `Raspbian <http://www.raspberrypi.org/downloads>`_ as
+  the Operating System for RaspberryPis.
 
 
 Network
