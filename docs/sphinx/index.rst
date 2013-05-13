@@ -15,6 +15,7 @@ Contents:
    net
    parsing
    orderbook
+   visual
 
 
 Indices and tables
