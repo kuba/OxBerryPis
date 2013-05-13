@@ -110,7 +110,7 @@
      inkscape:cx="372.04724"
      inkscape:cy="526.18109"
      inkscape:document-units="px"
-     inkscape:current-layer="g3329"
+     inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:snap-grids="true"
      showguides="true"
@@ -192,9 +192,9 @@
        inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
-       style="font-size:49.78696823px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
-       x="73.438354"
-       y="407.0957"
+       style="font-size:49.78696823px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="82.152985"
+       y="408.00336"
        id="text3011-1-6"
        sodipodi:linespacing="125%"
        inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
@@ -202,9 +202,9 @@
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3013-4-4"
-         x="73.438354"
-         y="407.0957"
-         style="font-size:11.48929977px">REQ</tspan></text>
+         x="82.152985"
+         y="408.00336"
+         style="font-size:11.48929977px;text-align:center;text-anchor:middle">REP</tspan></text>
     <path
        style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999982;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        d="m 62.870115,383.54059 c -0.848676,0 -1.531907,0.68323 -1.531907,1.53191 l 0,40.21282 c 14.462815,3e-5 29.335193,0 41.744452,0 l 0,-41.74446 c -13.404179,-7e-5 -26.808362,-1.7e-4 -40.212545,-2.7e-4 z"
@@ -216,9 +216,9 @@
        inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
-       style="font-size:49.78696823px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
-       x="73.438354"
-       y="448.84064"
+       style="font-size:49.78696823px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu Mono;-inkscape-font-specification:Ubuntu Mono"
+       x="82.152992"
+       y="449.74832"
        id="text3011-1-6-8"
        sodipodi:linespacing="125%"
        inkscape:export-filename="/home/jakub/dev/OxBerryPis/docs/network.png"
@@ -226,9 +226,9 @@
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan3013-4-4-1"
-         x="73.438354"
-         y="448.84064"
-         style="font-size:11.48929977px">REQ</tspan></text>
+         x="82.152992"
+         y="449.74832"
+         style="font-size:11.48929977px;text-align:center;text-anchor:middle">REP</tspan></text>
     <path
        style="color:#000000;fill:none;stroke:#000000;stroke-width:0.99999982;stroke-linejoin:miter;stroke-miterlimit:4;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        d="m 62.87012,467.03027 c -0.848677,1e-5 -1.531907,-0.68323 -1.531907,-1.5319 l 0,-40.21282 c 14.462815,-4e-5 29.335193,0 41.744457,0 l 0,41.74445 c -13.404184,7e-5 -26.808367,1.8e-4 -40.21255,2.7e-4 z"
