@@ -2,6 +2,7 @@ Networking
 ==========
 
 .. image:: ../network.png
+   :alt: Network diagram.
 
 .. automodule:: oxberrypis.net
    :members:
