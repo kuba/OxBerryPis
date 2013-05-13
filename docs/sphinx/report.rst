@@ -1,6 +1,9 @@
 Group report
 ============
 
+.. image:: ../network.png
+   :alt: Network diagram.
+
 Order Book
 ----------
 
@@ -59,6 +62,10 @@ be noticed and so we decided that was better.
 
 Visualisation
 -------------
+
+.. image:: ../visualisation.png
+   :width: 50%
+   :alt: Visualisation screenshot.
 
 The visualisation section was implemented in Java, meaning that we made
 use of the protocol buffers to switch from the Python code to the Java.
