@@ -40,7 +40,7 @@ patterns have been used for the networking:
 
 
 `Protocol Buffers <https://developers.google.com/protocol-buffers/>`_
-has been used to serialize data.  They are easy and allow to define
+have been used to serialize data.  They are easy and allow to define
 messages and serialize it easily and cross language barriers. They
 generate source files in the given language. This means an interface
 consistent with the language and with type safety.
@@ -141,7 +141,7 @@ Order Book
 
 The :py:mod:`order book <oxberrypis.orderbook>` is the main processing
 code that runs on Raspberry Pis.  The order book module consists of two
-books classes one for demand and one for supply. :py:class:`The book
+books classes, one for demand and one for supply. :py:class:`The book
 <oxberrypis.orderbook.book.OrderBook>` keeps all the orders and allows
 changing them as well as querying for orders either by id or for the
 currently best order. Order book keeps a set of limit books for each
@@ -151,7 +151,7 @@ the end of queue for the price. Each limit book the keeps orders at this
 price in first come first serve basis.
 
 The whole book class is very modular and it can be connected with any
-collection for limit books as well as for structures. We choose to pick
+collection for limit books as well as for structures. We chose to pick
 :py:mod:`Finacci heap <oxberrypis.orderbook.fibonacci_heap>` to store
 limit prices and :py:mod:`Doubly linked list
 <oxberrypis.orderbook.linked_list>` for individual orders for a single
