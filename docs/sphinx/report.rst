@@ -30,6 +30,32 @@ by people differences in time between stocks on the order of a second
 should not be noticed and so we decided that was better.
 
 
+Parsing
+-------
+
+`NYSE Arca Integrated Feed <http://www.nyxdata.com/page/1084>`_ is split
+into 4 different channels. Sample data can be downloaded from the FTP
+and it comes in 4 different files, one for each stream.
+
+Each channel is a stream of packets containing variable number of
+messages of different type. Each packet starts with a :py:class:`packet
+header <oxberrypis.parsing.headers.PacketHeader>` which contains e.g.
+the packet time and the number of messages contained  and each message
+starts with a :py:class:`message header
+<oxberrypis.parsing.headers.MsgHeader>` which contains the message type
+and its size. Parser runs on a single channel file, unpacking the
+headers and and parsing only relevant messages based on their type found
+in the header.  Since `Order Book`_ needs only select message types,
+filtering is important for performance reasons: firstly not all of the
+messages are parsed and secondly less data is transmitted over the
+network.
+
+:py:mod:`Parsing module <oxberrypis.parsing>` uses special framework
+built for this project only which allows easy extension of the code,
+e.g. by adding new :py:mod:`messages <oxberrypis.parsing.messages>` or
+new :py:mod:`message fields <oxberrypis.parsing.fields>`.
+
+
 Order Book
 ----------
 
