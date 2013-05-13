@@ -22,8 +22,19 @@ The following technologies have been used:
 * `Sphinx <http://sphinx-doc.org/>`_ for documentation generation.
 
 
+Statistics
+----------
+
+* About 65% of Python code has been covered with unit tests.
+
+* 81 files have been added, with total 7317 lines inserted.
+
+
+Implementation
+--------------
+
 Network
--------
+^^^^^^^
 
 `ØMQ <http://www.zeromq.org/>`_ and all 4 built-in core messaging
 patterns have been used for the networking:
@@ -48,7 +59,7 @@ generate source files in the given language. This means an interface
 consistent with the language and with type safety.
 
 The system outline
-^^^^^^^^^^^^^^^^^^
+""""""""""""""""""
 
 .. image:: ../network.png
    :alt: Network diagram.
@@ -113,7 +124,7 @@ Note that this design allows scaling of both:
 
 
 Parsing
--------
+^^^^^^^
 
 `NYSE Arca Integrated Feed <http://www.nyxdata.com/page/1084>`_ is split
 into 4 different channels. Sample data can be downloaded from the FTP
@@ -139,7 +150,7 @@ new :py:mod:`message fields <oxberrypis.parsing.fields>`.
 
 
 Order Book
-----------
+^^^^^^^^^^
 
 The :py:mod:`order book <oxberrypis.orderbook>` is the main processing
 code that runs on Raspberry Pis.  The order book module consists of two
@@ -173,7 +184,7 @@ Matching engine is also a public interface for other modules to use.
 
 
 Visualisation
--------------
+^^^^^^^^^^^^^
 
 .. image:: ../visualisation.png
    :width: 50%
