@@ -1,6 +1,49 @@
 Group report
 ============
 
+Project summary
+---------------
+
+As a group, we struggled a lot to get going for the project. There was
+an initial motivation, but a lack of communication, along with a loss of
+engagement with the project made for a difficult beginning. Assignments
+to sections of the project happened during one of the initial meetings,
+but work on them was done independently and without much communication
+between the team members. During this time, we lost contact entirely
+with one team member, who refused to answer emails, messages, any form
+of communication. This was a large worry, as he held a large position of
+responsibility over the project due to being chiefly in charge of
+visualisation.
+
+Throughout the vacation we didn’t keep in contact as best we should, and
+again the project didn’t move very far forward. At this point we decided
+that given the missing member, someone should step in to write the
+visualisation section of the code, and so the load was made heavier due
+to this large responsibility. When we returned for the next term, a
+sense of urgency hit after a meeting with our sponsor and we realised
+that we really needed to get the project going and functioning. In the
+last couple of weeks, we met near every day and worked hard together to
+get the project to its best state.
+
+In the end, we got the project working, although not to the quality we
+would have liked. We worked extremely hard on the project, and overall
+have found that it was a good exercise, and a useful lesson. In the
+future, we will aim to start strong and maintain that enthusiasm, keep
+communication quick and constant, and ensure that anyone not pulling
+their weight is quickly dealt with to avoid a heavy load being picked up
+rather later in the project. Also, we aim to put together a more basic
+version of the entire system earlier on, rather than developing our
+system parts individually and trying to get it to all work together at
+the end, which is a much harder and riskier method of going about the
+project.
+
+
+Implementation
+--------------
+
+General
+^^^^^^^
+
 The following technologies have been used:
 
 * `Python <http://python.org>`_ as the main programming language.
@@ -23,15 +66,12 @@ The following technologies have been used:
 
 
 Statistics
-----------
+^^^^^^^^^^
 
 * About 65% of Python code has been covered with unit tests.
 
-* 81 files have been added, with total 7317 lines inserted.
+* 82 files have been added, with total 7320 lines inserted.
 
-
-Implementation
---------------
 
 Network
 ^^^^^^^
