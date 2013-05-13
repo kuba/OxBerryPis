@@ -1,8 +1,35 @@
 Group report
 ============
 
-The system
-----------
+
+
+Network
+-------
+
+`ØMQ <http://www.zeromq.org/>`_ and all 4 built-in core messaging
+patterns have been used for the networking:
+
+* **Request-reply** for synchronization between:
+
+  * visualisation and the initializer
+
+  * RaspberryPis and the initializer (synchronized publisher).
+
+* **Pub-sub** for distribution of the stock data to RaspberryPis.
+
+* **Pipeline** for collection of proccessed data from RaspberryPis.
+
+* **Exclusive pair** for synchronizing threads in the Controller.
+
+
+`Protocol Buffers <https://developers.google.com/protocol-buffers/>`_
+has been used to serialize data.  They are easy and allow to define
+messages and serialize it easily and cross language barriers. They
+generate source files in the given language. This means an interface
+consistent with the language and with type safety.
+
+The system outline
+^^^^^^^^^^^^^^^^^^
 
 .. image:: ../network.png
    :alt: Network diagram.
@@ -64,31 +91,6 @@ Note that this design allows scaling of both:
 * number of channel parsers in case channels number increases/decreases.
 
 * number of RaspberryPis.
-
-
-Network
--------
-
-We used `Protocol Buffers
-<https://developers.google.com/protocol-buffers/>`_ to serialize data.
-They were very easy and allowed us to define messages and serialize it
-easily and cross language barriers. They generated source files in the
-given language. This meant that we had an interface consistent with the
-language and with type safety.
-
-Using `ZMQ <http://www.zeromq.org/>`_ helped as it meant it was easier
-to define channels and connect them than to use something like native
-sockets. It did cause a few problems with synchronisation as the socket
-type we used would start sending data before any of the RaspberryPis
-were connected. This meant that packets were lost. We fixed by sending
-messages back telling the parser when to start to send data.
-
-The connection between the RaspberryPis and the parser had top be
-ordered at the parser end due differences in speed between RaspberryPis
-and different parsers.  This was complicated. In the end we went for a
-design which was not perfect at ordering. As the visualisation is viewed
-by people differences in time between stocks on the order of a second
-should not be noticed and so we decided that was better.
 
 
 Parsing
