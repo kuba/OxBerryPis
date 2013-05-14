@@ -21,19 +21,19 @@ class Initializer(object):
        which will be distributed over the RapsberryPis.
 
     #. Wait for given number (:attr:`subscribers_expected`) of
-       RaspberryPis.
+       Raspberry Pis.
 
-    #. For every RaspberryPi connected send back range of symbol
-       indexes. Each range is sent to two different RaspberryPis
+    #. For every Raspberry Pi connected send back range of symbol
+       indexes. Each range is sent to two different Raspberry Pis
        to allow high availability.
 
-    #. Once all RaspberryPis are connected hand over to the
+    #. Once all Raspberry Pis are connected hand over to the
        :py:class:`.ChannelPublishersThread`.
 
 
     :param context: ZMQ context.
     :param vissync_uri: ZMQ URI for syncing with the visualisation.
-    :param rpisync_uri: ZMQ URI for syncing with RaspberryPis.
+    :param rpisync_uri: ZMQ URI for syncing with Raspberry Pis.
     :param proxy_uri: ZMQ URI for publishers proxy's frontend.
     :param to_publishers_pipe: Pipe used to sync :py:class:`Initializer`
                                with the :py:class:`.ChannelPublishersThread`.

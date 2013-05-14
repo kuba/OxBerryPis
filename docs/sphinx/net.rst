@@ -43,8 +43,8 @@ Messages factories
    :members:
 
 
-RaspberryPi
------------
+Raspberry Pi
+------------
 
 .. automodule:: oxberrypis.net.rpi
    :members:
