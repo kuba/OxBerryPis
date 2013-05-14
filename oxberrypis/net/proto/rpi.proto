@@ -1,4 +1,4 @@
-// Packets from RaspberryPis
+// Packets from Raspberry Pis
 package oxberrypis.net.proto.rpi;
 
 message StockEvent {

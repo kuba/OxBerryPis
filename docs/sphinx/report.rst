@@ -60,7 +60,7 @@ The following technologies have been used:
   for network data serialization.
 
 * Custom image of `Raspbian <http://www.raspberrypi.org/downloads>`_ as
-  the Operating System for RaspberryPis.
+  the Operating System for Raspberry Pis.
 
 * `Sphinx <http://sphinx-doc.org/>`_ for documentation generation.
 
@@ -83,11 +83,11 @@ patterns have been used for the networking:
 
   * visualisation and the initializer,
 
-  * RaspberryPis and the initializer (synchronized publisher).
+  * Raspberry Pis and the initializer (synchronized publisher).
 
-* **Pub-sub** for distribution of the stock data to RaspberryPis.
+* **Pub-sub** for distribution of the stock data to Raspberry Pis.
 
-* **Pipeline** for collection of proccessed data from RaspberryPis.
+* **Pipeline** for collection of processed data from Raspberry Pis.
 
 * **Exclusive pair** for synchronizing threads in the Controller.
 
@@ -119,27 +119,27 @@ The system outline
 #. The initializer parses stock's symbol indexes to symbol names and
    price scale code (power of denominator) mapping and splits this
    mapping into several ranges. Number of ranges is determined from the
-   number of RaspberryPis which publisher expects to connect.
+   number of Raspberry Pis which publisher expects to connect.
 
 #. The initializer waits for visualisation to issue a synchronization
    request on the ``REQ`` socket and replies on the ``REP`` socket with
    ranges of symbol indexes. Visualisation uses this data to display
    symbol names instead of symbol indexes and also to order data sent
-   from RaspberryPis.
+   from Raspberry Pis.
 
 #. The initializer starts :py:class:`synchronized publisher
    <oxberrypis.net.components.SynchronizedPublisher>` which waits for
-   expected number of RaspberryPis to connect. Dummy data (ping) is
+   expected number of Raspberry Pis to connect. Dummy data (ping) is
    published to the network through the proxy.
 
-#. When RaspberryPi is turned on it starts to listen on the ``SUB``
+#. When Raspberry Pi is turned on it starts to listen on the ``SUB``
    socket and once data arrives it sends symbol range request on the
    ``REQ`` socket. The initializer replies on the ``REP`` socket.  Each
-   RaspberryPi is assigned two different ranges to allow high
+   Raspberry Pi is assigned two different ranges to allow high
    availability of the entire system (ranges overlap between
-   RaspberryPis). RaspberryPi subscribes to given range.
+   Raspberry Pis). Raspberry Pi subscribes to given range.
 
-#. Once all RaspberryPis are connected, synchronized publisher dies and
+#. Once all Raspberry Pis are connected, synchronized publisher dies and
    the initializer hands over to the master synchronized publishers
    thread over the ``PAIR`` socket.
 
@@ -148,11 +148,11 @@ The system outline
    the data through the proxy. Data is encapsulated in special envelopes
    containing stock index and channel id to allow:
 
-   * subscriber prefix matching on RaspberryPis
+   * subscriber prefix matching on Raspberry Pis
 
    * easier ordering in the visualisation
 
-#. RaspberryPis process the data in their order books and send the
+#. Raspberry Pis process the data in their order books and send the
    results over the ``PUSH`` socket.
 
 #. Visualisation listens for stock event messages incoming on the
@@ -163,7 +163,7 @@ Note that this design allows scaling of both:
 
 * number of channel parsers in case channels number increases/decreases;
 
-* number of RaspberryPis.
+* number of Raspberry Pis.
 
 
 Parsing
@@ -208,7 +208,7 @@ price in first come first serve basis.
 
 The whole book class is very modular and it can be connected with any
 collection for limit books as well as for structures. We chose to pick
-:py:mod:`Finacci heap <oxberrypis.orderbook.fibonacci_heap>` to store
+:py:mod:`Fibonacci heap <oxberrypis.orderbook.fibonacci_heap>` to store
 limit prices and :py:mod:`Doubly linked list
 <oxberrypis.orderbook.linked_list>` for individual orders for a single
 limit price. For limit prices we need to very efficiently add element

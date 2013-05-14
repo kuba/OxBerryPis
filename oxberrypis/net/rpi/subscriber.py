@@ -1,4 +1,4 @@
-"""RaspberryPi stock messages subscriber/handler."""
+"""Raspberry Pi stock messages subscriber/handler."""
 import zmq
 
 from ..components import SynchronizedSubscriber

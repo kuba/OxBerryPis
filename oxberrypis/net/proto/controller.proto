@@ -16,7 +16,7 @@ message SetupVisualisation {
   repeated SymbolRange range = 1;
 }
 
-// Message used by RaspberryPi for setup
+// Message used by Raspberry Pi for setup
 message SetupRPi {
   repeated uint32 symbol_index = 1;
 }

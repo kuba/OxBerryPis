@@ -19,7 +19,7 @@ class Controller(object):
 
     :param context: ZMQ context.
     :param vissync_uri: ZMQ URI for syncing with the visualisation.
-    :param rpisync_uri: ZMQ URI for syncing with RaspberryPis.
+    :param rpisync_uri: ZMQ URI for syncing with Raspberry Pis.
     :param pub_uri: ZMQ URI controller publishes from.
 
     :param subscribers_expected: Number of subscribers expected to connect
