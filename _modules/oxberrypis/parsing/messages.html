@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.parsing.messages &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.parsing.messages</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;NYSE integrated feed messages.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">oxberrypis.parsing.fields</span> <span class="kn">import</span> <span class="n">fields</span>
+
+<span class="kn">from</span> <span class="nn">oxberrypis.parsing.headers</span> <span class="kn">import</span> <span class="n">MsgHeader</span>
+
+<span class="kn">from</span> <span class="nn">oxberrypis.parsing.utils</span> <span class="kn">import</span> <span class="n">get_pkt_format_string</span>
+<span class="kn">from</span> <span class="nn">oxberrypis.parsing.utils</span> <span class="kn">import</span> <span class="n">get_pkt_namedtuple</span>
+
+
+<span class="c"># Order Book Add Order Message</span>
+<span class="n">msg100_spec</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SourceTimeNS</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolIndex</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolSeqNum</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">OrderID</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Price</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Volume</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Side</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">OrderIDGTCIndicator</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">TradeSession</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nd">@MsgHeader.register_known_msg</span>
+<div class="viewcode-block" id="OBAddOrderMsg"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.messages.OBAddOrderMsg">[docs]</a><span class="k">class</span> <span class="nc">OBAddOrderMsg</span><span class="p">(</span><span class="n">get_pkt_namedtuple</span><span class="p">(</span><span class="s">&#39;OBAddOrderMsg&#39;</span><span class="p">,</span> <span class="n">msg100_spec</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Order Book Add Order Message.&quot;&quot;&quot;</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="n">get_pkt_format_string</span><span class="p">(</span><span class="n">msg100_spec</span><span class="p">)</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="mi">100</span>
+
+
+<span class="c"># Order Book Modify Message</span></div>
+<span class="n">msg101_spec</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SourceTimeNS</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolIndex</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolSeqNum</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">OrderID</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Price</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Volume</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Side</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">OrderIDGTCIndicator</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">ReasonCode</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nd">@MsgHeader.register_known_msg</span>
+<div class="viewcode-block" id="OBModifyMsg"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.messages.OBModifyMsg">[docs]</a><span class="k">class</span> <span class="nc">OBModifyMsg</span><span class="p">(</span><span class="n">get_pkt_namedtuple</span><span class="p">(</span><span class="s">&#39;OBModifyMsg&#39;</span><span class="p">,</span> <span class="n">msg101_spec</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Order Book Modify Message.&quot;&quot;&quot;</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="n">get_pkt_format_string</span><span class="p">(</span><span class="n">msg101_spec</span><span class="p">)</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="mi">101</span>
+
+
+<span class="c"># Order Book Delete Message</span></div>
+<span class="n">msg102_spec</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SourceTimeNS</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolIndex</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolSeqNum</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">OrderID</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Side</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">OrderIDGTCIndicator</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">ReasonCode</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nd">@MsgHeader.register_known_msg</span>
+<div class="viewcode-block" id="OBDeleteMsg"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.messages.OBDeleteMsg">[docs]</a><span class="k">class</span> <span class="nc">OBDeleteMsg</span><span class="p">(</span><span class="n">get_pkt_namedtuple</span><span class="p">(</span><span class="s">&#39;OBDeleteMsg&#39;</span><span class="p">,</span> <span class="n">msg102_spec</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Order Book Delete Message.&quot;&quot;&quot;</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="n">get_pkt_format_string</span><span class="p">(</span><span class="n">msg102_spec</span><span class="p">)</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="mi">102</span>
+
+
+<span class="c"># Order Book Execution Message</span></div>
+<span class="n">msg103_spec</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SourceTimeNS</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolIndex</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolSeqNum</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">OrderID</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Price</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Volume</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">OrderIDGTCIndicator</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">ReasonCode</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">TradeID</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nd">@MsgHeader.register_known_msg</span>
+<div class="viewcode-block" id="OBExecutionMsg"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.messages.OBExecutionMsg">[docs]</a><span class="k">class</span> <span class="nc">OBExecutionMsg</span><span class="p">(</span><span class="n">get_pkt_namedtuple</span><span class="p">(</span><span class="s">&#39;OBExecutionMsg&#39;</span><span class="p">,</span> <span class="n">msg103_spec</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Order Book Execution Message.&quot;&quot;&quot;</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="n">get_pkt_format_string</span><span class="p">(</span><span class="n">msg103_spec</span><span class="p">)</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="mi">103</span>
+
+
+<span class="c"># Trade Message</span></div>
+<span class="n">msg220_spec</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SourceTime</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SourceTimeNS</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolIndex</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">SymbolSeqNum</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">TradeID</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Price</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">Volume</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">TradeCond1</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">TradeCond2</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">TradeCond3</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">TradeCond4</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">TradeThroughExempt</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">LiquidityIndicatorFlag</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">AskPrice</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">AskVolume</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">BidPrice</span><span class="p">,</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">BidVolume</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nd">@MsgHeader.register_known_msg</span>
+<div class="viewcode-block" id="TradeMsg"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.messages.TradeMsg">[docs]</a><span class="k">class</span> <span class="nc">TradeMsg</span><span class="p">(</span><span class="n">get_pkt_namedtuple</span><span class="p">(</span><span class="s">&#39;TradeMsg&#39;</span><span class="p">,</span> <span class="n">msg220_spec</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Trade Message.&quot;&quot;&quot;</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="n">get_pkt_format_string</span><span class="p">(</span><span class="n">msg220_spec</span><span class="p">)</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="mi">220</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

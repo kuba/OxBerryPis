@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.net.controller.channel &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../../index.html" />
+    <link rel="up" title="oxberrypis.net.controller" href="../controller.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../controller.html" accesskey="U">oxberrypis.net.controller</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.net.controller.channel</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Network components responsible for a single channel parsing/publishing.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="kn">import</span> <span class="nn">zmq</span>
+
+<span class="kn">from</span> <span class="nn">...parsing.parsers</span> <span class="kn">import</span> <span class="n">FileXDPChannelUnpacker</span> <span class="k">as</span> <span class="n">Unpacker</span>
+<span class="kn">from</span> <span class="nn">.msgs_factories</span> <span class="kn">import</span> <span class="n">StockMessagesFactory</span>
+
+
+<div class="viewcode-block" id="ChannelStockMsgsGenerator"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.channel.ChannelStockMsgsGenerator">[docs]</a><span class="k">class</span> <span class="nc">ChannelStockMsgsGenerator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stock messages generator from the channel.</span>
+
+<span class="sd">    :param directory: Directory with NYSE Arca Integrated Feed</span>
+<span class="sd">                      channels files.</span>
+<span class="sd">    :type directory: string</span>
+
+<span class="sd">    :param channel_id: Channel ID to be parsed.</span>
+<span class="sd">    :type channel_id: integer</span>
+
+<span class="sd">    :param factory: Factory for :py:class:`StockMessage` objects,</span>
+<span class="sd">                    defaults to an instance of</span>
+<span class="sd">                    :py:class:`StockMessagesFactory`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unpacker</span> <span class="o">=</span> <span class="n">Unpacker</span><span class="o">.</span><span class="n">get_channel_unpacker</span><span class="p">(</span>
+            <span class="n">directory</span><span class="p">,</span>
+            <span class="n">channel_id</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">factory</span> <span class="ow">or</span> <span class="n">StockMessagesFactory</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ChannelStockMsgsGenerator.generate_stock_msgs"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.channel.ChannelStockMsgsGenerator.generate_stock_msgs">[docs]</a>    <span class="k">def</span> <span class="nf">generate_stock_msgs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate stock messages (with stock ids).</span>
+
+<span class="sd">        Yields :py:class:`StockMessage` object for every known</span>
+<span class="sd">        message found in the channel stream.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">pkt_hdr</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpacker</span><span class="o">.</span><span class="n">parse</span><span class="p">():</span>
+            <span class="n">stock_msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">pkt_hdr</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+            <span class="c"># Ignore messages with no handler in the factory</span>
+            <span class="k">if</span> <span class="n">stock_msg</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c"># Ignore messages without symbol index</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&#39;SymbolIndex&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">stock_id</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">SymbolIndex</span>
+            <span class="n">serialized</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+            <span class="k">yield</span> <span class="n">stock_id</span><span class="p">,</span> <span class="n">stock_msg</span>
+
+</div></div>
+<div class="viewcode-block" id="ChannelPublisher"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.channel.ChannelPublisher">[docs]</a><span class="k">class</span> <span class="nc">ChannelPublisher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Channel publisher.</span>
+
+<span class="sd">    Parses a single channel and publishes :py:class:`StockMessage` messages.</span>
+
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param uri: ZMQ URI publisher publishes to.</span>
+<span class="sd">    :param directory: Directory with NYSE Arca Integrated Feed channels</span>
+<span class="sd">                      files.</span>
+<span class="sd">    :param channel_id: Channel ID to be parsed.</span>
+<span class="sd">    :type channel_id: integer</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">uri</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">):</span>
+        <span class="c"># Setup a socket</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span> <span class="o">=</span> <span class="n">channel_id</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">ChannelStockMsgsGenerator</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">StockMessagesFactory</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ChannelPublisher.run"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.channel.ChannelPublisher.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the publisher.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">symbol_index</span><span class="p">,</span> <span class="n">stock_msg</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">generate_stock_msgs</span><span class="p">():</span>
+            <span class="n">serialized</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+
+            <span class="c"># 2^32 (max SymbolIndex) is 10-digit number</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbol_index</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">send_multipart</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">prefix</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span><span class="p">),</span> <span class="n">serialized</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="ChannelPublisherThread"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.channel.ChannelPublisherThread">[docs]</a><span class="k">class</span> <span class="nc">ChannelPublisherThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Channel publisher thread.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">uri</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="s">&quot;ChannelPublisher{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">channel_id</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ChannelPublisherThread</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel_publisher</span> <span class="o">=</span> <span class="n">ChannelPublisher</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">uri</span><span class="p">,</span>
+            <span class="n">directory</span><span class="p">,</span>
+            <span class="n">channel_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="ChannelPublisherThread.run"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.channel.ChannelPublisherThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the thread.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel_publisher</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../controller.html" >oxberrypis.net.controller</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.net.controller.publisher &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../../index.html" />
+    <link rel="up" title="oxberrypis.net.controller" href="../controller.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../controller.html" accesskey="U">oxberrypis.net.controller</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.net.controller.publisher</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Network components responsible for publishing stock messages.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">ChannelPublisherThread</span>
+
+<span class="kn">from</span> <span class="nn">..components</span> <span class="kn">import</span> <span class="n">PubSubProxy</span>
+
+
+<div class="viewcode-block" id="ProxyThread"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.publisher.ProxyThread">[docs]</a><span class="k">class</span> <span class="nc">ProxyThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pub-sub proxy thread.</span>
+
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param frontend_uri: ZMQ URI proxy listens to.</span>
+<span class="sd">    :param backend_uri: ZMQ URI proxy rebpublishes to.</span>
+<span class="sd">    :param name: Name of the thread; useful for debugging.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">frontend_uri</span><span class="p">,</span> <span class="n">backend_uri</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;Proxy&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ProxyThread</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy</span> <span class="o">=</span> <span class="n">PubSubProxy</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">frontend_uri</span><span class="p">,</span>
+            <span class="n">backend_uri</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="ProxyThread.run"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.publisher.ProxyThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the proxy.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="ChannelPublishersThread"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.publisher.ChannelPublishersThread">[docs]</a><span class="k">class</span> <span class="nc">ChannelPublishersThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Channel publishers thread.</span>
+
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param init_pipe: Pipe used to sync with the :py:class:`Initializer`.</span>
+<span class="sd">    :param proxy_uri: Destination channel publishers publish to.</span>
+<span class="sd">    :param directory: Directory when channel files are found.</span>
+<span class="sd">    :param channels_num: Number of channels to process. Parsing will</span>
+<span class="sd">                         start with channel 1.</span>
+<span class="sd">    :param name: Name of the thread; useful for debugging.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">init_pipe</span><span class="p">,</span> <span class="n">proxy_uri</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span>
+            <span class="n">channels_num</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;ChannelPublishers&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ChannelPublishersThread</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_pipe</span> <span class="o">=</span> <span class="n">init_pipe</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp_threads</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">channel_id</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">channels_num</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">cp_thread</span> <span class="o">=</span> <span class="n">ChannelPublisherThread</span><span class="p">(</span>
+                <span class="n">context</span><span class="p">,</span>
+                <span class="n">proxy_uri</span><span class="p">,</span>
+                <span class="n">directory</span><span class="p">,</span>
+                <span class="n">channel_id</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">cp_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="bp">True</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">cp_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cp_thread</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ChannelPublishersThread.run"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.publisher.ChannelPublishersThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the channel publishers thread.&quot;&quot;&quot;</span>
+        <span class="c"># Wait for signal from initializer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_pipe</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">cp_thread</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp_threads</span><span class="p">:</span>
+            <span class="n">cp_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../controller.html" >oxberrypis.net.controller</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

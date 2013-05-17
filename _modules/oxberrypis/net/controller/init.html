@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.net.controller.init &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../../index.html" />
+    <link rel="up" title="oxberrypis.net.controller" href="../controller.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../controller.html" accesskey="U">oxberrypis.net.controller</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.net.controller.init</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Network initialization.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">zmq</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">chunks</span>
+
+<span class="kn">from</span> <span class="nn">..components</span> <span class="kn">import</span> <span class="n">SynchronizedPublisher</span>
+
+<span class="kn">from</span> <span class="nn">..proto.controller_pb2</span> <span class="kn">import</span> <span class="n">SetupVisualisation</span>
+<span class="kn">from</span> <span class="nn">..proto.controller_pb2</span> <span class="kn">import</span> <span class="n">SetupRPi</span>
+
+
+<div class="viewcode-block" id="Initializer"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.init.Initializer">[docs]</a><span class="k">class</span> <span class="nc">Initializer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Network initializer.</span>
+
+<span class="sd">    Initilizer works as following:</span>
+
+<span class="sd">    #. Wait for visualisation.</span>
+
+<span class="sd">    #. Once visualisation connects, send back ranges of symbol indexes</span>
+<span class="sd">       which will be distributed over the RapsberryPis.</span>
+
+<span class="sd">    #. Wait for given number (:attr:`subscribers_expected`) of</span>
+<span class="sd">       RaspberryPis.</span>
+
+<span class="sd">    #. For every RaspberryPi connected send back range of symbol</span>
+<span class="sd">       indexes. Each range is sent to two different RaspberryPis</span>
+<span class="sd">       to allow high availability.</span>
+
+<span class="sd">    #. Once all RaspberryPis are connected hand over to the</span>
+<span class="sd">       :py:class:`.ChannelPublishersThread`.</span>
+
+
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param vissync_uri: ZMQ URI for syncing with the visualisation.</span>
+<span class="sd">    :param rpisync_uri: ZMQ URI for syncing with RaspberryPis.</span>
+<span class="sd">    :param proxy_uri: ZMQ URI for publishers proxy&#39;s frontend.</span>
+<span class="sd">    :param to_publishers_pipe: Pipe used to sync :py:class:`Initializer`</span>
+<span class="sd">                               with the :py:class:`.ChannelPublishersThread`.</span>
+<span class="sd">    :param subscribers_expected: Number of subscribers expected to</span>
+<span class="sd">                                 connect to the controller before</span>
+<span class="sd">                                 publishing starts.</span>
+<span class="sd">    :type subscribers_expected: integer</span>
+<span class="sd">    :param mapping: List of symbol mappings.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">vissync_uri</span><span class="p">,</span> <span class="n">rpisync_uri</span><span class="p">,</span> <span class="n">proxy_uri</span><span class="p">,</span>
+            <span class="n">to_publishers_pipe</span><span class="p">,</span> <span class="n">subscribers_expected</span><span class="p">,</span> <span class="n">mapping</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vissync</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vissync</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">vissync_uri</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_publishers_pipe</span> <span class="o">=</span> <span class="n">to_publishers_pipe</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers_expected</span> <span class="o">=</span> <span class="n">subscribers_expected</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ranges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chunks</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">subscribers_expected</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncpub</span> <span class="o">=</span> <span class="n">SynchronizedPublisher</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">proxy_uri</span><span class="p">,</span>
+            <span class="n">rpisync_uri</span><span class="p">,</span>
+            <span class="n">subscribers_expected</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_setup_rpi_msg_serialized</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Initializer.create_setup_rpi_msg"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.init.Initializer.create_setup_rpi_msg">[docs]</a>    <span class="k">def</span> <span class="nf">create_setup_rpi_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pi_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create :py:class:`SetupRPi` message.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">pi_id</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pi_id</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscribers_expected</span>
+
+        <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ranges</span><span class="p">)</span>
+        <span class="n">range1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ranges</span><span class="p">[</span><span class="n">pi_id</span><span class="p">]</span>
+        <span class="n">range2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ranges</span><span class="p">[</span><span class="n">pi_id</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">%</span> <span class="n">count</span><span class="p">]</span>
+
+        <span class="n">setup_rpi</span> <span class="o">=</span> <span class="n">SetupRPi</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">range1</span> <span class="o">+</span> <span class="n">range2</span><span class="p">:</span>
+            <span class="n">symbol_index</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">setup_rpi</span><span class="o">.</span><span class="n">symbol_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">symbol_index</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">setup_rpi</span>
+</div>
+<div class="viewcode-block" id="Initializer.create_setup_rpi_msg_serialized"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.init.Initializer.create_setup_rpi_msg_serialized">[docs]</a>    <span class="k">def</span> <span class="nf">create_setup_rpi_msg_serialized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pi_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create serialized :py:class:`SetupRPi` message.&quot;&quot;&quot;</span>
+        <span class="n">setup_rpi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_setup_rpi_msg</span><span class="p">(</span><span class="n">pi_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">setup_rpi</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Initializer.create_setup_visualisation_msg"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.init.Initializer.create_setup_visualisation_msg">[docs]</a>    <span class="k">def</span> <span class="nf">create_setup_visualisation_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create SetupVisualisation message.&quot;&quot;&quot;</span>
+        <span class="n">setup_vis</span> <span class="o">=</span> <span class="n">SetupVisualisation</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">index_range</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ranges</span><span class="p">:</span>
+            <span class="n">current_range</span> <span class="o">=</span> <span class="n">setup_vis</span><span class="o">.</span><span class="n">range</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">index_range</span><span class="p">:</span>
+                <span class="n">current_mapping</span> <span class="o">=</span> <span class="n">current_range</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+                <span class="n">current_mapping</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">current_mapping</span><span class="o">.</span><span class="n">symbol_index</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">current_mapping</span><span class="o">.</span><span class="n">price_scale_code</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">setup_vis</span>
+</div>
+<div class="viewcode-block" id="Initializer.run"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.init.Initializer.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the initializer.&quot;&quot;&quot;</span>
+        <span class="n">setup_vis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_setup_visualisation_msg</span><span class="p">()</span>
+        <span class="n">setup_vis_serialized</span> <span class="o">=</span> <span class="n">setup_vis</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+
+        <span class="c"># Wait for signal from visualisation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vissync</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vissync</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">setup_vis_serialized</span><span class="p">)</span>
+
+        <span class="c"># Wait for RPis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncpub</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span>
+
+        <span class="c"># Signal to ChannelPublishersThread</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_publishers_pipe</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+</div></div>
+<div class="viewcode-block" id="InitializerThread"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.init.InitializerThread">[docs]</a><span class="k">class</span> <span class="nc">InitializerThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;:py:class:`Initializer` thread.</span>
+
+<span class="sd">    .. seealso :: For constructor parameters check :py:class:`Initializer`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">vissync_uri</span><span class="p">,</span> <span class="n">rpisync_uri</span><span class="p">,</span> <span class="n">proxy_uri</span><span class="p">,</span>
+            <span class="n">to_publishers_pipe</span><span class="p">,</span> <span class="n">subscribers_expected</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s">&quot;Initializer&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InitializerThread</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initializer</span> <span class="o">=</span> <span class="n">Initializer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">vissync_uri</span><span class="p">,</span>
+            <span class="n">rpisync_uri</span><span class="p">,</span>
+            <span class="n">proxy_uri</span><span class="p">,</span>
+            <span class="n">to_publishers_pipe</span><span class="p">,</span>
+            <span class="n">subscribers_expected</span><span class="p">,</span>
+            <span class="n">mapping</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="InitializerThread.run"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.init.InitializerThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the initializer thread.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initializer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../controller.html" >oxberrypis.net.controller</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

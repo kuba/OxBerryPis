@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.net.controller.msgs_factories &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../../index.html" />
+    <link rel="up" title="oxberrypis.net.controller" href="../controller.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../controller.html" accesskey="U">oxberrypis.net.controller</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.net.controller.msgs_factories</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Factories for stock messages.</span>
+
+<span class="sd">These factories take messages from :py:mod:`oxberrypis.parsing.messages`</span>
+<span class="sd">and turn them into instances of :py:class:`.proto.stock_pb2.StockMessage`.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..proto.stock_pb2</span> <span class="kn">import</span> <span class="n">StockMessage</span>
+
+<span class="kn">from</span> <span class="nn">...parsing.messages</span> <span class="kn">import</span> <span class="n">OBAddOrderMsg</span>
+<span class="kn">from</span> <span class="nn">...parsing.messages</span> <span class="kn">import</span> <span class="n">OBModifyMsg</span>
+<span class="kn">from</span> <span class="nn">...parsing.messages</span> <span class="kn">import</span> <span class="n">OBDeleteMsg</span>
+<span class="kn">from</span> <span class="nn">...parsing.messages</span> <span class="kn">import</span> <span class="n">OBExecutionMsg</span>
+<span class="kn">from</span> <span class="nn">...parsing.messages</span> <span class="kn">import</span> <span class="n">TradeMsg</span>
+
+
+<div class="viewcode-block" id="StockMessageFactory"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.msgs_factories.StockMessageFactory">[docs]</a><span class="k">class</span> <span class="nc">StockMessageFactory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generic factory for stock message.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_stock_msg</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">stock_msg</span> <span class="o">=</span> <span class="n">StockMessage</span><span class="p">()</span>
+        <span class="n">stock_msg</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">msg_type</span>
+
+        <span class="n">field</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">stock_msg</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">field_name</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">process_field</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">stock_msg</span>
+
+</div>
+<div class="viewcode-block" id="StockMessageAddFactory"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.msgs_factories.StockMessageAddFactory">[docs]</a><span class="k">class</span> <span class="nc">StockMessageAddFactory</span><span class="p">(</span><span class="n">StockMessageFactory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Factory for add order stock message.&quot;&quot;&quot;</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">ADD</span>
+    <span class="n">field_name</span> <span class="o">=</span> <span class="s">&#39;add&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">process_field</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">symbol_index</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">SymbolIndex</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">OrderID</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Price</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Volume</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">side</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Side</span>
+
+</div>
+<div class="viewcode-block" id="StockMessageModifyFactory"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.msgs_factories.StockMessageModifyFactory">[docs]</a><span class="k">class</span> <span class="nc">StockMessageModifyFactory</span><span class="p">(</span><span class="n">StockMessageFactory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Factory for modify order stock message.&quot;&quot;&quot;</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">MODIFY</span>
+    <span class="n">field_name</span> <span class="o">=</span> <span class="s">&#39;modify&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">process_field</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">symbol_index</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">SymbolIndex</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">OrderID</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Price</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Volume</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">side</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Side</span>
+
+</div>
+<div class="viewcode-block" id="StockMessageDeleteFactory"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.msgs_factories.StockMessageDeleteFactory">[docs]</a><span class="k">class</span> <span class="nc">StockMessageDeleteFactory</span><span class="p">(</span><span class="n">StockMessageFactory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Factory for delete order stock message.&quot;&quot;&quot;</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">DELETE</span>
+    <span class="n">field_name</span> <span class="o">=</span> <span class="s">&#39;delete&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">process_field</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">symbol_index</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">SymbolIndex</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">OrderID</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">side</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Side</span>
+
+</div>
+<div class="viewcode-block" id="StockMessageExecutionFactory"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.msgs_factories.StockMessageExecutionFactory">[docs]</a><span class="k">class</span> <span class="nc">StockMessageExecutionFactory</span><span class="p">(</span><span class="n">StockMessageFactory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Factory for execution order stock message.&quot;&quot;&quot;</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">EXECUTE</span>
+    <span class="n">field_name</span> <span class="o">=</span> <span class="s">&#39;execution&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">process_field</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">symbol_index</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">SymbolIndex</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">OrderID</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Price</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">Volume</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">reason_code</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">ReasonCode</span>
+
+</div>
+<div class="viewcode-block" id="StockMessageTradeFactory"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.msgs_factories.StockMessageTradeFactory">[docs]</a><span class="k">class</span> <span class="nc">StockMessageTradeFactory</span><span class="p">(</span><span class="n">StockMessageFactory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Factory for trade stock message.&quot;&quot;&quot;</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">TRADE</span>
+    <span class="n">field_name</span> <span class="o">=</span> <span class="s">&#39;trade&#39;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">process_field</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">field</span><span class="o">.</span><span class="n">symbol_index</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">SymbolIndex</span>
+
+</div>
+<div class="viewcode-block" id="StockMessagesFactory"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.controller.msgs_factories.StockMessagesFactory">[docs]</a><span class="k">class</span> <span class="nc">StockMessagesFactory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Factory for stock messages.&quot;&quot;&quot;</span>
+
+    <span class="n">factories</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">OBAddOrderMsg</span><span class="p">:</span> <span class="n">StockMessageAddFactory</span><span class="p">,</span>
+        <span class="n">OBModifyMsg</span><span class="p">:</span> <span class="n">StockMessageModifyFactory</span><span class="p">,</span>
+        <span class="n">OBDeleteMsg</span><span class="p">:</span> <span class="n">StockMessageDeleteFactory</span><span class="p">,</span>
+        <span class="n">OBExecutionMsg</span><span class="p">:</span> <span class="n">StockMessageExecutionFactory</span><span class="p">,</span>
+        <span class="n">TradeMsg</span><span class="p">:</span> <span class="n">StockMessageTradeFactory</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">pkt_hdr</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">msg_cls</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">__class__</span>
+        <span class="k">if</span> <span class="n">msg_cls</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">factories</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="n">factory</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">factories</span><span class="p">[</span><span class="n">msg_cls</span><span class="p">]</span>
+        <span class="n">stock_msg</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_stock_msg</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">stock_msg</span><span class="o">.</span><span class="n">packet_time</span> <span class="o">=</span> <span class="n">pkt_hdr</span><span class="o">.</span><span class="n">SendTime</span>
+        <span class="n">stock_msg</span><span class="o">.</span><span class="n">packet_time_ns</span> <span class="o">=</span> <span class="n">pkt_hdr</span><span class="o">.</span><span class="n">SendTimeNS</span>
+
+        <span class="k">return</span> <span class="n">stock_msg</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../controller.html" >oxberrypis.net.controller</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

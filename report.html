@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Group report &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="index.html" />
+    <link rel="next" title="Networking" href="net.html" />
+    <link rel="prev" title="README" href="readme.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="net.html" title="Networking"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="readme.html" title="README"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="group-report">
+<h1>Group report<a class="headerlink" href="#group-report" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="project-summary">
+<h2>Project summary<a class="headerlink" href="#project-summary" title="Permalink to this headline">¶</a></h2>
+<p>As a group, we struggled a lot to get going for the project. There was
+an initial motivation, but a lack of communication, along with a loss of
+engagement with the project made for a difficult beginning. Assignments
+to sections of the project happened during one of the initial meetings,
+but work on them was done independently and without much communication
+between the team members. During this time, we lost contact entirely
+with one team member, who refused to answer emails, messages, any form
+of communication. This was a large worry, as he held a large position of
+responsibility over the project due to being chiefly in charge of
+visualisation.</p>
+<p>Throughout the vacation we didn’t keep in contact as best we should, and
+again the project didn’t move very far forward. At this point we decided
+that given the missing member, someone should step in to write the
+visualisation section of the code, and so the load was made heavier due
+to this large responsibility. When we returned for the next term, a
+sense of urgency hit after a meeting with our sponsor and we realised
+that we really needed to get the project going and functioning. In the
+last couple of weeks, we met near every day and worked hard together to
+get the project to its best state.</p>
+<p>In the end, we got the project working, although not to the quality we
+would have liked. We worked extremely hard on the project, and overall
+have found that it was a good exercise, and a useful lesson. In the
+future, we will aim to start strong and maintain that enthusiasm, keep
+communication quick and constant, and ensure that anyone not pulling
+their weight is quickly dealt with to avoid a heavy load being picked up
+rather later in the project. Also, we aim to put together a more basic
+version of the entire system earlier on, rather than developing our
+system parts individually and trying to get it to all work together at
+the end, which is a much harder and riskier method of going about the
+project.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="general">
+<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<p>The following technologies have been used:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://python.org">Python</a> as the main programming language.</li>
+<li><a class="reference external" href="http://www.oracle.com/technetwork/java/index.html">Java</a> for the
+visualisation.</li>
+<li><a class="reference external" href="https://github.com/">Github</a> for revision control and source code
+management.</li>
+<li><a class="reference external" href="http://www.zeromq.org/">ØMQ</a> for the networking.</li>
+<li><a class="reference external" href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>
+for network data serialization.</li>
+<li>Custom image of <a class="reference external" href="http://www.raspberrypi.org/downloads">Raspbian</a> as
+the Operating System for Raspberry Pis.</li>
+<li><a class="reference external" href="http://sphinx-doc.org/">Sphinx</a> for documentation generation.</li>
+</ul>
+</div>
+<div class="section" id="statistics">
+<h3>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>About 65% of Python code has been covered with unit tests.</li>
+<li>82 files have been added, with total 7320 lines inserted.</li>
+</ul>
+</div>
+<div class="section" id="network">
+<h3>Network<a class="headerlink" href="#network" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://www.zeromq.org/">ØMQ</a> and all 4 built-in core messaging
+patterns have been used for the networking:</p>
+<ul class="simple">
+<li><strong>Request-reply</strong> for synchronization between:<ul>
+<li>visualisation and the initializer,</li>
+<li>Raspberry Pis and the initializer (synchronized publisher).</li>
+</ul>
+</li>
+<li><strong>Pub-sub</strong> for distribution of the stock data to Raspberry Pis.</li>
+<li><strong>Pipeline</strong> for collection of processed data from Raspberry Pis.</li>
+<li><strong>Exclusive pair</strong> for synchronizing threads in the Controller.</li>
+</ul>
+<p><a class="reference external" href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>
+have been used to serialize data.  They are easy and allow to define
+messages and serialize it easily and cross language barriers. They
+generate source files in the given language. This means an interface
+consistent with the language and with type safety.</p>
+<div class="section" id="the-system-outline">
+<h4>The system outline<a class="headerlink" href="#the-system-outline" title="Permalink to this headline">¶</a></h4>
+<img alt="Network diagram." src="_images/network.png" />
+<ol class="arabic simple">
+<li>Controller starts and spawns 3 different threads:<ul>
+<li>the <a class="reference internal" href="net.html#oxberrypis.net.controller.init.InitializerThread" title="oxberrypis.net.controller.init.InitializerThread"><tt class="xref py py-class docutils literal"><span class="pre">network</span> <span class="pre">initializer</span></tt></a>,</li>
+<li><a class="reference internal" href="net.html#oxberrypis.net.controller.publisher.ChannelPublishersThread" title="oxberrypis.net.controller.publisher.ChannelPublishersThread"><tt class="xref py py-class docutils literal"><span class="pre">channels</span> <span class="pre">publishers</span> <span class="pre">master</span> <span class="pre">thread</span></tt></a></li>
+<li>and <a class="reference internal" href="net.html#oxberrypis.net.controller.publisher.ProxyThread" title="oxberrypis.net.controller.publisher.ProxyThread"><tt class="xref py py-class docutils literal"><span class="pre">publisher-subscriber</span> <span class="pre">proxy</span> <span class="pre">thread</span></tt></a>.</li>
+</ul>
+</li>
+<li>The initializer parses stock&#8217;s symbol indexes to symbol names and
+price scale code (power of denominator) mapping and splits this
+mapping into several ranges. Number of ranges is determined from the
+number of Raspberry Pis which publisher expects to connect.</li>
+<li>The initializer waits for visualisation to issue a synchronization
+request on the <tt class="docutils literal"><span class="pre">REQ</span></tt> socket and replies on the <tt class="docutils literal"><span class="pre">REP</span></tt> socket with
+ranges of symbol indexes. Visualisation uses this data to display
+symbol names instead of symbol indexes and also to order data sent
+from Raspberry Pis.</li>
+<li>The initializer starts <a class="reference internal" href="net.html#oxberrypis.net.components.SynchronizedPublisher" title="oxberrypis.net.components.SynchronizedPublisher"><tt class="xref py py-class docutils literal"><span class="pre">synchronized</span> <span class="pre">publisher</span></tt></a> which waits for
+expected number of Raspberry Pis to connect. Dummy data (ping) is
+published to the network through the proxy.</li>
+<li>When Raspberry Pi is turned on it starts to listen on the <tt class="docutils literal"><span class="pre">SUB</span></tt>
+socket and once data arrives it sends symbol range request on the
+<tt class="docutils literal"><span class="pre">REQ</span></tt> socket. The initializer replies on the <tt class="docutils literal"><span class="pre">REP</span></tt> socket.  Each
+Raspberry Pi is assigned two different ranges to allow high
+availability of the entire system (ranges overlap between
+Raspberry Pis). Raspberry Pi subscribes to given range.</li>
+<li>Once all Raspberry Pis are connected, synchronized publisher dies and
+the initializer hands over to the master synchronized publishers
+thread over the <tt class="docutils literal"><span class="pre">PAIR</span></tt> socket.</li>
+<li>Master synchronized publisher thread spawns 4 threads, one for each
+channel from NYSE. Each thread parses the channel file and publishes
+the data through the proxy. Data is encapsulated in special envelopes
+containing stock index and channel id to allow:<ul>
+<li>subscriber prefix matching on Raspberry Pis</li>
+<li>easier ordering in the visualisation</li>
+</ul>
+</li>
+<li>Raspberry Pis process the data in their order books and send the
+results over the <tt class="docutils literal"><span class="pre">PUSH</span></tt> socket.</li>
+<li>Visualisation listens for stock event messages incoming on the
+<tt class="docutils literal"><span class="pre">PULL</span></tt> socket and updates its UI respectively.</li>
+</ol>
+<p>Note that this design allows scaling of both:</p>
+<ul class="simple">
+<li>number of channel parsers in case channels number increases/decreases;</li>
+<li>number of Raspberry Pis.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="parsing">
+<h3>Parsing<a class="headerlink" href="#parsing" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://www.nyxdata.com/page/1084">NYSE Arca Integrated Feed</a> is split
+into 4 different channels. Sample data can be downloaded from the FTP
+and it comes in 4 different files, one for each stream.</p>
+<p>Each channel is a stream of packets containing variable number of
+messages of different type. Each packet starts with a <a class="reference internal" href="parsing.html#oxberrypis.parsing.headers.PacketHeader" title="oxberrypis.parsing.headers.PacketHeader"><tt class="xref py py-class docutils literal"><span class="pre">packet</span>
+<span class="pre">header</span></tt></a> which contains e.g.
+the packet time and the number of messages contained  and each message
+starts with a <a class="reference internal" href="parsing.html#oxberrypis.parsing.headers.MsgHeader" title="oxberrypis.parsing.headers.MsgHeader"><tt class="xref py py-class docutils literal"><span class="pre">message</span> <span class="pre">header</span></tt></a> which contains the message type
+and its size. Parser runs on a single channel file, unpacking the
+headers and and parsing only relevant messages based on their type found
+in the header.  Since <a class="reference internal" href="#order-book">Order Book</a> needs only select message types,
+filtering is important for performance reasons: firstly not all of the
+messages are parsed and secondly less data is transmitted over the
+network.</p>
+<p><a class="reference internal" href="parsing.html#module-oxberrypis.parsing" title="oxberrypis.parsing"><tt class="xref py py-mod docutils literal"><span class="pre">Parsing</span> <span class="pre">module</span></tt></a> uses special framework
+built for this project only which allows easy extension of the code,
+e.g. by adding new <a class="reference internal" href="parsing.html#module-oxberrypis.parsing.messages" title="oxberrypis.parsing.messages"><tt class="xref py py-mod docutils literal"><span class="pre">messages</span></tt></a> or
+new <a class="reference internal" href="parsing.html#module-oxberrypis.parsing.fields" title="oxberrypis.parsing.fields"><tt class="xref py py-mod docutils literal"><span class="pre">message</span> <span class="pre">fields</span></tt></a>.</p>
+</div>
+<div class="section" id="order-book">
+<h3>Order Book<a class="headerlink" href="#order-book" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="orderbook.html#module-oxberrypis.orderbook" title="oxberrypis.orderbook"><tt class="xref py py-mod docutils literal"><span class="pre">order</span> <span class="pre">book</span></tt></a> is the main processing
+code that runs on Raspberry Pis.  The order book module consists of two
+books classes, one for demand and one for supply. <a class="reference internal" href="orderbook.html#oxberrypis.orderbook.book.OrderBook" title="oxberrypis.orderbook.book.OrderBook"><tt class="xref py py-class docutils literal"><span class="pre">The</span> <span class="pre">book</span></tt></a> keeps all the orders and allows
+changing them as well as querying for orders either by id or for the
+currently best order. Order book keeps a set of limit books for each
+limit price that is present. This seems natural since there will be lots
+of orders for a single price and some update orders can move order to
+the end of queue for the price. Each limit book the keeps orders at this
+price in first come first serve basis.</p>
+<p>The whole book class is very modular and it can be connected with any
+collection for limit books as well as for structures. We chose to pick
+<a class="reference internal" href="orderbook.html#module-oxberrypis.orderbook.fibonacci_heap" title="oxberrypis.orderbook.fibonacci_heap"><tt class="xref py py-mod docutils literal"><span class="pre">Fibonacci</span> <span class="pre">heap</span></tt></a> to store
+limit prices and <a class="reference internal" href="orderbook.html#module-oxberrypis.orderbook.linked_list" title="oxberrypis.orderbook.linked_list"><tt class="xref py py-mod docutils literal"><span class="pre">Doubly</span> <span class="pre">linked</span> <span class="pre">list</span></tt></a> for individual orders for a single
+limit price. For limit prices we need to very efficiently add element
+and query for smallest element, also reasonably fast remove any element.
+Fibonacci heap allows the first two in O(1) and the second two in O(log
+N). For orders at a single limit price, the operations are the same,
+except we only add elements at the beginning or the end, doubly linked
+lists are perfect for this allowing all operations in O(1).</p>
+<p>The <a class="reference internal" href="orderbook.html#oxberrypis.orderbook.matching_engine.MatchingEngine" title="oxberrypis.orderbook.matching_engine.MatchingEngine"><tt class="xref py py-class docutils literal"><span class="pre">matching</span> <span class="pre">engine</span> <span class="pre">class</span></tt></a> is the class that
+implements trading logic. It implements the rules of which order has a
+priority, in which cases changing the order loses its position in queue,
+what will be the price when there is larger interval of agreement.
+Matching engine is also a public interface for other modules to use.</p>
+</div>
+<div class="section" id="visualisation">
+<h3>Visualisation<a class="headerlink" href="#visualisation" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="_images/visualisation.png"><img alt="Visualisation screenshot." src="_images/visualisation.png" style="width: 50%;" /></a>
+<p>The visualisation section was implemented in Java, meaning that we made
+use of the <a class="reference external" href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a> to switch from the
+Python code to the Java. The only one that was used for visualisation
+was <tt class="docutils literal"><span class="pre">StockEvent</span></tt>, which provided a stock id, information on what
+channel it came from, sequence number which allowed to detect duplicates
+(produced due to the high availability model we used), along with
+optionally the last trade price, top buy price and top sell price.</p>
+<p>A stock was given its own class, containing the stock name, last trade
+price, top buy price and top sell price. The stock name was obtained
+from a map sent from the parser, taking stock id to stock name. Each
+time a <tt class="docutils literal"><span class="pre">StockEvent</span></tt> came through, if the stock was already in the map,
+it was updated, otherwise it was added to the map.</p>
+<p>The actual visual part of the project was written using Java Swing. A
+scrollable grid of each stock is shown, along with its last trade price,
+the average of its top buy and top sell prices, and the difference
+between the top buy and top sell prices. Each time a new trade price
+comes in, it is compared with the previous one and the cell of the stock
+changes colour depending on if the price went up, down or stayed the
+same.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Group report</a><ul>
+<li><a class="reference internal" href="#project-summary">Project summary</a></li>
+<li><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#statistics">Statistics</a></li>
+<li><a class="reference internal" href="#network">Network</a><ul>
+<li><a class="reference internal" href="#the-system-outline">The system outline</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#parsing">Parsing</a></li>
+<li><a class="reference internal" href="#order-book">Order Book</a></li>
+<li><a class="reference internal" href="#visualisation">Visualisation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="readme.html"
+                        title="previous chapter">README</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="net.html"
+                        title="next chapter">Networking</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/report.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="net.html" title="Networking"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="readme.html" title="README"
+             >previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

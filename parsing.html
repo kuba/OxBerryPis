@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parsing &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="index.html" />
+    <link rel="next" title="Order book" href="orderbook.html" />
+    <link rel="prev" title="Networking" href="net.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="orderbook.html" title="Order book"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="net.html" title="Networking"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-oxberrypis.parsing">
+<span id="parsing"></span><h1>Parsing<a class="headerlink" href="#module-oxberrypis.parsing" title="Permalink to this headline">¶</a></h1>
+<p>Parsing of the NYSE Arca Feed data.</p>
+<p>NYSE supplies 4 different channel feeds (<a class="reference external" href="http://www.nyxdata.com/page/1084">http://www.nyxdata.com/page/1084</a>):</p>
+<blockquote>
+<div><p>The NYSE Arca Integrated Feed now lists four channels each A-Z. What
+is significant about four channels?</p>
+<p>The four channels will send data via matching engine ID&#8217;s, which are
+load balanced across all letter ranges A-Z. Four-channel delivery of
+this feed will benefit customers by reducing the overall delivery
+latency with this product. These channel configurations will help our
+publishers achieve the very lowest latency possible.</p>
+</div></blockquote>
+<div class="section" id="module-oxberrypis.parsing.parsers">
+<span id="parsers"></span><h2>Parsers<a class="headerlink" href="#module-oxberrypis.parsing.parsers" title="Permalink to this headline">¶</a></h2>
+<p>Parsers for XDP streams.</p>
+<dl class="class">
+<dt id="oxberrypis.parsing.parsers.FileXDPChannelUnpacker">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.parsers.</tt><tt class="descname">FileXDPChannelUnpacker</tt><big>(</big><em>channel_path</em>, <em>pkt_hdr_cls=None</em>, <em>msg_hdr_cls=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#FileXDPChannelUnpacker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.FileXDPChannelUnpacker" title="Permalink to this definition">¶</a></dt>
+<dd><p>XDP channel parser (unpacker) with file stream.</p>
+<dl class="classmethod">
+<dt id="oxberrypis.parsing.parsers.FileXDPChannelUnpacker.get_channel_path">
+<em class="property">classmethod </em><tt class="descname">get_channel_path</tt><big>(</big><em>directory</em>, <em>channel</em>, <em>channel_file_name_fmt=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#FileXDPChannelUnpacker.get_channel_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.FileXDPChannelUnpacker.get_channel_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get path to the channel found in the directory.</p>
+<p>Channel file name format string defaults to string set in
+<tt class="xref py py-attr docutils literal"><span class="pre">CHANNEL_FILE_NAME_FMT</span></tt> but it may be changed by calling
+the function with appropriate <tt class="docutils literal"><span class="pre">channel_file_name_fmt</span></tt> value.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="oxberrypis.parsing.parsers.FileXDPChannelUnpacker.get_channel_unpacker">
+<em class="property">classmethod </em><tt class="descname">get_channel_unpacker</tt><big>(</big><em>directory</em>, <em>channel_id</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#FileXDPChannelUnpacker.get_channel_unpacker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.FileXDPChannelUnpacker.get_channel_unpacker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for channel unpacker given <tt class="docutils literal"><span class="pre">directory</span></tt> and <tt class="docutils literal"><span class="pre">channel_id</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.parsing.parsers.FileXDPChannelUnpacker.open_stream">
+<tt class="descname">open_stream</tt><big>(</big><em>channel_path</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#FileXDPChannelUnpacker.open_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.FileXDPChannelUnpacker.open_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return opened stream for the given file found at <tt class="docutils literal"><span class="pre">channel_path</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.parsing.parsers.XDPChannelUnpacker">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.parsers.</tt><tt class="descname">XDPChannelUnpacker</tt><big>(</big><em>stream</em>, <em>pkt_hdr_cls=None</em>, <em>msg_hdr_cls=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#XDPChannelUnpacker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.XDPChannelUnpacker" title="Permalink to this definition">¶</a></dt>
+<dd><p>XDP channel parser (unpacker).</p>
+<p>The parser reads the supplied <tt class="xref py py-attr docutils literal"><span class="pre">stream</span></tt>, unpacks packet
+headers, reads all message headers and unpacks only known messages.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The parser assumes that the stream position is not manipulated
+during the lifetime of this object. Packets and messages are
+assumed to appear in the stream consecutively.</p>
+</div>
+<p>The parsers uses <a class="reference internal" href="#oxberrypis.parsing.headers.PacketHeader" title="oxberrypis.parsing.headers.PacketHeader"><tt class="xref py py-class docutils literal"><span class="pre">headers.PacketHeader</span></tt></a> and
+<a class="reference internal" href="#oxberrypis.parsing.headers.MsgHeader" title="oxberrypis.parsing.headers.MsgHeader"><tt class="xref py py-class docutils literal"><span class="pre">headers.MsgHeader</span></tt></a> for parsing, but you can supply your
+own header classes by setting <tt class="xref py py-attr docutils literal"><span class="pre">pkt_hdr_cls</span></tt> and
+<tt class="xref py py-attr docutils literal"><span class="pre">msg_header_cls</span></tt> to appropriate values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stream</strong> &#8211; Readable stream which feeds the parser.</li>
+<li><strong>pkt_hdr_cls</strong> &#8211; Packet header class. Defaults to
+<a class="reference internal" href="#oxberrypis.parsing.headers.PacketHeader" title="oxberrypis.parsing.headers.PacketHeader"><tt class="xref py py-class docutils literal"><span class="pre">headers.PacketHeader</span></tt></a>.</li>
+<li><strong>msg_hdr_cls</strong> &#8211; Message header class. Defaults to
+<tt class="xref py py-class docutils literal"><span class="pre">headers.MessageHeader</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.parsing.parsers.XDPChannelUnpacker.advance">
+<tt class="descname">advance</tt><big>(</big><em>offset</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#XDPChannelUnpacker.advance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.XDPChannelUnpacker.advance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skip <tt class="docutils literal"><span class="pre">offset</span></tt> number of bytes in the stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.parsing.parsers.XDPChannelUnpacker.parse">
+<tt class="descname">parse</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#XDPChannelUnpacker.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.XDPChannelUnpacker.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator for all the known messages from the stream.</p>
+<p>As long as there is a data remaining in the stream (assumed to
+be sufficiently long), it unpack the packet header. For each
+packet header parses the messages contained within.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_cls_from_stream">
+<tt class="descname">parse_cls_from_stream</tt><big>(</big><em>cls</em>, <em>size</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#XDPChannelUnpacker.parse_cls_from_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_cls_from_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the stream and parse to create an instance of given class.</p>
+<p>Assumes <tt class="docutils literal"><span class="pre">cls._make</span></tt> is a method accepting a tuple of unpacked
+data.</p>
+<p>Returns <tt class="docutils literal"><span class="pre">None</span></tt> if the stream is empty and raises an error
+if unpacking failed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_msg">
+<tt class="descname">parse_msg</tt><big>(</big><em>msg_header</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#XDPChannelUnpacker.parse_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a message from the stream.</p>
+<p>Message header is used to determined the size of the payload
+and the type of the message contained within it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_packet">
+<tt class="descname">parse_packet</tt><big>(</big><em>pkt_header</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/parsers.html#XDPChannelUnpacker.parse_packet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_packet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator for messages found within packet.</p>
+<p>Packet header is used to read off the number of messages
+contained within the packet. Then unpacks message headers one
+by one and if the message type is recognised, the message is
+parsed. Otherwise position of the stream is advanced.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.parsing.fields">
+<span id="fields"></span><h2>Fields<a class="headerlink" href="#module-oxberrypis.parsing.fields" title="Permalink to this headline">¶</a></h2>
+<p>Fields used in the XDP data stream packets.</p>
+<dl class="class">
+<dt id="oxberrypis.parsing.fields.FieldsGenerator">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.fields.</tt><tt class="descname">FieldsGenerator</tt><big>(</big><em>fields</em>, <em>size_mapping</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/fields.html#FieldsGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.fields.FieldsGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fields generator for NYSE Arca Integrated Feed stream.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.parsing.headers">
+<span id="headers"></span><h2>Headers<a class="headerlink" href="#module-oxberrypis.parsing.headers" title="Permalink to this headline">¶</a></h2>
+<p>XDP stream headers.</p>
+<dl class="class">
+<dt id="oxberrypis.parsing.headers.MsgHeader">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.headers.</tt><tt class="descname">MsgHeader</tt><a class="reference internal" href="_modules/oxberrypis/parsing/headers.html#MsgHeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.headers.MsgHeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>XDP Message header.</p>
+<dl class="method">
+<dt id="oxberrypis.parsing.headers.MsgHeader.get_msg_cls">
+<tt class="descname">get_msg_cls</tt><big>(</big><em>known_msgs=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/headers.html#MsgHeader.get_msg_cls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.headers.MsgHeader.get_msg_cls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get payload message class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.parsing.headers.MsgHeader.get_msg_size">
+<tt class="descname">get_msg_size</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/headers.html#MsgHeader.get_msg_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.headers.MsgHeader.get_msg_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the size of the payload (message) only.</p>
+<p>Customers should not hard code msg sizes in feed handlers;
+instead the feed handler should use the Msg
+Size field to determine where the next message in the packet
+begins. This allows the XDP format to
+accommodate the different market needs for data content and
+allow the format to be more agile.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="oxberrypis.parsing.headers.MsgHeader.header_size">
+<tt class="descname">header_size</tt><em class="property"> = 4</em><a class="headerlink" href="#oxberrypis.parsing.headers.MsgHeader.header_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mapping between known message types and known message classes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.parsing.headers.MsgHeader.is_known">
+<tt class="descname">is_known</tt><big>(</big><em>known_msgs=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/headers.html#MsgHeader.is_known"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.headers.MsgHeader.is_known" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checked whether payload message is known.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="oxberrypis.parsing.headers.MsgHeader.register_known_msg">
+<em class="property">classmethod </em><tt class="descname">register_known_msg</tt><big>(</big><em>msg_cls</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/headers.html#MsgHeader.register_known_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.headers.MsgHeader.register_known_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator for registering known messages.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.parsing.headers.PacketHeader">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.headers.</tt><tt class="descname">PacketHeader</tt><a class="reference internal" href="_modules/oxberrypis/parsing/headers.html#PacketHeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.headers.PacketHeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>XDP feed packet header.</p>
+<dl class="method">
+<dt id="oxberrypis.parsing.headers.PacketHeader.get_datetime">
+<tt class="descname">get_datetime</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/headers.html#PacketHeader.get_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.headers.PacketHeader.get_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get datetime when the packet was sent to the multicast
+channel for publication.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.parsing.messages">
+<span id="messages"></span><h2>Messages<a class="headerlink" href="#module-oxberrypis.parsing.messages" title="Permalink to this headline">¶</a></h2>
+<p>NYSE integrated feed messages.</p>
+<dl class="class">
+<dt id="oxberrypis.parsing.messages.OBAddOrderMsg">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.messages.</tt><tt class="descname">OBAddOrderMsg</tt><a class="reference internal" href="_modules/oxberrypis/parsing/messages.html#OBAddOrderMsg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.messages.OBAddOrderMsg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order Book Add Order Message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.parsing.messages.OBDeleteMsg">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.messages.</tt><tt class="descname">OBDeleteMsg</tt><a class="reference internal" href="_modules/oxberrypis/parsing/messages.html#OBDeleteMsg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.messages.OBDeleteMsg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order Book Delete Message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.parsing.messages.OBExecutionMsg">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.messages.</tt><tt class="descname">OBExecutionMsg</tt><a class="reference internal" href="_modules/oxberrypis/parsing/messages.html#OBExecutionMsg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.messages.OBExecutionMsg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order Book Execution Message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.parsing.messages.OBModifyMsg">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.messages.</tt><tt class="descname">OBModifyMsg</tt><a class="reference internal" href="_modules/oxberrypis/parsing/messages.html#OBModifyMsg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.messages.OBModifyMsg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order Book Modify Message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.parsing.messages.TradeMsg">
+<em class="property">class </em><tt class="descclassname">oxberrypis.parsing.messages.</tt><tt class="descname">TradeMsg</tt><a class="reference internal" href="_modules/oxberrypis/parsing/messages.html#TradeMsg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.messages.TradeMsg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trade Message.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.parsing.utils">
+<span id="utilities"></span><h2>Utilities<a class="headerlink" href="#module-oxberrypis.parsing.utils" title="Permalink to this headline">¶</a></h2>
+<p>Various utilities used in the parsing module.</p>
+<dl class="function">
+<dt id="oxberrypis.parsing.utils.get_pkt_format_string">
+<tt class="descclassname">oxberrypis.parsing.utils.</tt><tt class="descname">get_pkt_format_string</tt><big>(</big><em>pkt_spec</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/utils.html#get_pkt_format_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.utils.get_pkt_format_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create struct format string from spec tuple.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="oxberrypis.parsing.utils.get_pkt_namedtuple">
+<tt class="descclassname">oxberrypis.parsing.utils.</tt><tt class="descname">get_pkt_namedtuple</tt><big>(</big><em>name</em>, <em>pkt_spec</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/parsing/utils.html#get_pkt_namedtuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.parsing.utils.get_pkt_namedtuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create namedtuple from spec tuple.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parsing</a><ul>
+<li><a class="reference internal" href="#module-oxberrypis.parsing.parsers">Parsers</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.parsing.fields">Fields</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.parsing.headers">Headers</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.parsing.messages">Messages</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.parsing.utils">Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="net.html"
+                        title="previous chapter">Networking</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="orderbook.html"
+                        title="next chapter">Order book</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/parsing.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="orderbook.html" title="Order book"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="net.html" title="Networking"
+             >previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

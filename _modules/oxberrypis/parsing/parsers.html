@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.parsing.parsers &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.parsing.parsers</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Parsers for XDP streams.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+
+<span class="kn">from</span> <span class="nn">oxberrypis.errors</span> <span class="kn">import</span> <span class="n">ParsingError</span>
+
+<span class="kn">from</span> <span class="nn">oxberrypis.parsing.headers</span> <span class="kn">import</span> <span class="n">PacketHeader</span>
+<span class="kn">from</span> <span class="nn">oxberrypis.parsing.headers</span> <span class="kn">import</span> <span class="n">MsgHeader</span>
+
+
+<div class="viewcode-block" id="XDPChannelUnpacker"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.XDPChannelUnpacker">[docs]</a><span class="k">class</span> <span class="nc">XDPChannelUnpacker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;XDP channel parser (unpacker).</span>
+
+<span class="sd">    The parser reads the supplied :py:attr:`stream`, unpacks packet</span>
+<span class="sd">    headers, reads all message headers and unpacks only known messages.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">       The parser assumes that the stream position is not manipulated</span>
+<span class="sd">       during the lifetime of this object. Packets and messages are</span>
+<span class="sd">       assumed to appear in the stream consecutively.</span>
+
+<span class="sd">    The parsers uses :py:class:`.headers.PacketHeader` and</span>
+<span class="sd">    :py:class:`.headers.MsgHeader` for parsing, but you can supply your</span>
+<span class="sd">    own header classes by setting :py:attr:`pkt_hdr_cls` and</span>
+<span class="sd">    :py:attr:`msg_header_cls` to appropriate values.</span>
+
+<span class="sd">    :param stream: Readable stream which feeds the parser.</span>
+<span class="sd">    :param pkt_hdr_cls: Packet header class. Defaults to</span>
+<span class="sd">                        :py:class:`.headers.PacketHeader`.</span>
+<span class="sd">    :param msg_hdr_cls: Message header class. Defaults to</span>
+<span class="sd">                        :py:class:`.headers.MessageHeader`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">pkt_hdr_cls</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">msg_hdr_cls</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">stream</span><span class="o">.</span><span class="n">readable</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">ParsingError</span><span class="p">(</span><span class="s">&quot;The stream is not readable&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pkt_hdr_cls</span> <span class="o">=</span> <span class="n">pkt_hdr_cls</span> <span class="ow">or</span> <span class="n">PacketHeader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_hdr_cls</span> <span class="o">=</span> <span class="n">msg_hdr_cls</span> <span class="ow">or</span> <span class="n">MsgHeader</span>
+
+<div class="viewcode-block" id="XDPChannelUnpacker.parse_cls_from_stream"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_cls_from_stream">[docs]</a>    <span class="k">def</span> <span class="nf">parse_cls_from_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read the stream and parse to create an instance of given class.</span>
+
+<span class="sd">        Assumes ``cls._make`` is a method accepting a tuple of unpacked</span>
+<span class="sd">        data.</span>
+
+<span class="sd">        Returns ``None`` if the stream is empty and raises an error</span>
+<span class="sd">        if unpacking failed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="c"># stream is empty</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">unpacked</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack_from</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">fmt</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">struct</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParsingError</span><span class="p">(</span><span class="s">&#39;Unpacking failed&#39;</span><span class="p">)</span>
+
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_make</span><span class="p">(</span><span class="n">unpacked</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parsed</span>
+</div>
+<div class="viewcode-block" id="XDPChannelUnpacker.parse_msg"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_msg">[docs]</a>    <span class="k">def</span> <span class="nf">parse_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_header</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse a message from the stream.</span>
+
+<span class="sd">        Message header is used to determined the size of the payload</span>
+<span class="sd">        and the type of the message contained within it.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">msg_header</span><span class="o">.</span><span class="n">get_msg_size</span><span class="p">()</span>
+        <span class="n">cls</span> <span class="o">=</span> <span class="n">msg_header</span><span class="o">.</span><span class="n">get_msg_cls</span><span class="p">()</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_cls_from_stream</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span>
+</div>
+<div class="viewcode-block" id="XDPChannelUnpacker.advance"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.XDPChannelUnpacker.advance">[docs]</a>    <span class="k">def</span> <span class="nf">advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Skip ``offset`` number of bytes in the stream.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">seekable</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">SEEK_CUR</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="XDPChannelUnpacker.parse_packet"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.XDPChannelUnpacker.parse_packet">[docs]</a>    <span class="k">def</span> <span class="nf">parse_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pkt_header</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generator for messages found within packet.</span>
+
+<span class="sd">        Packet header is used to read off the number of messages</span>
+<span class="sd">        contained within the packet. Then unpacks message headers one</span>
+<span class="sd">        by one and if the message type is recognised, the message is</span>
+<span class="sd">        parsed. Otherwise position of the stream is advanced.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">pkt_header</span><span class="o">.</span><span class="n">NumberMsgs</span>
+
+        <span class="k">while</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_cls_from_stream</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg_hdr_cls</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">msg_hdr_cls</span><span class="o">.</span><span class="n">header_size</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">is_known</span><span class="p">():</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_msg</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">msg</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">get_msg_size</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+
+            <span class="n">count</span> <span class="o">-=</span> <span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="XDPChannelUnpacker.parse"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.XDPChannelUnpacker.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generator for all the known messages from the stream.</span>
+
+<span class="sd">        As long as there is a data remaining in the stream (assumed to</span>
+<span class="sd">        be sufficiently long), it unpack the packet header. For each</span>
+<span class="sd">        packet header parses the messages contained within.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">pkt_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_cls_from_stream</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pkt_hdr_cls</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pkt_hdr_cls</span><span class="o">.</span><span class="n">header_size</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">pkt_header</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c"># End reading the stream as no data remains</span>
+                <span class="k">break</span>
+
+            <span class="n">msgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_packet</span><span class="p">(</span><span class="n">pkt_header</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">msgs</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">pkt_header</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+        <span class="c"># Close the stream when we are done</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="FileXDPChannelUnpacker"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.FileXDPChannelUnpacker">[docs]</a><span class="k">class</span> <span class="nc">FileXDPChannelUnpacker</span><span class="p">(</span><span class="n">XDPChannelUnpacker</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;XDP channel parser (unpacker) with file stream.&quot;&quot;&quot;</span>
+
+    <span class="sd">&quot;&quot;&quot;Standard channel file name.&quot;&quot;&quot;</span>
+    <span class="n">CHANNEL_FILE_NAME_FMT</span> <span class="o">=</span> <span class="s">&quot;20111219-ARCA_XDP_IBF_{}.dat&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel_path</span><span class="p">,</span> <span class="n">pkt_hdr_cls</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">msg_hdr_cls</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the parser with the stream from opened file.&quot;&quot;&quot;</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span><span class="p">(</span><span class="n">channel_path</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">FileXDPChannelUnpacker</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">stream</span><span class="p">,</span>
+            <span class="n">pkt_hdr_cls</span><span class="p">,</span>
+            <span class="n">msg_hdr_cls</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="FileXDPChannelUnpacker.open_stream"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.FileXDPChannelUnpacker.open_stream">[docs]</a>    <span class="k">def</span> <span class="nf">open_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return opened stream for the given file found at ``channel_path``.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">channel_path</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;Channel {} not found&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">channel_path</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ParsingError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">channel_path</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">stream</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="FileXDPChannelUnpacker.get_channel_path"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.FileXDPChannelUnpacker.get_channel_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_channel_path</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">channel_file_name_fmt</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get path to the channel found in the directory.</span>
+
+<span class="sd">        Channel file name format string defaults to string set in</span>
+<span class="sd">        :py:attr:`CHANNEL_FILE_NAME_FMT` but it may be changed by calling</span>
+<span class="sd">        the function with appropriate ``channel_file_name_fmt`` value.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">channel_file_name_fmt</span> <span class="o">=</span> <span class="n">channel_file_name_fmt</span> <span class="ow">or</span> <span class="n">cls</span><span class="o">.</span><span class="n">CHANNEL_FILE_NAME_FMT</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">channel_file_name_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="FileXDPChannelUnpacker.get_channel_unpacker"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.parsers.FileXDPChannelUnpacker.get_channel_unpacker">[docs]</a>    <span class="k">def</span> <span class="nf">get_channel_unpacker</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Factory for channel unpacker given ``directory`` and ``channel_id``.&quot;&quot;&quot;</span>
+        <span class="n">channel_path</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">get_channel_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">channel_path</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.parsing.fields &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.parsing.fields</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Fields used in the XDP data stream packets.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">oxberrypis.errors</span> <span class="kn">import</span> <span class="n">OxBerryPisException</span>
+
+<span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c"># Packet</span>
+    <span class="s">&#39;PktSize&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s">&#39;DeliveryFlag&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;NumberMsgs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;SeqNum&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;SendTime&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;SendTimeNS&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+
+    <span class="c"># Messages</span>
+    <span class="s">&#39;MsgSize&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s">&#39;MsgType&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s">&#39;SourceTimeNS&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;SymbolIndex&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;SymbolSeqNum&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;OrderID&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;Price&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;Volume&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;Side&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;OrderIDGTCIndicator&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;TradeSession&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;ReasonCode&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;TradeID&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+
+    <span class="c"># Message 220</span>
+    <span class="s">&#39;SourceTime&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;TradeCond1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;TradeCond2&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;TradeCond3&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;TradeCond4&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;TradeThroughExempt&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;LiquidityIndicatorFlag&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;AskPrice&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;AskVolume&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;BidPrice&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s">&#39;BidVolume&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">size_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s">&#39;B&#39;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s">&#39;H&#39;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="s">&#39;I&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="FieldsGenerator"><a class="viewcode-back" href="../../../parsing.html#oxberrypis.parsing.fields.FieldsGenerator">[docs]</a><span class="k">class</span> <span class="nc">FieldsGenerator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fields generator for NYSE Arca Integrated Feed stream.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">size_mapping</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size_mapping</span> <span class="o">=</span> <span class="n">size_mapping</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">field_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Field not found&quot;</span><span class="p">)</span>
+
+        <span class="n">field_format_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">field_format_size</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_mapping</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">OxBerryPisException</span><span class="p">(</span><span class="s">&quot;Field has no size mapped&quot;</span><span class="p">)</span>
+
+        <span class="n">field_format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_mapping</span><span class="p">[</span><span class="n">field_format_size</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">field_format</span><span class="p">)</span>
+</div>
+<span class="n">fields</span> <span class="o">=</span> <span class="n">FieldsGenerator</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">size_mapping</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

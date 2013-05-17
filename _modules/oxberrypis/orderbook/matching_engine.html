@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.orderbook.matching_engine &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.orderbook.matching_engine</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Order book matching engine.</span>
+
+<span class="sd">Created on Apr 28, 2013</span>
+
+<span class="sd">.. codeauthor:: Hynek Jemelik</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..errors</span> <span class="kn">import</span> <span class="n">OrderBookError</span>
+
+<span class="kn">from</span> <span class="nn">.book</span> <span class="kn">import</span> <span class="n">OrderBook</span>
+<span class="kn">from</span> <span class="nn">.order</span> <span class="kn">import</span> <span class="n">Order</span>
+
+
+<span class="k">class</span> <span class="nc">PrintingMatchingEngineCallback</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">trade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_shares</span><span class="p">,</span> <span class="n">price</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;Trading {} shares at price {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num_shares</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MatchingEngine"><a class="viewcode-back" href="../../../orderbook.html#oxberrypis.orderbook.matching_engine.MatchingEngine">[docs]</a><span class="k">class</span> <span class="nc">MatchingEngine</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Matching engine.</span>
+
+<span class="sd">    Main class for processing each individual stock, it implements</span>
+<span class="sd">    rules and logic of stock exchange and maintains orders in correct</span>
+<span class="sd">    order. It allows adding, changing, and removing orders.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supply</span> <span class="o">=</span> <span class="n">OrderBook</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">demand</span> <span class="o">=</span> <span class="n">OrderBook</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span> <span class="ow">or</span> <span class="n">PrintingMatchingEngineCallback</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">add_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">,</span> <span class="n">limit_price</span><span class="p">,</span> <span class="n">num_shares</span><span class="p">,</span> <span class="n">order_type</span><span class="p">):</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">order_id</span><span class="p">,</span> <span class="n">limit_price</span><span class="p">,</span> <span class="n">num_shares</span><span class="p">,</span> <span class="n">order_type</span><span class="p">)</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+        <span class="n">book</span><span class="o">.</span><span class="n">add_order</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute_orders</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">remove_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supply</span><span class="o">.</span><span class="n">remove_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">demand</span><span class="o">.</span><span class="n">remove_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">update_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">,</span> <span class="n">limit_price</span><span class="p">,</span> <span class="n">num_shares</span><span class="p">,</span> <span class="n">order_type</span><span class="p">):</span>
+        <span class="n">updated_order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">order_id</span><span class="p">,</span> <span class="n">limit_price</span><span class="p">,</span> <span class="n">num_shares</span><span class="p">,</span> <span class="n">order_type</span><span class="p">)</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">updated_order</span><span class="p">)</span>
+        <span class="n">book</span><span class="o">.</span><span class="n">update_order</span><span class="p">(</span><span class="n">updated_order</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute_orders</span><span class="p">(</span><span class="n">updated_order</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">decrease_order_amount_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_id</span><span class="p">,</span> <span class="n">decr_by</span><span class="p">):</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">supply</span><span class="o">.</span><span class="n">get_order_by_id</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_order</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">price</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">num_shares</span> <span class="o">-</span> <span class="n">decr_by</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">demand</span><span class="o">.</span><span class="n">get_order_by_id</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_order</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">price</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">num_shares</span> <span class="o">-</span> <span class="n">decr_by</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;Order with id {} has not been found.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">OrderBookError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">get_best_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supply</span><span class="o">.</span><span class="n">get_best</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">demand</span><span class="o">.</span><span class="n">get_best</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">execute_orders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+        <span class="k">return</span>
+        <span class="n">opposite</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_opposite</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="n">opposite</span><span class="o">.</span><span class="n">get_best</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_trade</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">best</span><span class="p">):</span>
+            <span class="n">num_shares</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">num_shares</span><span class="p">,</span> <span class="n">best</span><span class="o">.</span><span class="n">num_shares</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="o">.</span><span class="n">trade</span><span class="p">(</span><span class="n">num_shares</span><span class="p">,</span> <span class="n">best</span><span class="o">.</span><span class="n">price</span><span class="p">)</span>
+            <span class="n">order</span><span class="o">.</span><span class="n">num_shares</span> <span class="o">-=</span> <span class="n">num_shares</span>
+            <span class="n">best</span><span class="o">.</span><span class="n">num_shares</span> <span class="o">-=</span> <span class="n">num_shares</span>
+            <span class="k">if</span> <span class="n">best</span><span class="o">.</span><span class="n">num_shares</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove_order</span><span class="p">(</span><span class="n">best</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">order</span><span class="o">.</span><span class="n">num_shares</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove_order</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execute_orders</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">can_trade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">o1</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">o2</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o1</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">Order</span><span class="o">.</span><span class="n">SELL</span><span class="p">:</span>
+                <span class="n">sell</span> <span class="o">=</span> <span class="n">o1</span>
+                <span class="n">buy</span> <span class="o">=</span> <span class="n">o2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">buy</span> <span class="o">=</span> <span class="n">o1</span>
+                <span class="n">sell</span> <span class="o">=</span> <span class="n">o2</span>
+            <span class="k">return</span> <span class="n">sell</span><span class="o">.</span><span class="n">price</span> <span class="o">&lt;=</span> <span class="n">buy</span><span class="o">.</span><span class="n">price</span>
+
+    <span class="k">def</span> <span class="nf">get_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">order</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">Order</span><span class="o">.</span><span class="n">SELL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">supply</span>
+        <span class="k">elif</span> <span class="n">order</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">Order</span><span class="o">.</span><span class="n">BUY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">demand</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;Order type {} not recognized.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">OrderBookError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_opposite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">order</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">Order</span><span class="o">.</span><span class="n">SELL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">demand</span>
+        <span class="k">elif</span> <span class="n">order</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">Order</span><span class="o">.</span><span class="n">BUY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">supply</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;Order type {} not recognized.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">OrderBookError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

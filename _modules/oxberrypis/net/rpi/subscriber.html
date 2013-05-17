@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.net.rpi.subscriber &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.net.rpi.subscriber</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;RaspberryPi stock messages subscriber/handler.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">zmq</span>
+
+<span class="kn">from</span> <span class="nn">..components</span> <span class="kn">import</span> <span class="n">SynchronizedSubscriber</span>
+
+<span class="kn">from</span> <span class="nn">..proto.stock_pb2</span> <span class="kn">import</span> <span class="n">StockMessage</span>
+<span class="kn">from</span> <span class="nn">..proto.controller_pb2</span> <span class="kn">import</span> <span class="n">SetupRPi</span>
+
+<span class="kn">from</span> <span class="nn">...orderbook.matching_engine</span> <span class="kn">import</span> <span class="n">MatchingEngine</span>
+
+<span class="kn">from</span> <span class="nn">.handlers</span> <span class="kn">import</span> <span class="n">PrintingHandler</span>
+<span class="kn">from</span> <span class="nn">.handlers</span> <span class="kn">import</span> <span class="n">ToVisualisation</span>
+<span class="kn">from</span> <span class="nn">.handlers</span> <span class="kn">import</span> <span class="n">UpdateMatchingEngines</span>
+
+
+<div class="viewcode-block" id="StockMessagesSubscriber"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.subscriber.StockMessagesSubscriber">[docs]</a><span class="k">class</span> <span class="nc">StockMessagesSubscriber</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stock messages subscriber.</span>
+
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param rpisync_uri: ZMQ URI for syncing with the :py:class:`.Initializer`</span>
+<span class="sd">    :param pub_uri: ZMQ URI for stock messages publisher.</span>
+<span class="sd">    :param visual_uri: ZMQ URI visualisation binds to.</span>
+<span class="sd">    :param me_handler_cls: Handler class for updating matching engines.</span>
+<span class="sd">    :param visual_handler_cls: Handler class for sending stock events to</span>
+<span class="sd">                               visualisation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">rpisync_uri</span><span class="p">,</span> <span class="n">pub_uri</span><span class="p">,</span> <span class="n">visual_uri</span><span class="p">,</span>
+                 <span class="n">me_handler_cls</span><span class="o">=</span><span class="n">UpdateMatchingEngines</span><span class="p">,</span>
+                 <span class="n">visual_handler_cls</span><span class="o">=</span><span class="n">ToVisualisation</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">printing_handler</span> <span class="o">=</span> <span class="n">PrintingHandler</span><span class="p">()</span>
+        <span class="n">ordebook_handler</span> <span class="o">=</span> <span class="n">me_handler_cls</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span><span class="p">)</span>
+        <span class="n">visual_handler</span> <span class="o">=</span> <span class="n">visual_handler_cls</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">visual_uri</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">printing_handler</span><span class="p">,</span>
+            <span class="n">ordebook_handler</span><span class="p">,</span>
+            <span class="n">visual_handler</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="c"># For the time being we don&#39;t know what to subscribe to.</span>
+        <span class="c"># We will resubscribe in sync_reply_handler</span>
+        <span class="n">subscriptions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SynchronizedSubscriber</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">pub_uri</span><span class="p">,</span>
+            <span class="n">rpisync_uri</span><span class="p">,</span>
+            <span class="n">subscriptions</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_data</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sync_reply_handler</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="StockMessagesSubscriber.sync_reply_handler"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.sync_reply_handler">[docs]</a>    <span class="k">def</span> <span class="nf">sync_reply_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handler for synchronization reply message.&quot;&quot;&quot;</span>
+        <span class="n">setup_rpi</span> <span class="o">=</span> <span class="n">SetupRPi</span><span class="p">()</span>
+        <span class="n">setup_rpi</span><span class="o">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">symbol_index</span> <span class="ow">in</span> <span class="n">setup_rpi</span><span class="o">.</span><span class="n">symbol_index</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span><span class="p">[</span><span class="n">symbol_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">MatchingEngine</span><span class="p">()</span>
+
+            <span class="c"># 2^32 (max SymbolIndex) is 10-digit number</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbol_index</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="StockMessagesSubscriber.run"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the subscriber.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span><span class="o">.</span><span class="n">recv_multipart</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="StockMessagesSubscriber.handle_data"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.handle_data">[docs]</a>    <span class="k">def</span> <span class="nf">handle_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handle subscribed data.&quot;&quot;&quot;</span>
+        <span class="n">symbol_index</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">,</span> <span class="n">serialized_stock_msg</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">symbol_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">symbol_index</span><span class="p">)</span>
+        <span class="n">channel_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">channel_id</span><span class="p">)</span>
+
+        <span class="n">stock_msg</span> <span class="o">=</span> <span class="n">StockMessage</span><span class="p">()</span>
+        <span class="n">stock_msg</span><span class="o">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">serialized_stock_msg</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+            <span class="n">handler</span><span class="o">.</span><span class="n">handle_stock_data</span><span class="p">(</span><span class="n">symbol_index</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">,</span> <span class="n">stock_msg</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

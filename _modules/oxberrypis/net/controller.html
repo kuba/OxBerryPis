@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.net.controller &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.net.controller</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Network controller.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..zhelpers</span> <span class="kn">import</span> <span class="n">zpipe</span>
+
+<span class="kn">from</span> <span class="nn">.init</span> <span class="kn">import</span> <span class="n">InitializerThread</span>
+
+<span class="kn">from</span> <span class="nn">.publisher</span> <span class="kn">import</span> <span class="n">ProxyThread</span>
+<span class="kn">from</span> <span class="nn">.publisher</span> <span class="kn">import</span> <span class="n">ChannelPublishersThread</span>
+
+
+<div class="viewcode-block" id="Controller"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.controller.Controller">[docs]</a><span class="k">class</span> <span class="nc">Controller</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Network controller.</span>
+
+<span class="sd">    The controller starts 3 threads:</span>
+
+<span class="sd">    * :py:class:`.ProxyThread`</span>
+<span class="sd">    * :py:class:`.InitializerThread`</span>
+<span class="sd">    * :py:class:`.ChannelPublishersThread`</span>
+
+
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param vissync_uri: ZMQ URI for syncing with the visualisation.</span>
+<span class="sd">    :param rpisync_uri: ZMQ URI for syncing with RaspberryPis.</span>
+<span class="sd">    :param pub_uri: ZMQ URI controller publishes from.</span>
+
+<span class="sd">    :param subscribers_expected: Number of subscribers expected to connect</span>
+<span class="sd">                                 to the controller before publishing starts.</span>
+<span class="sd">    :type subscribers_expected: integer</span>
+
+<span class="sd">    :param directory: Directory for NYSE ARCA Integrated Feed channel and</span>
+<span class="sd">                      symbol index mapping files.</span>
+<span class="sd">    :type directory: string</span>
+
+<span class="sd">    :param channels_num: Number of channels to be processed.</span>
+<span class="sd">    :type channels_num: integer</span>
+
+<span class="sd">    :param mapping: symbol index mapping</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">vissync_uri</span><span class="p">,</span> <span class="n">rpisync_uri</span><span class="p">,</span>
+            <span class="n">pub_uri</span><span class="p">,</span> <span class="n">subscribers_expected</span><span class="p">,</span>
+            <span class="n">directory</span><span class="p">,</span> <span class="n">channels_num</span><span class="p">,</span> <span class="n">mapping</span><span class="p">):</span>
+        <span class="c"># Proxy thread</span>
+        <span class="n">proxy_uri</span> <span class="o">=</span> <span class="s">&#39;inproc://channel-publishers&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_thread</span> <span class="o">=</span> <span class="n">ProxyThread</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">proxy_uri</span><span class="p">,</span>
+            <span class="n">pub_uri</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="c"># Pipe for syncing Initializer and ChannelPublishers threads.</span>
+        <span class="n">pipe</span> <span class="o">=</span> <span class="n">zpipe</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="c"># Initializer thread</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initializer_thread</span> <span class="o">=</span> <span class="n">InitializerThread</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">vissync_uri</span><span class="p">,</span>
+            <span class="n">rpisync_uri</span><span class="p">,</span>
+            <span class="n">proxy_uri</span><span class="p">,</span>
+            <span class="n">pipe</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">subscribers_expected</span><span class="p">,</span>
+            <span class="n">mapping</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initializer_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="c"># Publishers thread</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publishers_thread</span> <span class="o">=</span> <span class="n">ChannelPublishersThread</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">pipe</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">proxy_uri</span><span class="p">,</span>
+            <span class="n">directory</span><span class="p">,</span>
+            <span class="n">channels_num</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publishers_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="bp">True</span>
+
+<div class="viewcode-block" id="Controller.run"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.controller.Controller.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the controller.</span>
+
+<span class="sd">        Starts all subthreads and loop forever.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initializer_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publishers_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">pass</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

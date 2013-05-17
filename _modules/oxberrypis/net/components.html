@@ -1,0 +1,346 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.net.components &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.net.components</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Reusable network components.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">zmq</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="PubSubProxy"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.PubSubProxy">[docs]</a><span class="k">class</span> <span class="nc">PubSubProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Publisher-Subscriber proxy.</span>
+
+<span class="sd">    Based on:</span>
+
+<span class="sd">    * http://zguide.zeromq.org/py:all#The-Dynamic-Discovery-Problem</span>
+<span class="sd">    * http://zguide.zeromq.org/py:all#-MQ-s-Built-In-Proxy-Function</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">frontend_uri</span><span class="p">,</span> <span class="n">backend_uri</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frontend_uri</span> <span class="o">=</span> <span class="n">frontend_uri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend_uri</span> <span class="o">=</span> <span class="n">backend_uri</span>
+
+        <span class="c"># Socket facing clients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">XSUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frontend_uri</span><span class="p">)</span>
+
+        <span class="c"># Socket facing services</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">XPUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backend_uri</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">zmq</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">QUEUE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span>
+
+        <span class="c"># We never get here...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frontend</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="SynchronizedPublisher"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedPublisher">[docs]</a><span class="k">class</span> <span class="nc">SynchronizedPublisher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Synchronized publisher.</span>
+
+<span class="sd">    This publisher and :py:class:`SynchronizedSubscriber` are generally</span>
+<span class="sd">    based on http://zguide.zeromq.org/py:all#Node-Coordination. However</span>
+<span class="sd">    docs notes that:</span>
+
+<span class="sd">      We can&#39;t assume that the SUB connect will be finished by the time</span>
+<span class="sd">      the REQ/REP dialog is complete. There are no guarantees that</span>
+<span class="sd">      outbound connects will finish in any order whatsoever, if you&#39;re</span>
+<span class="sd">      using any transport except inproc. So, the example does a brute</span>
+<span class="sd">      force sleep of one second between subscribing, and sending the</span>
+<span class="sd">      REQ/REP synchronization.</span>
+
+<span class="sd">      A more robust model could be:</span>
+
+<span class="sd">      * Publisher opens PUB socket and starts sending &quot;Hello&quot;</span>
+<span class="sd">        messages (not data).</span>
+<span class="sd">      * Subscribers connect SUB socket and when they receive a</span>
+<span class="sd">        Hello message they tell the publisher via a REQ/REP</span>
+<span class="sd">        socket pair.</span>
+<span class="sd">      * When the publisher has had all the necessary</span>
+<span class="sd">        confirmations, it starts to send real data.</span>
+
+<span class="sd">    Therefore we implement above mentioned &quot;more robust model&quot;, basin on</span>
+<span class="sd">    http://thisthread.blogspot.co.uk/2012/03/pub-sub-coordination-by-req-rep.html.</span>
+
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param publisher_uri: ZMQ URI the publisher binds to.</span>
+<span class="sd">    :param syncservice_uri: ZMQ URI for publisher&#39;s syncing service REP socket.</span>
+<span class="sd">    :param subscribers_expected: Number of expected subscribers.</span>
+<span class="sd">    :param sync_reply: Synchronization reply function.</span>
+<span class="sd">    :type sync_reply: function accepting sub_id and returning sync reply message.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">PING_MSG</span> <span class="o">=</span> <span class="s">&#39;PING&#39;</span>
+    <span class="n">END_MSG</span> <span class="o">=</span> <span class="s">&#39;END&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">publisher_uri</span><span class="p">,</span> <span class="n">syncservice_uri</span><span class="p">,</span>
+            <span class="n">subscribers_expected</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sync_reply</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers_expected</span> <span class="o">=</span> <span class="n">subscribers_expected</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_uri</span> <span class="o">=</span> <span class="n">publisher_uri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncservice_uri</span> <span class="o">=</span> <span class="n">syncservice_uri</span>
+
+        <span class="c"># Socket to talk to clients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUB</span><span class="p">)</span>
+        <span class="c"># Normally, we should bind, but in OxBerryPis</span>
+        <span class="c"># we connect to the pub-sub proxy</span>
+        <span class="c">#self.publisher.bind(self.publisher_uri)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">publisher_uri</span><span class="p">)</span>
+
+        <span class="c"># Socket to receive signals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncservice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncservice</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">syncservice_uri</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sync_reply</span> <span class="o">=</span> <span class="n">sync_reply</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="nb">id</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SynchronizedPublisher.sync"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedPublisher.sync">[docs]</a>    <span class="k">def</span> <span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Synchronize with subscribers.&quot;&quot;&quot;</span>
+        <span class="c"># Get synchronization from subscribers</span>
+        <span class="n">subscribers</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">subscribers</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscribers_expected</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handshake</span><span class="p">(</span><span class="n">subscribers</span><span class="p">):</span>
+                <span class="n">subscribers</span> <span class="o">+=</span> <span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="SynchronizedPublisher.ping"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedPublisher.ping">[docs]</a>    <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Broadcast a ping message.</span>
+
+<span class="sd">        A &quot;ping&quot; message is sent on the PUB socket to show the</span>
+<span class="sd">        subscribers that the publisher is up and waiting for them.</span>
+
+<span class="sd">        Sends :attr:`PING_MSG`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PING_MSG</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SynchronizedPublisher.handshake"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedPublisher.handshake">[docs]</a>    <span class="k">def</span> <span class="nf">handshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform handshake with subscriber if available.</span>
+
+<span class="sd">        This function checks for subscribers synchronization</span>
+<span class="sd">        on the REP socket.</span>
+
+<span class="sd">        :param sub_id: Subscriber-to-be id.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Sleep one second, to give time to the subscribers to connect.</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c"># Check on the socket for an empty message.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">syncservice</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">DONTWAIT</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">zmq</span><span class="o">.</span><span class="n">ZMQError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="c"># send synchronization reply</span>
+        <span class="n">reply</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_reply</span><span class="p">(</span><span class="n">sub_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncservice</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="SynchronizedPublisher.publish"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedPublisher.publish">[docs]</a>    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Send data to subscribers.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SynchronizedPublisher.publish_enveloped"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedPublisher.publish_enveloped">[docs]</a>    <span class="k">def</span> <span class="nf">publish_enveloped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Send enveloped data to subscribers.</span>
+
+<span class="sd">        Based on http://zguide.zeromq.org/py:all#Pub-Sub-Message-Envelopes</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">send_mulipart</span><span class="p">([</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="SynchronizedPublisher.close"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedPublisher.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Announce end of publisher stream and close internal sockets.</span>
+
+<span class="sd">        Sends :attr:`END_MSG`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">END_MSG</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="SynchronizedSubscriber"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedSubscriber">[docs]</a><span class="k">class</span> <span class="nc">SynchronizedSubscriber</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Synchronized subscriber.</span>
+
+<span class="sd">    .. seealso:: Check :py:class:`SynchronizedPublisher` for</span>
+<span class="sd">                 implementation details.</span>
+
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param publisher_uri: ZMQ URI of the publisher.</span>
+<span class="sd">    :param syncservice_uri: ZMQ URI of the publisher&#39;s REP socket for syncing.</span>
+<span class="sd">    :param subscriptions: A list of prefixes to subscribe to.</span>
+<span class="sd">    :param msg_handler: Function for handling of subscribed data.</span>
+<span class="sd">    :param sync_reply_handler: Function for handling synchronization reply.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">publisher_uri</span><span class="p">,</span> <span class="n">syncservice_uri</span><span class="p">,</span>
+            <span class="n">subscriptions</span><span class="p">,</span> <span class="n">msg_handler</span><span class="p">,</span> <span class="n">sync_reply_handler</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">publisher_uri</span> <span class="o">=</span> <span class="n">publisher_uri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncservice_uri</span> <span class="o">=</span> <span class="n">syncservice_uri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span> <span class="o">=</span> <span class="n">subscriptions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_handler</span> <span class="o">=</span> <span class="n">msg_handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sync_reply_handler</span> <span class="o">=</span> <span class="n">sync_reply_handler</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="c"># First, connect our subscriber socket</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">SUB</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscriber</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">publisher_uri</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">SynchronizedPublisher</span><span class="o">.</span><span class="n">PING_MSG</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">SynchronizedPublisher</span><span class="o">.</span><span class="n">END_MSG</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">subscription</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">subscription</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SynchronizedSubscriber.subscribe"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedSubscriber.subscribe">[docs]</a>    <span class="k">def</span> <span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscription</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Subscribe to ``subscription``.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscriber</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">SUBSCRIBE</span><span class="p">,</span> <span class="n">subscription</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SynchronizedSubscriber.unsubscribe"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedSubscriber.unsubscribe">[docs]</a>    <span class="k">def</span> <span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscription</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unsubscribe from ``subscription``.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscriber</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">UNSUBSCRIBE</span><span class="p">,</span> <span class="n">subscription</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SynchronizedSubscriber.sync"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedSubscriber.sync">[docs]</a>    <span class="k">def</span> <span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Synchronize with the publisher.&quot;&quot;&quot;</span>
+        <span class="c"># Wait for dummy data from the SychronizedPublisher</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscriber</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+
+        <span class="c"># Second, synchronize with publisher</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncclient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REQ</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncclient</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">syncservice_uri</span><span class="p">)</span>
+
+        <span class="c"># send a synchronization request</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncclient</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c"># wait for synchronization reply</span>
+        <span class="n">sync_reply</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">syncclient</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sync_reply_handler</span><span class="p">(</span><span class="n">sync_reply</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">SynchronizedPublisher</span><span class="o">.</span><span class="n">PING_MSG</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SynchronizedSubscriber.recv"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedSubscriber.recv">[docs]</a>    <span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Receive messages and proccess them using :attr:`msg_handler`</span>
+<span class="sd">        in a loop.</span>
+
+<span class="sd">        Stops when :py:attr:`SynchronizedPublisher.END_MSG` is received.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscriber</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="n">SynchronizedPublisher</span><span class="o">.</span><span class="n">END_MSG</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg_handler</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SynchronizedSubscriber.recv_multipart"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedSubscriber.recv_multipart">[docs]</a>    <span class="k">def</span> <span class="nf">recv_multipart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Receive mulitpart messages and process them using</span>
+<span class="sd">        :attr:`msg_handler` in a loop.</span>
+
+<span class="sd">        Stops when :py:attr:`SynchronizedPublisher.END_MSG` is received.</span>
+
+<span class="sd">        To be used with pub-sub message envelopes; based on</span>
+<span class="sd">        http://zguide.zeromq.org/py:all#Pub-Sub-Message-Envelopes</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Third, get our updates and report how many we got</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscriber</span><span class="o">.</span><span class="n">recv_multipart</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">SynchronizedPublisher</span><span class="o">.</span><span class="n">END_MSG</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg_handler</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SynchronizedSubscriber.close"><a class="viewcode-back" href="../../../net.html#oxberrypis.net.components.SynchronizedSubscriber.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Close internal sockets.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syncclient</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscriber</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oxberrypis.net.rpi.handlers &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for oxberrypis.net.rpi.handlers</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Handlers for stock data.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">zmq</span>
+
+<span class="kn">from</span> <span class="nn">...orderbook.order</span> <span class="kn">import</span> <span class="n">Order</span>
+
+<span class="kn">from</span> <span class="nn">..proto.stock_pb2</span> <span class="kn">import</span> <span class="n">StockMessage</span>
+<span class="kn">from</span> <span class="nn">..proto.rpi_pb2</span> <span class="kn">import</span> <span class="n">StockEvent</span>
+
+
+<div class="viewcode-block" id="PrintingHandler"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.handlers.PrintingHandler">[docs]</a><span class="k">class</span> <span class="nc">PrintingHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simple printing handler.</span>
+
+<span class="sd">    Prints stock message to the console on arrival.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">handle_stock_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol_index</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">,</span> <span class="n">stock_msg</span><span class="p">):</span>
+        <span class="k">print</span> <span class="n">stock_msg</span>
+
+</div>
+<div class="viewcode-block" id="UpdateMatchingEngines"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.handlers.UpdateMatchingEngines">[docs]</a><span class="k">class</span> <span class="nc">UpdateMatchingEngines</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stock messages handler for updating matching engines.</span>
+
+<span class="sd">    :param matching_engines: Mapping ``stock_index`` -&gt; ``matching_engine``.</span>
+<span class="sd">    :type matching_engines: list of :py:class:`.MatchingEngine`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matching_engines</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span> <span class="o">=</span> <span class="n">matching_engines</span>
+
+<div class="viewcode-block" id="UpdateMatchingEngines.handle_stock_data"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.handlers.UpdateMatchingEngines.handle_stock_data">[docs]</a>    <span class="k">def</span> <span class="nf">handle_stock_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol_index</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">,</span> <span class="n">stock_msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update appropriate matching_engine based on ``stock_msg``.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">ADD</span><span class="p">:</span>
+            <span class="n">add_msg</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">add</span>
+
+            <span class="n">stock_id</span> <span class="o">=</span> <span class="n">add_msg</span><span class="o">.</span><span class="n">symbol_index</span>
+            <span class="n">order_id</span> <span class="o">=</span> <span class="n">add_msg</span><span class="o">.</span><span class="n">order_id</span>
+            <span class="n">limit_price</span> <span class="o">=</span> <span class="n">add_msg</span><span class="o">.</span><span class="n">price</span>
+            <span class="n">num_shares</span> <span class="o">=</span> <span class="n">add_msg</span><span class="o">.</span><span class="n">volume</span>
+
+            <span class="k">if</span> <span class="n">add_msg</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="n">add_msg</span><span class="o">.</span><span class="n">BUY</span><span class="p">:</span>
+                <span class="n">side</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">BUY</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">side</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">SELL</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span><span class="o">.</span><span class="n">add_order</span><span class="p">(</span>
+                <span class="n">order_id</span><span class="p">,</span>
+                <span class="n">limit_price</span><span class="p">,</span>
+                <span class="n">num_shares</span><span class="p">,</span>
+                <span class="n">side</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">stock_id</span>
+        <span class="k">elif</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">MODIFY</span><span class="p">:</span>
+            <span class="n">modify_msg</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">modify</span>
+
+            <span class="n">stock_id</span> <span class="o">=</span> <span class="n">modify_msg</span><span class="o">.</span><span class="n">symbol_index</span>
+            <span class="n">order_id</span> <span class="o">=</span> <span class="n">modify_msg</span><span class="o">.</span><span class="n">order_id</span>
+            <span class="n">limit_price</span> <span class="o">=</span> <span class="n">modify_msg</span><span class="o">.</span><span class="n">price</span>
+            <span class="n">num_shares</span> <span class="o">=</span> <span class="n">modify_msg</span><span class="o">.</span><span class="n">volume</span>
+
+            <span class="k">if</span> <span class="n">modify_msg</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="n">modify_msg</span><span class="o">.</span><span class="n">BUY</span><span class="p">:</span>
+                <span class="n">side</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">BUY</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">side</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">SELL</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span><span class="o">.</span><span class="n">update_order</span><span class="p">(</span>
+                <span class="n">order_id</span><span class="p">,</span>
+                <span class="n">limit_price</span><span class="p">,</span>
+                <span class="n">num_shares</span><span class="p">,</span>
+                <span class="n">side</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">stock_id</span>
+        <span class="k">elif</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">DELETE</span><span class="p">:</span>
+            <span class="n">delete_msg</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">delete</span>
+
+            <span class="n">stock_id</span> <span class="o">=</span> <span class="n">delete_msg</span><span class="o">.</span><span class="n">symbol_index</span>
+            <span class="n">order_id</span> <span class="o">=</span> <span class="n">delete_msg</span><span class="o">.</span><span class="n">order_id</span>
+
+            <span class="k">if</span> <span class="n">delete_msg</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="n">delete_msg</span><span class="o">.</span><span class="n">BUY</span><span class="p">:</span>
+                <span class="n">side</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">BUY</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">side</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">SELL</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span><span class="o">.</span><span class="n">remove_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">stock_id</span>
+        <span class="k">elif</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">EXECUTE</span><span class="p">:</span>
+            <span class="n">exec_msg</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">execution</span>
+
+            <span class="n">stock_id</span> <span class="o">=</span> <span class="n">exec_msg</span><span class="o">.</span><span class="n">symbol_index</span>
+            <span class="n">order_id</span> <span class="o">=</span> <span class="n">exec_msg</span><span class="o">.</span><span class="n">order_id</span>
+
+            <span class="n">limit_price</span> <span class="o">=</span> <span class="n">exec_msg</span><span class="o">.</span><span class="n">price</span>
+            <span class="n">num_shares</span> <span class="o">=</span> <span class="n">exec_msg</span><span class="o">.</span><span class="n">volume</span>
+
+            <span class="n">matching_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">exec_msg</span><span class="o">.</span><span class="n">reason_code</span> <span class="o">==</span> <span class="n">exec_msg</span><span class="o">.</span><span class="n">FILLED</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matching_engine</span><span class="o">.</span><span class="n">remove_order</span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">exec_msg</span><span class="o">.</span><span class="n">reason_code</span> <span class="o">==</span> <span class="n">exec_msg</span><span class="o">.</span><span class="n">PARTIAL</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matching_engine</span><span class="o">.</span><span class="n">decrease_order_amount_by</span><span class="p">(</span>
+                    <span class="n">order_id</span><span class="p">,</span>
+                    <span class="n">num_shares</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c">#  otherwise do nothing (this type of message may be useless)</span>
+                <span class="k">pass</span>
+
+            <span class="k">return</span> <span class="n">stock_id</span>
+        <span class="k">elif</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">TRADE</span><span class="p">:</span>
+            <span class="n">trade_msg</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">trade</span>
+
+            <span class="n">stock_id</span> <span class="o">=</span> <span class="n">trade_msg</span><span class="o">.</span><span class="n">symbol_index</span>
+            <span class="k">return</span> <span class="n">stock_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">OxBerryPisExecption</span><span class="p">(</span><span class="s">&quot;Invalid Message Type&quot;</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="ToVisualisation"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.handlers.ToVisualisation">[docs]</a><span class="k">class</span> <span class="nc">ToVisualisation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Stock messages handler that Sends stock evnets to visualisation.</span>
+
+<span class="sd">    :param matching_engines: Mapping ``stock_index`` -&gt; ``matching_engine``.</span>
+<span class="sd">    :type matching_engines: list of :py:class:`.MatchingEngine`</span>
+<span class="sd">    :param context: ZMQ context.</span>
+<span class="sd">    :param visual_uri: ZMQ URI visualisation binds to.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matching_engines</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">visual_uri</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span> <span class="o">=</span> <span class="n">matching_engines</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_visualisation</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUSH</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_visualisation</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">visual_uri</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_top_buy</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_top_sell</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_nums</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="ToVisualisation.make_price_message"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.handlers.ToVisualisation.make_price_message">[docs]</a>    <span class="k">def</span> <span class="nf">make_price_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stock_msg</span><span class="p">,</span> <span class="n">stock_id</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Makes the message to send to visualisation.&quot;&quot;&quot;</span>
+        <span class="n">matching_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matching_engines</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span>
+
+        <span class="n">top_sell_order</span><span class="p">,</span> <span class="n">top_buy_order</span> <span class="o">=</span> <span class="n">matching_engine</span><span class="o">.</span><span class="n">get_best_orders</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">top_buy_order</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">top_buy_price</span> <span class="o">=</span> <span class="n">top_buy_order</span><span class="o">.</span><span class="n">price</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">top_buy_price</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="n">top_sell_order</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">top_sell_price</span> <span class="o">=</span> <span class="n">top_sell_order</span><span class="o">.</span><span class="n">price</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">top_sell_price</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">stock_msg</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">TRADE</span> <span class="ow">and</span>
+            <span class="n">stock_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_top_buy</span> <span class="ow">and</span>
+            <span class="n">stock_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_top_sell</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_top_buy</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span> <span class="o">==</span> <span class="n">top_buy_price</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_top_sell</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span> <span class="o">==</span> <span class="n">top_sell_price</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_top_buy</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_buy_price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_top_sell</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_sell_price</span>
+
+        <span class="n">stock_event</span> <span class="o">=</span> <span class="n">StockEvent</span><span class="p">()</span>
+        <span class="n">stock_event</span><span class="o">.</span><span class="n">stock_id</span> <span class="o">=</span> <span class="n">stock_id</span>
+        <span class="n">stock_event</span><span class="o">.</span><span class="n">timestamp_s</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">packet_time</span>
+        <span class="n">stock_event</span><span class="o">.</span><span class="n">timestamp_ns</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">packet_time_ns</span>
+        <span class="n">stock_event</span><span class="o">.</span><span class="n">channel_id</span> <span class="o">=</span> <span class="n">channel_id</span>
+
+        <span class="k">if</span> <span class="n">stock_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_nums</span><span class="p">:</span>
+            <span class="n">new_seq_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_nums</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_seq_num</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_nums</span><span class="p">[</span><span class="n">stock_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_seq_num</span>
+        <span class="n">stock_event</span><span class="o">.</span><span class="n">seq_num</span> <span class="o">=</span> <span class="n">new_seq_num</span>
+
+        <span class="k">if</span> <span class="n">top_buy_price</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">stock_event</span><span class="o">.</span><span class="n">top_buy_price</span> <span class="o">=</span> <span class="n">top_buy_price</span>
+        <span class="k">if</span> <span class="n">top_sell_price</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">stock_event</span><span class="o">.</span><span class="n">top_sell_price</span> <span class="o">=</span> <span class="n">top_sell_price</span>
+        <span class="k">if</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">StockMessage</span><span class="o">.</span><span class="n">TRADE</span><span class="p">:</span>
+            <span class="n">stock_event</span><span class="o">.</span><span class="n">trade_price</span> <span class="o">=</span> <span class="n">stock_msg</span><span class="o">.</span><span class="n">trade</span><span class="o">.</span><span class="n">price</span>
+
+        <span class="k">return</span> <span class="n">stock_event</span>
+</div>
+<div class="viewcode-block" id="ToVisualisation.handle_stock_data"><a class="viewcode-back" href="../../../../net.html#oxberrypis.net.rpi.handlers.ToVisualisation.handle_stock_data">[docs]</a>    <span class="k">def</span> <span class="nf">handle_stock_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stock_id</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">,</span> <span class="n">stock_msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handle sending a single stock event to visualisation&quot;&quot;&quot;</span>
+        <span class="n">stock_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_price_message</span><span class="p">(</span><span class="n">stock_msg</span><span class="p">,</span> <span class="n">stock_id</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stock_event</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">serialized_stock_event</span> <span class="o">=</span> <span class="n">stock_event</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to_visualisation</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">serialized_stock_event</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">OxBerryPis 0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

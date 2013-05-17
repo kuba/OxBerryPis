@@ -1,0 +1,735 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Networking &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="index.html" />
+    <link rel="next" title="Parsing" href="parsing.html" />
+    <link rel="prev" title="Group report" href="report.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="parsing.html" title="Parsing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="report.html" title="Group report"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="networking">
+<h1>Networking<a class="headerlink" href="#networking" title="Permalink to this headline">¶</a></h1>
+<img alt="Network diagram." src="_images/network.png" />
+<span class="target" id="module-oxberrypis.net"></span><p>Network related stuff.</p>
+<div class="section" id="module-oxberrypis.net.controller">
+<span id="controller"></span><h2>Controller<a class="headerlink" href="#module-oxberrypis.net.controller" title="Permalink to this headline">¶</a></h2>
+<p>Network controller.</p>
+<dl class="class">
+<dt id="oxberrypis.net.controller.Controller">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.</tt><tt class="descname">Controller</tt><big>(</big><em>context</em>, <em>vissync_uri</em>, <em>rpisync_uri</em>, <em>pub_uri</em>, <em>subscribers_expected</em>, <em>directory</em>, <em>channels_num</em>, <em>mapping</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller.html#Controller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.Controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Network controller.</p>
+<p>The controller starts 3 threads:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#oxberrypis.net.controller.publisher.ProxyThread" title="oxberrypis.net.controller.publisher.ProxyThread"><tt class="xref py py-class docutils literal"><span class="pre">ProxyThread</span></tt></a></li>
+<li><a class="reference internal" href="#oxberrypis.net.controller.init.InitializerThread" title="oxberrypis.net.controller.init.InitializerThread"><tt class="xref py py-class docutils literal"><span class="pre">InitializerThread</span></tt></a></li>
+<li><a class="reference internal" href="#oxberrypis.net.controller.publisher.ChannelPublishersThread" title="oxberrypis.net.controller.publisher.ChannelPublishersThread"><tt class="xref py py-class docutils literal"><span class="pre">ChannelPublishersThread</span></tt></a></li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>vissync_uri</strong> &#8211; ZMQ URI for syncing with the visualisation.</li>
+<li><strong>rpisync_uri</strong> &#8211; ZMQ URI for syncing with Raspberry Pis.</li>
+<li><strong>pub_uri</strong> &#8211; ZMQ URI controller publishes from.</li>
+<li><strong>subscribers_expected</strong> (<em>integer</em>) &#8211; Number of subscribers expected to connect
+to the controller before publishing starts.</li>
+<li><strong>directory</strong> (<em>string</em>) &#8211; Directory for NYSE ARCA Integrated Feed channel and
+symbol index mapping files.</li>
+<li><strong>channels_num</strong> (<em>integer</em>) &#8211; Number of channels to be processed.</li>
+<li><strong>mapping</strong> &#8211; symbol index mapping</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.controller.Controller.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller.html#Controller.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.Controller.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the controller.</p>
+<p>Starts all subthreads and loop forever.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-oxberrypis.net.controller.init">
+<span id="init"></span><h3>Init<a class="headerlink" href="#module-oxberrypis.net.controller.init" title="Permalink to this headline">¶</a></h3>
+<p>Network initialization.</p>
+<dl class="class">
+<dt id="oxberrypis.net.controller.init.Initializer">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.init.</tt><tt class="descname">Initializer</tt><big>(</big><em>context</em>, <em>vissync_uri</em>, <em>rpisync_uri</em>, <em>proxy_uri</em>, <em>to_publishers_pipe</em>, <em>subscribers_expected</em>, <em>mapping</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/init.html#Initializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.init.Initializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Network initializer.</p>
+<p>Initilizer works as following:</p>
+<ol class="arabic simple">
+<li>Wait for visualisation.</li>
+<li>Once visualisation connects, send back ranges of symbol indexes
+which will be distributed over the RapsberryPis.</li>
+<li>Wait for given number (<tt class="xref py py-attr docutils literal"><span class="pre">subscribers_expected</span></tt>) of
+Raspberry Pis.</li>
+<li>For every Raspberry Pi connected send back range of symbol
+indexes. Each range is sent to two different Raspberry Pis
+to allow high availability.</li>
+<li>Once all Raspberry Pis are connected hand over to the
+<a class="reference internal" href="#oxberrypis.net.controller.publisher.ChannelPublishersThread" title="oxberrypis.net.controller.publisher.ChannelPublishersThread"><tt class="xref py py-class docutils literal"><span class="pre">ChannelPublishersThread</span></tt></a>.</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>vissync_uri</strong> &#8211; ZMQ URI for syncing with the visualisation.</li>
+<li><strong>rpisync_uri</strong> &#8211; ZMQ URI for syncing with Raspberry Pis.</li>
+<li><strong>proxy_uri</strong> &#8211; ZMQ URI for publishers proxy&#8217;s frontend.</li>
+<li><strong>to_publishers_pipe</strong> &#8211; Pipe used to sync <a class="reference internal" href="#oxberrypis.net.controller.init.Initializer" title="oxberrypis.net.controller.init.Initializer"><tt class="xref py py-class docutils literal"><span class="pre">Initializer</span></tt></a>
+with the <a class="reference internal" href="#oxberrypis.net.controller.publisher.ChannelPublishersThread" title="oxberrypis.net.controller.publisher.ChannelPublishersThread"><tt class="xref py py-class docutils literal"><span class="pre">ChannelPublishersThread</span></tt></a>.</li>
+<li><strong>subscribers_expected</strong> (<em>integer</em>) &#8211; Number of subscribers expected to
+connect to the controller before
+publishing starts.</li>
+<li><strong>mapping</strong> &#8211; List of symbol mappings.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.controller.init.Initializer.create_setup_rpi_msg">
+<tt class="descname">create_setup_rpi_msg</tt><big>(</big><em>pi_id</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/init.html#Initializer.create_setup_rpi_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.init.Initializer.create_setup_rpi_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create <tt class="xref py py-class docutils literal"><span class="pre">SetupRPi</span></tt> message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.controller.init.Initializer.create_setup_rpi_msg_serialized">
+<tt class="descname">create_setup_rpi_msg_serialized</tt><big>(</big><em>pi_id</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/init.html#Initializer.create_setup_rpi_msg_serialized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.init.Initializer.create_setup_rpi_msg_serialized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create serialized <tt class="xref py py-class docutils literal"><span class="pre">SetupRPi</span></tt> message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.controller.init.Initializer.create_setup_visualisation_msg">
+<tt class="descname">create_setup_visualisation_msg</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/init.html#Initializer.create_setup_visualisation_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.init.Initializer.create_setup_visualisation_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create SetupVisualisation message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.controller.init.Initializer.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/init.html#Initializer.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.init.Initializer.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the initializer.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.init.InitializerThread">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.init.</tt><tt class="descname">InitializerThread</tt><big>(</big><em>context</em>, <em>vissync_uri</em>, <em>rpisync_uri</em>, <em>proxy_uri</em>, <em>to_publishers_pipe</em>, <em>subscribers_expected</em>, <em>mapping</em>, <em>name='Initializer'</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/init.html#InitializerThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.init.InitializerThread" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#oxberrypis.net.controller.init.Initializer" title="oxberrypis.net.controller.init.Initializer"><tt class="xref py py-class docutils literal"><span class="pre">Initializer</span></tt></a> thread.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">For constructor parameters check <a class="reference internal" href="#oxberrypis.net.controller.init.Initializer" title="oxberrypis.net.controller.init.Initializer"><tt class="xref py py-class docutils literal"><span class="pre">Initializer</span></tt></a>.</p>
+</div>
+<dl class="method">
+<dt id="oxberrypis.net.controller.init.InitializerThread.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/init.html#InitializerThread.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.init.InitializerThread.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the initializer thread.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.net.controller.publisher">
+<span id="publisher"></span><h3>Publisher<a class="headerlink" href="#module-oxberrypis.net.controller.publisher" title="Permalink to this headline">¶</a></h3>
+<p>Network components responsible for publishing stock messages.</p>
+<dl class="class">
+<dt id="oxberrypis.net.controller.publisher.ChannelPublishersThread">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.publisher.</tt><tt class="descname">ChannelPublishersThread</tt><big>(</big><em>context</em>, <em>init_pipe</em>, <em>proxy_uri</em>, <em>directory</em>, <em>channels_num</em>, <em>name='ChannelPublishers'</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/publisher.html#ChannelPublishersThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.publisher.ChannelPublishersThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel publishers thread.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>init_pipe</strong> &#8211; Pipe used to sync with the <tt class="xref py py-class docutils literal"><span class="pre">Initializer</span></tt>.</li>
+<li><strong>proxy_uri</strong> &#8211; Destination channel publishers publish to.</li>
+<li><strong>directory</strong> &#8211; Directory when channel files are found.</li>
+<li><strong>channels_num</strong> &#8211; Number of channels to process. Parsing will
+start with channel 1.</li>
+<li><strong>name</strong> &#8211; Name of the thread; useful for debugging.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.controller.publisher.ChannelPublishersThread.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/publisher.html#ChannelPublishersThread.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.publisher.ChannelPublishersThread.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the channel publishers thread.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.publisher.ProxyThread">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.publisher.</tt><tt class="descname">ProxyThread</tt><big>(</big><em>context</em>, <em>frontend_uri</em>, <em>backend_uri</em>, <em>name='Proxy'</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/publisher.html#ProxyThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.publisher.ProxyThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pub-sub proxy thread.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>frontend_uri</strong> &#8211; ZMQ URI proxy listens to.</li>
+<li><strong>backend_uri</strong> &#8211; ZMQ URI proxy rebpublishes to.</li>
+<li><strong>name</strong> &#8211; Name of the thread; useful for debugging.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.controller.publisher.ProxyThread.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/publisher.html#ProxyThread.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.publisher.ProxyThread.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the proxy.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.net.controller.channel">
+<span id="channel"></span><h3>Channel<a class="headerlink" href="#module-oxberrypis.net.controller.channel" title="Permalink to this headline">¶</a></h3>
+<p>Network components responsible for a single channel parsing/publishing.</p>
+<dl class="class">
+<dt id="oxberrypis.net.controller.channel.ChannelPublisher">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.channel.</tt><tt class="descname">ChannelPublisher</tt><big>(</big><em>context</em>, <em>uri</em>, <em>directory</em>, <em>channel_id</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/channel.html#ChannelPublisher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.channel.ChannelPublisher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel publisher.</p>
+<p>Parses a single channel and publishes <tt class="xref py py-class docutils literal"><span class="pre">StockMessage</span></tt> messages.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>uri</strong> &#8211; ZMQ URI publisher publishes to.</li>
+<li><strong>directory</strong> &#8211; Directory with NYSE Arca Integrated Feed channels
+files.</li>
+<li><strong>channel_id</strong> (<em>integer</em>) &#8211; Channel ID to be parsed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.controller.channel.ChannelPublisher.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/channel.html#ChannelPublisher.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.channel.ChannelPublisher.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the publisher.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.channel.ChannelPublisherThread">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.channel.</tt><tt class="descname">ChannelPublisherThread</tt><big>(</big><em>context</em>, <em>uri</em>, <em>directory</em>, <em>channel_id</em>, <em>name=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/channel.html#ChannelPublisherThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.channel.ChannelPublisherThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel publisher thread.</p>
+<dl class="method">
+<dt id="oxberrypis.net.controller.channel.ChannelPublisherThread.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/channel.html#ChannelPublisherThread.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.channel.ChannelPublisherThread.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the thread.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.channel.ChannelStockMsgsGenerator">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.channel.</tt><tt class="descname">ChannelStockMsgsGenerator</tt><big>(</big><em>directory</em>, <em>channel_id</em>, <em>factory=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/channel.html#ChannelStockMsgsGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.channel.ChannelStockMsgsGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stock messages generator from the channel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>directory</strong> (<em>string</em>) &#8211; Directory with NYSE Arca Integrated Feed
+channels files.</li>
+<li><strong>channel_id</strong> (<em>integer</em>) &#8211; Channel ID to be parsed.</li>
+<li><strong>factory</strong> &#8211; Factory for <tt class="xref py py-class docutils literal"><span class="pre">StockMessage</span></tt> objects,
+defaults to an instance of
+<tt class="xref py py-class docutils literal"><span class="pre">StockMessagesFactory</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.controller.channel.ChannelStockMsgsGenerator.generate_stock_msgs">
+<tt class="descname">generate_stock_msgs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/controller/channel.html#ChannelStockMsgsGenerator.generate_stock_msgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.channel.ChannelStockMsgsGenerator.generate_stock_msgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate stock messages (with stock ids).</p>
+<p>Yields <tt class="xref py py-class docutils literal"><span class="pre">StockMessage</span></tt> object for every known
+message found in the channel stream.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.net.controller.msgs_factories">
+<span id="messages-factories"></span><h3>Messages factories<a class="headerlink" href="#module-oxberrypis.net.controller.msgs_factories" title="Permalink to this headline">¶</a></h3>
+<p>Factories for stock messages.</p>
+<p>These factories take messages from <a class="reference internal" href="parsing.html#module-oxberrypis.parsing.messages" title="oxberrypis.parsing.messages"><tt class="xref py py-mod docutils literal"><span class="pre">oxberrypis.parsing.messages</span></tt></a>
+and turn them into instances of <tt class="xref py py-class docutils literal"><span class="pre">proto.stock_pb2.StockMessage</span></tt>.</p>
+<dl class="class">
+<dt id="oxberrypis.net.controller.msgs_factories.StockMessageAddFactory">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.msgs_factories.</tt><tt class="descname">StockMessageAddFactory</tt><a class="reference internal" href="_modules/oxberrypis/net/controller/msgs_factories.html#StockMessageAddFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.msgs_factories.StockMessageAddFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for add order stock message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.msgs_factories.StockMessageDeleteFactory">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.msgs_factories.</tt><tt class="descname">StockMessageDeleteFactory</tt><a class="reference internal" href="_modules/oxberrypis/net/controller/msgs_factories.html#StockMessageDeleteFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.msgs_factories.StockMessageDeleteFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for delete order stock message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.msgs_factories.StockMessageExecutionFactory">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.msgs_factories.</tt><tt class="descname">StockMessageExecutionFactory</tt><a class="reference internal" href="_modules/oxberrypis/net/controller/msgs_factories.html#StockMessageExecutionFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.msgs_factories.StockMessageExecutionFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for execution order stock message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.msgs_factories.StockMessageFactory">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.msgs_factories.</tt><tt class="descname">StockMessageFactory</tt><a class="reference internal" href="_modules/oxberrypis/net/controller/msgs_factories.html#StockMessageFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.msgs_factories.StockMessageFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic factory for stock message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.msgs_factories.StockMessageModifyFactory">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.msgs_factories.</tt><tt class="descname">StockMessageModifyFactory</tt><a class="reference internal" href="_modules/oxberrypis/net/controller/msgs_factories.html#StockMessageModifyFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.msgs_factories.StockMessageModifyFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for modify order stock message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.msgs_factories.StockMessageTradeFactory">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.msgs_factories.</tt><tt class="descname">StockMessageTradeFactory</tt><a class="reference internal" href="_modules/oxberrypis/net/controller/msgs_factories.html#StockMessageTradeFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.msgs_factories.StockMessageTradeFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for trade stock message.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.controller.msgs_factories.StockMessagesFactory">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.controller.msgs_factories.</tt><tt class="descname">StockMessagesFactory</tt><a class="reference internal" href="_modules/oxberrypis/net/controller/msgs_factories.html#StockMessagesFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.controller.msgs_factories.StockMessagesFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory for stock messages.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-oxberrypis.net.rpi">
+<span id="raspberry-pi"></span><h2>Raspberry Pi<a class="headerlink" href="#module-oxberrypis.net.rpi" title="Permalink to this headline">¶</a></h2>
+<p>Network communcation happening at Raspberry Pi.</p>
+<div class="section" id="module-oxberrypis.net.rpi.subscriber">
+<span id="subscriber"></span><h3>Subscriber<a class="headerlink" href="#module-oxberrypis.net.rpi.subscriber" title="Permalink to this headline">¶</a></h3>
+<p>Raspberry Pi stock messages subscriber/handler.</p>
+<dl class="class">
+<dt id="oxberrypis.net.rpi.subscriber.StockMessagesSubscriber">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.rpi.subscriber.</tt><tt class="descname">StockMessagesSubscriber</tt><big>(</big><em>context</em>, <em>rpisync_uri</em>, <em>pub_uri</em>, <em>visual_uri</em>, <em>me_handler_cls=&lt;class 'oxberrypis.net.rpi.handlers.UpdateMatchingEngines'&gt;</em>, <em>visual_handler_cls=&lt;class 'oxberrypis.net.rpi.handlers.ToVisualisation'&gt;</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/subscriber.html#StockMessagesSubscriber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.subscriber.StockMessagesSubscriber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stock messages subscriber.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>rpisync_uri</strong> &#8211; ZMQ URI for syncing with the <a class="reference internal" href="#oxberrypis.net.controller.init.Initializer" title="oxberrypis.net.controller.init.Initializer"><tt class="xref py py-class docutils literal"><span class="pre">Initializer</span></tt></a></li>
+<li><strong>pub_uri</strong> &#8211; ZMQ URI for stock messages publisher.</li>
+<li><strong>visual_uri</strong> &#8211; ZMQ URI visualisation binds to.</li>
+<li><strong>me_handler_cls</strong> &#8211; Handler class for updating matching engines.</li>
+<li><strong>visual_handler_cls</strong> &#8211; Handler class for sending stock events to
+visualisation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.handle_data">
+<tt class="descname">handle_data</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/subscriber.html#StockMessagesSubscriber.handle_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.handle_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle subscribed data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.run">
+<tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/subscriber.html#StockMessagesSubscriber.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the subscriber.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.sync_reply_handler">
+<tt class="descname">sync_reply_handler</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/subscriber.html#StockMessagesSubscriber.sync_reply_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.subscriber.StockMessagesSubscriber.sync_reply_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for synchronization reply message.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.net.rpi.handlers">
+<span id="handlers"></span><h3>Handlers<a class="headerlink" href="#module-oxberrypis.net.rpi.handlers" title="Permalink to this headline">¶</a></h3>
+<p>Handlers for stock data.</p>
+<dl class="class">
+<dt id="oxberrypis.net.rpi.handlers.PrintingHandler">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.rpi.handlers.</tt><tt class="descname">PrintingHandler</tt><a class="reference internal" href="_modules/oxberrypis/net/rpi/handlers.html#PrintingHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.handlers.PrintingHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple printing handler.</p>
+<p>Prints stock message to the console on arrival.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.rpi.handlers.ToVisualisation">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.rpi.handlers.</tt><tt class="descname">ToVisualisation</tt><big>(</big><em>matching_engines</em>, <em>context</em>, <em>visual_uri</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/handlers.html#ToVisualisation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.handlers.ToVisualisation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stock messages handler that Sends stock evnets to visualisation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>matching_engines</strong> (list of <a class="reference internal" href="orderbook.html#oxberrypis.orderbook.matching_engine.MatchingEngine" title="oxberrypis.orderbook.matching_engine.MatchingEngine"><tt class="xref py py-class docutils literal"><span class="pre">MatchingEngine</span></tt></a>) &#8211; Mapping <tt class="docutils literal"><span class="pre">stock_index</span></tt> -&gt; <tt class="docutils literal"><span class="pre">matching_engine</span></tt>.</li>
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>visual_uri</strong> &#8211; ZMQ URI visualisation binds to.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.rpi.handlers.ToVisualisation.handle_stock_data">
+<tt class="descname">handle_stock_data</tt><big>(</big><em>stock_id</em>, <em>channel_id</em>, <em>stock_msg</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/handlers.html#ToVisualisation.handle_stock_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.handlers.ToVisualisation.handle_stock_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle sending a single stock event to visualisation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.rpi.handlers.ToVisualisation.make_price_message">
+<tt class="descname">make_price_message</tt><big>(</big><em>stock_msg</em>, <em>stock_id</em>, <em>channel_id</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/handlers.html#ToVisualisation.make_price_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.handlers.ToVisualisation.make_price_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the message to send to visualisation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.rpi.handlers.UpdateMatchingEngines">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.rpi.handlers.</tt><tt class="descname">UpdateMatchingEngines</tt><big>(</big><em>matching_engines</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/handlers.html#UpdateMatchingEngines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.handlers.UpdateMatchingEngines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stock messages handler for updating matching engines.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>matching_engines</strong> (list of <a class="reference internal" href="orderbook.html#oxberrypis.orderbook.matching_engine.MatchingEngine" title="oxberrypis.orderbook.matching_engine.MatchingEngine"><tt class="xref py py-class docutils literal"><span class="pre">MatchingEngine</span></tt></a>) &#8211; Mapping <tt class="docutils literal"><span class="pre">stock_index</span></tt> -&gt; <tt class="docutils literal"><span class="pre">matching_engine</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.rpi.handlers.UpdateMatchingEngines.handle_stock_data">
+<tt class="descname">handle_stock_data</tt><big>(</big><em>symbol_index</em>, <em>channel_id</em>, <em>stock_msg</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/rpi/handlers.html#UpdateMatchingEngines.handle_stock_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.rpi.handlers.UpdateMatchingEngines.handle_stock_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update appropriate matching_engine based on <tt class="docutils literal"><span class="pre">stock_msg</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-oxberrypis.net.components">
+<span id="components"></span><h2>Components<a class="headerlink" href="#module-oxberrypis.net.components" title="Permalink to this headline">¶</a></h2>
+<p>Reusable network components.</p>
+<dl class="class">
+<dt id="oxberrypis.net.components.PubSubProxy">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.components.</tt><tt class="descname">PubSubProxy</tt><big>(</big><em>context</em>, <em>frontend_uri</em>, <em>backend_uri</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#PubSubProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.PubSubProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Publisher-Subscriber proxy.</p>
+<p>Based on:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://zguide.zeromq.org/py:all#The-Dynamic-Discovery-Problem">http://zguide.zeromq.org/py:all#The-Dynamic-Discovery-Problem</a></li>
+<li><a class="reference external" href="http://zguide.zeromq.org/py:all#-MQ-s-Built-In-Proxy-Function">http://zguide.zeromq.org/py:all#-MQ-s-Built-In-Proxy-Function</a></li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.components.SynchronizedPublisher">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.components.</tt><tt class="descname">SynchronizedPublisher</tt><big>(</big><em>context</em>, <em>publisher_uri</em>, <em>syncservice_uri</em>, <em>subscribers_expected=1</em>, <em>sync_reply=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedPublisher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedPublisher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronized publisher.</p>
+<p>This publisher and <a class="reference internal" href="#oxberrypis.net.components.SynchronizedSubscriber" title="oxberrypis.net.components.SynchronizedSubscriber"><tt class="xref py py-class docutils literal"><span class="pre">SynchronizedSubscriber</span></tt></a> are generally
+based on <a class="reference external" href="http://zguide.zeromq.org/py:all#Node-Coordination">http://zguide.zeromq.org/py:all#Node-Coordination</a>. However
+docs notes that:</p>
+<blockquote>
+<div><p>We can&#8217;t assume that the SUB connect will be finished by the time
+the REQ/REP dialog is complete. There are no guarantees that
+outbound connects will finish in any order whatsoever, if you&#8217;re
+using any transport except inproc. So, the example does a brute
+force sleep of one second between subscribing, and sending the
+REQ/REP synchronization.</p>
+<p>A more robust model could be:</p>
+<ul class="simple">
+<li>Publisher opens PUB socket and starts sending &#8220;Hello&#8221;
+messages (not data).</li>
+<li>Subscribers connect SUB socket and when they receive a
+Hello message they tell the publisher via a REQ/REP
+socket pair.</li>
+<li>When the publisher has had all the necessary
+confirmations, it starts to send real data.</li>
+</ul>
+</div></blockquote>
+<p>Therefore we implement above mentioned &#8220;more robust model&#8221;, basin on
+<a class="reference external" href="http://thisthread.blogspot.co.uk/2012/03/pub-sub-coordination-by-req-rep.html">http://thisthread.blogspot.co.uk/2012/03/pub-sub-coordination-by-req-rep.html</a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>publisher_uri</strong> &#8211; ZMQ URI the publisher binds to.</li>
+<li><strong>syncservice_uri</strong> &#8211; ZMQ URI for publisher&#8217;s syncing service REP socket.</li>
+<li><strong>subscribers_expected</strong> &#8211; Number of expected subscribers.</li>
+<li><strong>sync_reply</strong> (<em>function accepting sub_id and returning sync reply message.</em>) &#8211; Synchronization reply function.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedPublisher.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedPublisher.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedPublisher.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Announce end of publisher stream and close internal sockets.</p>
+<p>Sends <tt class="xref py py-attr docutils literal"><span class="pre">END_MSG</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedPublisher.handshake">
+<tt class="descname">handshake</tt><big>(</big><em>sub_id</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedPublisher.handshake"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedPublisher.handshake" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform handshake with subscriber if available.</p>
+<p>This function checks for subscribers synchronization
+on the REP socket.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sub_id</strong> &#8211; Subscriber-to-be id.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedPublisher.ping">
+<tt class="descname">ping</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedPublisher.ping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedPublisher.ping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast a ping message.</p>
+<p>A &#8220;ping&#8221; message is sent on the PUB socket to show the
+subscribers that the publisher is up and waiting for them.</p>
+<p>Sends <tt class="xref py py-attr docutils literal"><span class="pre">PING_MSG</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedPublisher.publish">
+<tt class="descname">publish</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedPublisher.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedPublisher.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send data to subscribers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedPublisher.publish_enveloped">
+<tt class="descname">publish_enveloped</tt><big>(</big><em>key</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedPublisher.publish_enveloped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedPublisher.publish_enveloped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send enveloped data to subscribers.</p>
+<p>Based on <a class="reference external" href="http://zguide.zeromq.org/py:all#Pub-Sub-Message-Envelopes">http://zguide.zeromq.org/py:all#Pub-Sub-Message-Envelopes</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedPublisher.sync">
+<tt class="descname">sync</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedPublisher.sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedPublisher.sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronize with subscribers.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.net.components.SynchronizedSubscriber">
+<em class="property">class </em><tt class="descclassname">oxberrypis.net.components.</tt><tt class="descname">SynchronizedSubscriber</tt><big>(</big><em>context</em>, <em>publisher_uri</em>, <em>syncservice_uri</em>, <em>subscriptions</em>, <em>msg_handler</em>, <em>sync_reply_handler=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedSubscriber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedSubscriber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronized subscriber.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Check <a class="reference internal" href="#oxberrypis.net.components.SynchronizedPublisher" title="oxberrypis.net.components.SynchronizedPublisher"><tt class="xref py py-class docutils literal"><span class="pre">SynchronizedPublisher</span></tt></a> for
+implementation details.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>context</strong> &#8211; ZMQ context.</li>
+<li><strong>publisher_uri</strong> &#8211; ZMQ URI of the publisher.</li>
+<li><strong>syncservice_uri</strong> &#8211; ZMQ URI of the publisher&#8217;s REP socket for syncing.</li>
+<li><strong>subscriptions</strong> &#8211; A list of prefixes to subscribe to.</li>
+<li><strong>msg_handler</strong> &#8211; Function for handling of subscribed data.</li>
+<li><strong>sync_reply_handler</strong> &#8211; Function for handling synchronization reply.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedSubscriber.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedSubscriber.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedSubscriber.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close internal sockets.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedSubscriber.recv">
+<tt class="descname">recv</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedSubscriber.recv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedSubscriber.recv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive messages and proccess them using <tt class="xref py py-attr docutils literal"><span class="pre">msg_handler</span></tt>
+in a loop.</p>
+<p>Stops when <tt class="xref py py-attr docutils literal"><span class="pre">SynchronizedPublisher.END_MSG</span></tt> is received.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedSubscriber.recv_multipart">
+<tt class="descname">recv_multipart</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedSubscriber.recv_multipart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedSubscriber.recv_multipart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive mulitpart messages and process them using
+<tt class="xref py py-attr docutils literal"><span class="pre">msg_handler</span></tt> in a loop.</p>
+<p>Stops when <tt class="xref py py-attr docutils literal"><span class="pre">SynchronizedPublisher.END_MSG</span></tt> is received.</p>
+<p>To be used with pub-sub message envelopes; based on
+<a class="reference external" href="http://zguide.zeromq.org/py:all#Pub-Sub-Message-Envelopes">http://zguide.zeromq.org/py:all#Pub-Sub-Message-Envelopes</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedSubscriber.subscribe">
+<tt class="descname">subscribe</tt><big>(</big><em>subscription</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedSubscriber.subscribe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedSubscriber.subscribe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subscribe to <tt class="docutils literal"><span class="pre">subscription</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedSubscriber.sync">
+<tt class="descname">sync</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedSubscriber.sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedSubscriber.sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronize with the publisher.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.net.components.SynchronizedSubscriber.unsubscribe">
+<tt class="descname">unsubscribe</tt><big>(</big><em>subscription</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/net/components.html#SynchronizedSubscriber.unsubscribe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.net.components.SynchronizedSubscriber.unsubscribe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unsubscribe from <tt class="docutils literal"><span class="pre">subscription</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Networking</a><ul>
+<li><a class="reference internal" href="#module-oxberrypis.net.controller">Controller</a><ul>
+<li><a class="reference internal" href="#module-oxberrypis.net.controller.init">Init</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.net.controller.publisher">Publisher</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.net.controller.channel">Channel</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.net.controller.msgs_factories">Messages factories</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-oxberrypis.net.rpi">Raspberry Pi</a><ul>
+<li><a class="reference internal" href="#module-oxberrypis.net.rpi.subscriber">Subscriber</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.net.rpi.handlers">Handlers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-oxberrypis.net.components">Components</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="report.html"
+                        title="previous chapter">Group report</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="parsing.html"
+                        title="next chapter">Parsing</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/net.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="parsing.html" title="Parsing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="report.html" title="Group report"
+             >previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Order book &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="index.html" />
+    <link rel="next" title="Visualisation" href="visual.html" />
+    <link rel="prev" title="Parsing" href="parsing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="visual.html" title="Visualisation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="parsing.html" title="Parsing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-oxberrypis.orderbook">
+<span id="order-book"></span><h1>Order book<a class="headerlink" href="#module-oxberrypis.orderbook" title="Permalink to this headline">¶</a></h1>
+<p>Order book implementation.</p>
+<div class="section" id="module-oxberrypis.orderbook.matching_engine">
+<span id="matching-engine"></span><h2>Matching engine<a class="headerlink" href="#module-oxberrypis.orderbook.matching_engine" title="Permalink to this headline">¶</a></h2>
+<p>Order book matching engine.</p>
+<p>Created on Apr 28, 2013</p>
+<dl class="class">
+<dt id="oxberrypis.orderbook.matching_engine.MatchingEngine">
+<em class="property">class </em><tt class="descclassname">oxberrypis.orderbook.matching_engine.</tt><tt class="descname">MatchingEngine</tt><big>(</big><em>callback=None</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/orderbook/matching_engine.html#MatchingEngine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.matching_engine.MatchingEngine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matching engine.</p>
+<p>Main class for processing each individual stock, it implements
+rules and logic of stock exchange and maintains orders in correct
+order. It allows adding, changing, and removing orders.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.orderbook.book">
+<span id="the-book"></span><h2>The book<a class="headerlink" href="#module-oxberrypis.orderbook.book" title="Permalink to this headline">¶</a></h2>
+<p>Order book implementation.</p>
+<p>Created on Apr 28, 2013</p>
+<dl class="class">
+<dt id="oxberrypis.orderbook.book.OrderBook">
+<em class="property">class </em><tt class="descclassname">oxberrypis.orderbook.book.</tt><tt class="descname">OrderBook</tt><a class="reference internal" href="_modules/oxberrypis/orderbook/book.html#OrderBook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.book.OrderBook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order book.</p>
+<p>Keeps order in either demand or supply for single stock.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.orderbook.order">
+<span id="order"></span><h2>Order<a class="headerlink" href="#module-oxberrypis.orderbook.order" title="Permalink to this headline">¶</a></h2>
+<p>Order implementation.</p>
+<p>Created on Apr 28, 2013</p>
+</div>
+<div class="section" id="internal-data-structures">
+<h2>Internal data structures<a class="headerlink" href="#internal-data-structures" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-oxberrypis.orderbook.fibonacci_heap">
+<span id="fibonacci-heap"></span><h3>Fibonacci heap<a class="headerlink" href="#module-oxberrypis.orderbook.fibonacci_heap" title="Permalink to this headline">¶</a></h3>
+<p>Fibonacci Heap implementation.</p>
+<p>Fibonacci heaps are especially desirable when the number of
+<cite>extract_min</cite> and <cite>delete</cite> operations is small relative to the
+number of other operations performed.</p>
+<dl class="class">
+<dt id="oxberrypis.orderbook.fibonacci_heap.FibonacciHeap">
+<em class="property">class </em><tt class="descclassname">oxberrypis.orderbook.fibonacci_heap.</tt><tt class="descname">FibonacciHeap</tt><a class="reference internal" href="_modules/oxberrypis/orderbook/fibonacci_heap.html#FibonacciHeap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.fibonacci_heap.FibonacciHeap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fibonacci heap.</p>
+<dl class="method">
+<dt id="oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.decrease_key">
+<tt class="descname">decrease_key</tt><big>(</big><em>node</em>, <em>new_key</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/orderbook/fibonacci_heap.html#FibonacciHeap.decrease_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.decrease_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrease node&#8217;s key.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.extract">
+<tt class="descname">extract</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/orderbook/fibonacci_heap.html#FibonacciHeap.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract minimum node from the heap.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.front">
+<tt class="descname">front</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/orderbook/fibonacci_heap.html#FibonacciHeap.front"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.front" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns minimum node from the heap.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.insert">
+<tt class="descname">insert</tt><big>(</big><em>key</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/orderbook/fibonacci_heap.html#FibonacciHeap.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a pair of key and data into the heap.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.is_empty">
+<tt class="descname">is_empty</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/oxberrypis/orderbook/fibonacci_heap.html#FibonacciHeap.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.fibonacci_heap.FibonacciHeap.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the heap is empty.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.orderbook.fibonacci_heap.FibonacciHeapNode">
+<em class="property">class </em><tt class="descclassname">oxberrypis.orderbook.fibonacci_heap.</tt><tt class="descname">FibonacciHeapNode</tt><big>(</big><em>key</em>, <em>data</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/orderbook/fibonacci_heap.html#FibonacciHeapNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.fibonacci_heap.FibonacciHeapNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fibonacci heap node.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-oxberrypis.orderbook.linked_list">
+<span id="linked-list"></span><h3>Linked list<a class="headerlink" href="#module-oxberrypis.orderbook.linked_list" title="Permalink to this headline">¶</a></h3>
+<p>Linked lists implementation.</p>
+<p>Created on Apr 28, 2013</p>
+<dl class="class">
+<dt id="oxberrypis.orderbook.linked_list.LinkedList">
+<em class="property">class </em><tt class="descclassname">oxberrypis.orderbook.linked_list.</tt><tt class="descname">LinkedList</tt><a class="reference internal" href="_modules/oxberrypis/orderbook/linked_list.html#LinkedList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.linked_list.LinkedList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Double linked list.</p>
+<p>Implementation of double linked list, which is used for keeping orders
+at one prize. Ii allows adding a data at the end, removing node by
+pointer, getting and extracting first element, and check for empty.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oxberrypis.orderbook.linked_list.LinkedListNode">
+<em class="property">class </em><tt class="descclassname">oxberrypis.orderbook.linked_list.</tt><tt class="descname">LinkedListNode</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/oxberrypis/orderbook/linked_list.html#LinkedListNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oxberrypis.orderbook.linked_list.LinkedListNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node in a double linked list.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Order book</a><ul>
+<li><a class="reference internal" href="#module-oxberrypis.orderbook.matching_engine">Matching engine</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.orderbook.book">The book</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.orderbook.order">Order</a></li>
+<li><a class="reference internal" href="#internal-data-structures">Internal data structures</a><ul>
+<li><a class="reference internal" href="#module-oxberrypis.orderbook.fibonacci_heap">Fibonacci heap</a></li>
+<li><a class="reference internal" href="#module-oxberrypis.orderbook.linked_list">Linked list</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="parsing.html"
+                        title="previous chapter">Parsing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="visual.html"
+                        title="next chapter">Visualisation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/orderbook.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="visual.html" title="Visualisation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="parsing.html" title="Parsing"
+             >previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

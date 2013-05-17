@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>README &mdash; OxBerryPis 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="OxBerryPis 0 documentation" href="index.html" />
+    <link rel="next" title="Group report" href="report.html" />
+    <link rel="prev" title="Welcome to OxBerryPis’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="report.html" title="Group report"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to OxBerryPis’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="readme">
+<h1>README<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
+<p>&#8220;Project A: Resilient and Rapid Raspberries&#8221; is Group Design Practical
+set by the <a class="reference external" href="http://www.cs.ox.ac.uk">Department of Computer Science at the University of Oxford</a> in the academic year 2012/2013. OxBerryPis
+is an implementation of the practical maintained by 4 university
+students (Group 8).</p>
+<div class="section" id="design-brief">
+<h2>Design Brief<a class="headerlink" href="#design-brief" title="Permalink to this headline">¶</a></h2>
+<p>In today&#8217;s world of high frequency trading, understanding the rapidly
+changing quotes from a myriad of trading algorithms is a colossal data
+processing problem. With tens of thousands of updated per second in a
+single market, and limited space and power constraints, it is important
+to be able to maximise throughput and resiliency with the hardware
+available. Given a day of actual stock exchange data, your challenge is
+to create a cluster to process and aggregate the data. Doing this with
+real hardware is more fun - we can&#8217;t give you our data centre, but we
+can suppy you with a Raspberry Pi cluster.</p>
+</div>
+<div class="section" id="project-details">
+<h2>Project details<a class="headerlink" href="#project-details" title="Permalink to this headline">¶</a></h2>
+<p>The idea of the project is that, given a day of stock exchange data, we
+must parse it to retrieve the useful information, consisting of buying,
+selling, and various trade orders. This will then be sent to the cluster
+of Raspberry Pis that we have, which will maintain a data structure
+called the Order Book, which will keep track of the various offers to
+buy and sell for different prices, how many of each stock are being
+sold, and allowing the trades to occur according to the data given,
+maintaining the order book and keeping it up to date. From this, certain
+data will be sent back to the computer, which will then implement some
+visualisation so as to show various things about each product, such as
+last trade price, various medians, and so on. An optional suggestion
+from GResearch was to implement high availability in the cluster, so as
+to allow the pis to redistribute the work if one or more were to fail,
+without data loss.</p>
+</div>
+<div class="section" id="team-members">
+<h2>Team members<a class="headerlink" href="#team-members" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Hynek Jemelik</li>
+<li>Josh Peaker</li>
+<li>Alexander Eyers-Taylor</li>
+<li>Jakub Warmuz</li>
+</ul>
+</div>
+<div class="section" id="development">
+<h2>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h2>
+<p>Firstly, install the package with all the dependencies in the development
+mode:</p>
+<div class="highlight-python"><pre>python setup.py develop</pre>
+</div>
+<p>You may want to use <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a>
+if you don&#8217;t want to pollute your operationg system&#8217;s Python distrubution.</p>
+<p>Then introduce your changes and run all the tests:</p>
+<div class="highlight-python"><pre>python setup.py nosetests</pre>
+</div>
+<p>Please follow the guidelines from <a class="reference external" href="http://www.python.org/dev/peps/pep-0008">PEP8</a> (4 spaces for indentation!).
+If still in doubt, apply the coding style from the master branch.
+Remember to include appropriate tests for new modules.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">README</a><ul>
+<li><a class="reference internal" href="#design-brief">Design Brief</a></li>
+<li><a class="reference internal" href="#project-details">Project details</a></li>
+<li><a class="reference internal" href="#team-members">Team members</a></li>
+<li><a class="reference internal" href="#development">Development</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to OxBerryPis&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="report.html"
+                        title="next chapter">Group report</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/readme.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="report.html" title="Group report"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to OxBerryPis’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">OxBerryPis 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Hynek Jemelik, Josh Peaker, Alexander Eyers-Taylor, Jakub Warmuz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
